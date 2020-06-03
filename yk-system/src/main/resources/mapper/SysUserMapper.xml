@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.system.mapper.SysUserMapper">
+    <!-- 新增系统用户 -->
+    <insert id="insertSysUser" parameterType="SysUser">
+        insert into tb_sys_user(
+        <include refid="sysUser_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        (#{id}, #{deptId}, #{account}, #{userName}, #{password}, #{phone}, #{email}, #{sex}, #{avatar}, #{userType},
+        #{salt}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime})
+
+    </insert>
+
+    <!-- 批量新增用户系统 -->
+    <insert id="insertSysUserBatch">
+        insert into tb_sys_user(
+        <include refid="sysUser_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.deptId}, #{item.account}, #{item.userName}, #{item.password}, #{item.phone},
+            #{item.email}, #{item.sex}, #{item.avatar}, #{item.userType}, #{item.salt}, #{item.status},
+            #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+        </foreach>
+
+    </insert>
+
+    <!--  更新系统用户  -->
+    <update id="updateSysUser" parameterType="SysUser">
+        update tb_sys_user
+        <set>
+            <if test="deptId != null and deptId != '' and deptId != 'null' and deptId != 'undefined'">
+                dept_id = #{deptId},
+            </if>
+            <if test="account != null and account != '' and account != 'null' and account != 'undefined'">
+                account = #{account},
+            </if>
+            <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+                user_name = #{userName},
+            </if>
+            <if test="password != null and password != '' and password != 'null' and password != 'undefined'">
+                password = #{password},
+            </if>
+            <if test="phone != null and phone != '' and phone != 'null' and phone != 'undefined'">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != '' and email != 'null' and email != 'undefined'">
+                email = #{email},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="avatar != null and avatar != '' and avatar != 'null' and avatar != 'undefined'">
+                avatar = #{avatar},
+            </if>
+            <if test="salt != null and salt != '' and salt != 'null' and salt != 'undefined'">
+                salt = #{salt},
+            </if>
+            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                update_time = #{updateTime},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="userType != null">
+                user_type=#{userType},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除系统用户 -->
+    <update id="deleteSysUserById">
+        update tb_sys_user set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除系统用户 -->
+    <update id="deleteBatchSysUserByIds" parameterType="List">
+        update tb_sys_user set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除系统用户 -->
+    <delete id="deleteSysUserRealById">
+        delete from tb_sys_user where id = #{id}
+    </delete>
+
+    <!-- 批量真删除系统用户 -->
+    <delete id="deleteBatchSysUserRealByIds">
+        delete from tb_sys_user where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统用户 -->
+    <select id="getSysUserById" resultType="SysUser">
+        select
+        <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询系统用户集合 -->
+    <select id="listSysUsers" parameterType="SysUserQuery" resultType="SysUser">
+        select
+        <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        <where>
+            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                AND a.id = #{id}
+            </if>
+            <if test="account != null and account != '' and account != 'null' and account != 'undefined'">
+                AND a.account = #{account}
+            </if>
+            <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="sex != null">
+                AND a.sex = #{sex}
+            </if>
+            <if test="phone != null and phone != '' and phone != 'null' and phone != 'undefined'">
+                AND a.phone = #{phone}
+            </if>
+            <if test="email != null and email != '' and email != 'null' and email != 'undefined'">
+                AND a.email = #{email}
+            </if>
+            <if test="status != null">
+                AND a.status = #{status}
+            </if>
+            AND a.status = 1
+        </where>
+    </select>
+
+    <!-- 根据账号获取用户信息 -->
+    <select id="getSysUserByAccount" resultType="SysUser">
+        select
+        <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        where a.account = #{account} and a.status = 1
+    </select>
+
+    <!-- 根据用户名获取用户信息 -->
+    <select id="getSysUserByUserName" resultType="SysUser">
+        select
+        <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        where a.account = #{userName} and a.status = 1
+    </select>
+
+    <!-- 根据手机号获取用户信息 -->
+    <select id="getSysUserByPhoneNumber" resultType="SysUser">
+        select
+        <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        where a.phone = #{phone} and a.status = 1
+    </select>
+
+    <!-- 根据邮箱获取用户信息 -->
+    <select id="getSysUserByEmail" resultType="SysUser">
+        select
+        <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        where a.email = #{email} and a.status = 1
+    </select>
+
+    <sql id="sysUser_select_cond">
+        a.id id, a.dept_id deptId, a.account account, a.user_name userName, a.password password, a.phone phone, a.email email, a.sex sex, a.avatar avatar, a.user_type userType, a.salt salt, a.status status
+        , a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime
+    </sql>
+
+    <sql id="sysUser_add_key">
+          id, dept_id, account, user_name, password, phone, email, sex, avatar, user_type, salt, status, create_user_id, create_time, update_user_id, update_time
+    </sql>
+</mapper>

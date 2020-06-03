@@ -61,7 +61,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public int deleteBatchSysUserRealByIds(List<SysUser> list) {
+    public int deleteBatchSysUserRealByIds(List<String> list) {
         return sysUserMapper.deleteBatchSysUserRealByIds(list);
     }
 
@@ -79,5 +79,25 @@ public class SysUserServiceImpl implements SysUserService {
     public List<SysUser> listSysUsers(int start, int pageSize, SysUserQuery sysUserQuery) {
         PageHelper.startPage(start, pageSize);
         return this.listSysUsers(sysUserQuery);
+    }
+
+    @Override
+    public SysUser getSysUserByAccount(String account) {
+        return sysUserMapper.getSysUserByAccount(account);
+    }
+
+    @Override
+    public SysUser getSysUserByUserName(String userName) {
+        return sysUserMapper.getSysUserByUserName(userName);
+    }
+
+    @Override
+    public SysUser getSysUserByPhoneNumber(String phone) {
+        return sysUserMapper.getSysUserByPhoneNumber(phone);
+    }
+
+    @Override
+    public SysUser getSysUserByEmail(String email) {
+        return sysUserMapper.getSysUserByEmail(email);
     }
 }

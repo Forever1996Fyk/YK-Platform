@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.system.mapper.SysMenuMapper">
+
+    <!--  获取所有的菜单 -->
+    <select id="listMenuAll" resultType="SysMenu">
+        select distinct a.id id, a.menu_name menuName, a.parent_id parentId, a.menu_sort menuSort, a.url url, a.target target, a.menu_type menuType, a.perms perms, a.icon icon
+        from tb_sys_menu a
+        where a.menu_type in (1, 2) and a.status = 1
+        order by a.parent_id, a.menu_sort
+    </select>
+</mapper>

@@ -56,10 +56,10 @@ public interface SysUserMapper {
 
     /**
      * 批量真删除系统用户
-     * @param list
+     * @param ids
      * @return
      */
-    int deleteBatchSysUserRealByIds(@Param(value = "list") List<SysUser> list);
+    int deleteBatchSysUserRealByIds(List<String> ids);
 
     /**
      * 根据id获取系统用户
@@ -75,4 +75,31 @@ public interface SysUserMapper {
      */
     List<SysUser> listSysUsers(SysUserQuery sysUserQuery);
 
+    /**
+     * 根据账号获取用户信息
+     * @param account
+     * @return
+     */
+    SysUser getSysUserByAccount(String account);
+
+    /**
+     * 根据手机号获取用户信息
+     * @param phone
+     * @return
+     */
+    SysUser getSysUserByPhoneNumber(String phone);
+
+    /**
+     * 根据邮箱获取用户信息
+     * @param email
+     * @return
+     */
+    SysUser getSysUserByEmail(String email);
+
+    /**
+     * 根据用户名获取用户信息
+     * @param userName
+     * @return
+     */
+    SysUser getSysUserByUserName(String userName);
 }

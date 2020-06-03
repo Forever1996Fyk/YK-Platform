@@ -1,6 +1,7 @@
 package com.yk.system.model.pojo;
 
 import com.yk.common.entity.BaseEntity;
+import com.yk.common.util.StringUtils;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -41,4 +42,15 @@ public class SysUser extends BaseEntity implements Serializable {
     //账号状态(0已删除, 1正常, 2停用)
     private Integer status;
 
+    /**
+     * 判断是否是超级管理员
+     * @return
+     */
+    public boolean isAdmin() {
+        return isAdmin(this.id);
+    }
+
+    private boolean isAdmin(String userId) {
+        return StringUtils.isNotBlank(userId) && "1".equals(userId);
+    }
 }

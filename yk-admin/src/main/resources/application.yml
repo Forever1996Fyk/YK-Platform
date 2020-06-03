@@ -1,0 +1,58 @@
+# 项目相关配置
+yk:
+  # 名称
+  name: YK
+  # 版本
+  version: 3.0.0
+  # 年份
+  copyrightYear: 2020
+  # 演示demo开关
+  demoEnabled: true
+  # 文件路径
+  profile:
+  # 获取ip地址开关
+  addressEnabled: false
+
+# 开发环境胚子
+server:
+  port: 80
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    # tomcat最大线程数 默认200
+    max-threads: 800
+    # tomcat启动初始化线程数, 默认25
+    min-spare-threads: 30
+
+# Spring配置
+spring:
+  thymeleaf:
+    prefix: classpath:/template/
+    suffix: .html
+    mode: HTML
+    encoding: utf-8
+    # 禁用缓存
+    cache: false
+  profiles:
+    active: druid
+#  # 文件上传
+#  servlet:
+#    multipart:
+#      # 单个文件大小
+#      max-file-size: 500MB
+#      # 设置总上传的文件大小
+#      max-request-size: 2500MB
+#  # 服务
+#  devtools:
+#    restart:
+#      # 热部署开关
+#      enabled: true
+
+# MyBatis配置
+mybatis:
+  type-aliases-package: com.yk
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    call-setters-on-nulls: true

@@ -16,6 +16,7 @@
         <module>yk-system</module>
         <module>yk-common</module>
         <module>yk-framework</module>
+        <module>yk-generator</module>
     </modules>
     
     <properties>

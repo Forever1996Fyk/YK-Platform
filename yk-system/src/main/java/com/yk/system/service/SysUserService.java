@@ -2,7 +2,6 @@ package com.yk.system.service;
 
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.query.SysUserQuery;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public interface SysUserService {
      * 批量新增用户系统
      * @param list
      */
-    int insertSysUserBatch(@Param(value = "list") List<SysUser> list);
+    int insertSysUserBatch(List<SysUser> list);
 
     /**
      * 更新系统用户
@@ -59,7 +58,7 @@ public interface SysUserService {
      * @param list
      * @return
      */
-    int deleteBatchSysUserRealByIds(@Param(value = "list") List<SysUser> list);
+    int deleteBatchSysUserRealByIds(List<String> list);
 
     /**
      * 根据id获取系统用户
@@ -81,4 +80,32 @@ public interface SysUserService {
      * @return
      */
     List<SysUser> listSysUsers(int start, int pageSize, SysUserQuery sysUserQuery);
+
+    /**
+     * 根据账号获取用户信息
+     * @param account
+     * @return
+     */
+    SysUser getSysUserByAccount(String account);
+
+    /**
+     * 根据用户名获取用户信息
+     * @param userName
+     * @return
+     */
+    SysUser getSysUserByUserName(String userName);
+
+    /**
+     * 根据手机号获取用户信息
+     * @param phone
+     * @return
+     */
+    SysUser getSysUserByPhoneNumber(String phone);
+
+    /**
+     * 根据邮箱获取用户信息
+     * @param email
+     * @return
+     */
+    SysUser getSysUserByEmail(String email);
 }
