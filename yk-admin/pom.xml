@@ -41,6 +41,12 @@
             <groupId>com.yk</groupId>
             <artifactId>yk-framework</artifactId>
         </dependency>
+
+        <!-- 代码生成-->
+        <dependency>
+            <groupId>com.yk</groupId>
+            <artifactId>yk-generator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

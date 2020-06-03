@@ -1,4 +1,4 @@
-package com.yk.generator.model;
+package com.yk.generator.model.pojo;
 
 
 import com.yk.common.entity.BaseEntity;

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.generator.mapper.GenTableMapper">
+
+    <!-- 查询业务数据库表 -->
+    <select id="listGenTables" parameterType="GenTableQuery" resultType="GenTable">
+        select a.id id, a.table_name tableName, a.table_comment tableComment, a.class_name className, a.tpl_category
+        tplCategory, a.package_name packageName,
+        a.module_name moduleName, a.business_name businessName, a.function_name functionName, a.function_author
+        functionAuthor, a.options options,
+        a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time
+        updateTime, a.remark remark
+        from gen_table a
+        <where>
+            <if test="tableName != null and tableName != ''">
+                AND lower(a.table_name) like lower(concat('%', #{tableName}, '%'))
+            </if>
+            <if test="tableComment != null and tableComment != ''">
+                AND lower(a.table_comment) like lower(concat('%', #{tableComment}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取数据库列表 -->
+    <select id="listDbTables" parameterType="GenTableQuery" resultType="GenTable">
+        select table_name tableName, table_comment tableComment, create_time creatTime, update_time updateTime
+        from information_schema.tables
+        where table_schema = (select database())
+        AND table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'
+        AND table_name NOT IN (select table_name from gen_table)
+        <if test="tableName != null and tableName != ''">
+            AND lower(table_name) like lower(concat('%', #{tableName}, '%'))
+        </if>
+        <if test="tableComment != null and tableComment != ''">
+            AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))
+        </if>
+    </select>
+</mapper>

@@ -167,7 +167,7 @@ var table = {
                     } else {
                     	if ($.common.isNotEmpty(table.options.rememberSelected) && table.options.rememberSelected) {
                     		var column = $.common.isEmpty(table.options.uniqueId) ? table.options.columns[1].field : table.options.uniqueId;
-                    		$.each(res.rows, function(i, row) {
+                    		$.each(res.data.rows, function(i, row) {
                     			row.state = $.inArray(row[column], table.rememberSelectedIds[table.options.id]) !== -1;
                             })
                     	}

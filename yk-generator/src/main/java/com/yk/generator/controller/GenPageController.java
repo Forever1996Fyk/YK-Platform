@@ -23,4 +23,13 @@ public class GenPageController {
     public String gen() {
         return prefix + "/gen";
     }
+
+    /**
+     * 导入表页面
+     * @return
+     */
+    @GetMapping("/importTable")
+    public String importTable() {
+        return prefix + "/importTable";
+    }
 }

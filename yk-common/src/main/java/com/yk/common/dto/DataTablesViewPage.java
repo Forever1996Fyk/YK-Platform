@@ -15,14 +15,14 @@ import java.util.List;
 @Data
 public class DataTablesViewPage<T> {
     //封装的数据
-    private List<T> data;
+    private List<T> rows;
     //数据总数
     private long total;
 
     public DataTablesViewPage(List<T> data) {
         if (data instanceof Page) {
             PageInfo a = new PageInfo(data);
-            this.data = a.getList();
+            this.rows = a.getList();
             this.total = a.getTotal();
         }
     }

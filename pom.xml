@@ -146,6 +146,13 @@
                 <artifactId>yk-common</artifactId>
                 <version>${yk.version}</version>
             </dependency>
+
+            <!-- 代码生成 -->
+            <dependency>
+                <groupId>com.yk</groupId>
+                <artifactId>yk-generator</artifactId>
+                <version>${yk.version}</version>
+            </dependency>
             
         </dependencies>
     </dependencyManagement>
