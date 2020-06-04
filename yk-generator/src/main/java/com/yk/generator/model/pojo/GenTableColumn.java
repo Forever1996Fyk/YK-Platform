@@ -2,6 +2,7 @@ package com.yk.generator.model.pojo;
 
 
 import com.yk.common.entity.BaseEntity;
+import com.yk.common.util.StringUtils;
 import lombok.Data;
 
 
@@ -13,42 +14,86 @@ import lombok.Data;
  */
 @Data
 public class GenTableColumn extends BaseEntity {
-	private static final long serialVersionUID = 6971765873120245211L;
-	//列名标识
+    private static final long serialVersionUID = 6971765873120245211L;
+    /**
+     * 列名标识
+     */
     private String id;
-    //归属表编号
+    /**
+     * 归属表编号
+     */
     private String tableId;
-    //列名称
+    /**
+     * 列名称
+     */
     private String columnName;
-    //列描述
+    /**
+     * 列描述
+     */
     private String columnComment;
-    //列类型
+    /**
+     * 列类型
+     */
     private String columnType;
-    //JAVA类型
+    /**
+     * JAVA类型
+     */
     private String javaType;
-    //JAVA字段名
+    /**
+     * JAVA字段名
+     */
     private String javaField;
-    //是否主键（1是）
+    /**
+     * 是否主键（1是）
+     */
     private String pk;
-    //是否自增（1是）
+    /**
+     * 是否自增（1是）
+     */
     private String increment;
-    //是否必填（1是）
+    /**
+     * 是否必填（1是）
+     */
     private String required;
-    //是否为插入字段（1是）
+    /**
+     * 是否为插入字段（1是）
+     */
     private String insert;
-    //是否编辑字段（1是）
+    /**
+     * 是否编辑字段（1是）
+     */
     private String edit;
-    //是否列表字段（1是）
+    /**
+     * 是否列表字段（1是）
+     */
     private String list;
-    //是否查询字段（1是）
+    /**
+     * 是否查询字段（1是）
+     */
     private String query;
-    //查询方式（等于、不等于、大于、小于、范围）
+    /**
+     * 查询方式（等于、不等于、大于、小于、范围）
+     */
     private String queryType;
-    //显示类型（文本框、文本域、下拉框、复选框、单选框、日期控件）
+    /**
+     * 显示类型（文本框、文本域、下拉框、复选框、单选框、日期控件）
+     */
     private String htmlType;
-    //字典类型
+    /**
+     * 字典类型
+     */
     private String dictType;
-    //排序
+    /**
+     * 排序
+     */
     private Integer sort;
+
+    public boolean checkPk() {
+        return checkPk(this.pk);
+    }
+
+    private boolean checkPk(String pk) {
+        return StringUtils.equals("1", pk);
+    }
 
 }

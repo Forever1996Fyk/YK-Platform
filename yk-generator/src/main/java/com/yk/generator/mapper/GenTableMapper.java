@@ -26,4 +26,22 @@ public interface GenTableMapper {
      * @return
      */
     List<GenTable> listDbTables(GenTableQuery genTableQuery);
+
+    /**
+     * 根据表名称获取数据库表集合
+     * @author YuKai Fan
+     * @param tableNames
+     * @return java.util.List<com.yk.generator.model.pojo.GenTable>
+     * @date 2020/6/4 20:33
+     */
+    List<GenTable> listDbTablesByNames(String[] tableNames);
+
+    /**
+     * 新增表信息
+     * @author YuKai Fan
+     * @param table
+     * @return int
+     * @date 2020/6/4 20:59
+     */
+    int insertGenTable(GenTable table);
 }

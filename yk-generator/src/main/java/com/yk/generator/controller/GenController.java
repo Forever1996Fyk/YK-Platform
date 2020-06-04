@@ -2,6 +2,7 @@ package com.yk.generator.controller;
 
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
+import com.yk.common.text.Convert;
 import com.yk.generator.model.pojo.GenTable;
 import com.yk.generator.model.query.GenTableQuery;
 import com.yk.generator.service.GenCodeService;
@@ -54,8 +55,18 @@ public class GenController {
         return Result.success(new DataTablesViewPage<>(genTables));
     }
 
-    @PostMapping("/importTable")
-    public Result importTable() {
+    /**
+     * 导入数据表
+     * @author YuKai Fan
+     * @param tables
+     * @return com.yk.common.dto.Result
+     * @date 2020/6/4 21:47
+     */
+    @PostMapping("/importTable/{tables}")
+    public Result importTable(@PathVariable("tables") String tables) {
+        String[] tableNames = Convert.toStrArray(tables);
+        List<GenTable> tablesList = genTableService.listDbTablesByNames(tableNames);
+        genTableService.importGenTable(tablesList);
         return Result.success();
     }
 

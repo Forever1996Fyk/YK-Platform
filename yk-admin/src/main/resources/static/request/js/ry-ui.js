@@ -905,6 +905,10 @@ var table = {
             post: function(url, data, callback) {
             	$.operate.submit(url, "post", "json", data, callback);
             },
+			// post 变量参数 请求传输
+			postVariable: function(url, callback) {
+				$.operate.submit(url, "post", "json", callback);
+			},
             // get请求传输
             get: function(url, callback) {
             	$.operate.submit(url, "get", "json", "", callback);

@@ -87,12 +87,13 @@
 		/* 导入表结构-选择表结构-提交 */
 		function submitHandler() {
 			var rows = $.table.selectColumns("tableName");
-			if (rows.length == 0) {
+			if (rows.length === 0) {
        			$.modal.alertWarning("请至少选择一条记录");
        			return;
        		}
-			var data = {"tables": rows.join()};
-			$.operate.save(prefix + "/importTable", data);
+			// var data = {"tables": rows.join()};
+			var data = rows.join();
+			$.operate.postVariable(prefix + "/importTable/" + data);
 		}
 	</script>
 </body>

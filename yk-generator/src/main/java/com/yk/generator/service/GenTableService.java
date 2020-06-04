@@ -45,4 +45,22 @@ public interface GenTableService {
      * @return
      */
     List<GenTable> listDbTables(int start, int pageSize, GenTableQuery genTableQuery);
+
+    /**
+     * 根据表名称获取数据库表集合
+     * @author YuKai Fan 
+     * @param tableNames
+     * @return java.util.List<com.yk.generator.model.pojo.GenTable>
+     * @date 2020/6/4 20:32
+     */
+    List<GenTable> listDbTablesByNames(String[] tableNames);
+
+    /**
+     * 导入表结构
+     * @author YuKai Fan
+     * @param tablesList
+     * @return void
+     * @date 2020/6/4 20:42
+     */
+    void importGenTable(List<GenTable> tablesList);
 }
