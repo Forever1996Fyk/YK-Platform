@@ -952,31 +952,6 @@ var table = {
             	}
                 return url;
             },
-			putItemToXXQG: function() {
-				var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
-				if (rows.length == 0) {
-					$.modal.alertWarning("请至少选择一条记录");
-					return;
-				}
-				$.modal.confirm("确认要提交选中的" + rows.length + "条数据吗?", function() {
-					var url = $.common.isEmpty(rows) ? table.options.putItemsUrl : table.options.putItemsUrl.replace("{itemId}", rows);
-					var config = {
-						url: url,
-						type: "POST",
-						beforeSend: function () {
-							$.modal.loading("正在处理中，请稍后...");
-							$.modal.disable();
-						},
-						success: function(result) {
-							if (typeof callback == "function") {
-								callback(result);
-							}
-							$.operate.successCallback(result);
-						}
-					};
-					$.ajax(config)
-				});
-			},
             // 删除信息
             remove: function(id, msg) {
 				table.set();

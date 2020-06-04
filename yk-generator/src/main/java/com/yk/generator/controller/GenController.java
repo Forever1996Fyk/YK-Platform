@@ -54,6 +54,11 @@ public class GenController {
         return Result.success(new DataTablesViewPage<>(genTables));
     }
 
+    @PostMapping("/importTable")
+    public Result importTable() {
+        return Result.success();
+    }
+
     /**
      * 生成代码
      * @param tableName
