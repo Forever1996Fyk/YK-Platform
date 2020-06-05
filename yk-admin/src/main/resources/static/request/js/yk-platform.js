@@ -959,6 +959,7 @@ var table = {
             // 删除信息
             remove: function(id, msg) {
 				table.set();
+				msg = msg?msg:"确定要删除这条数据吗?"
 				$.modal.confirm(msg, function() {
 					if ($.common.isEmpty(id)) {
 						$.modal.alertWarning("请至少选择一条记录");
@@ -966,10 +967,10 @@ var table = {
 
 					var url = table.options.removeUrl.replace("{id}", id);
 					if(table.options.type == table_type.bootstrapTreeTable) {
-						$.operate.get(url);
+						$.operate.delete(url);
 					} else {
 						var config = {
-							url: url + "?id=" + id,
+							url: url,
 							type: "delete",
 							beforeSend: function () {
 								$.modal.loading("正在处理中，请稍后...");
@@ -996,9 +997,8 @@ var table = {
         			return;
         		}
         		$.modal.confirm("确认要删除选中的" + rows.length + "条数据吗?", function() {
-        			var url = table.options.removeUrl;
-        			var data = { "ids": rows.join() };
-        			$.operate.submit(url, "post", "json", data);
+					var url = table.options.removeAllUrl.replace("{ids}", rows.join(","));
+        			$.operate.delete(url);
         		});
             },
             // 清空信息

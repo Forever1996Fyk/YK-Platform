@@ -55,4 +55,12 @@
         values (#{id}, #{tableName}, #{tableComment}, #{className}, #{tplCategory}, #{packageName}, #{moduleName}, #{businessName}, #{functionName},
          #{functionAuthor}, #{remark})
     </insert>
+
+    <!-- 根据tableName获取数据库表信息 -->
+    <select id="getGenTableByName" resultType="GenTable">
+        SELECT t.id id, t.table_name tableName, t.table_comment tableComment, t.class_name className, t.tpl_category tplCategory, t.package_name packageName,
+         t.module_name moduleName, t.business_name businessName, t.function_name functionName, t.function_author functionAuthor, t.options options, t.remark remark
+		FROM gen_table t
+		where t.table_name = #{tableName}
+    </select>
 </mapper>

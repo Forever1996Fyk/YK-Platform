@@ -21,4 +21,14 @@
         #{required}, #{insert}, #{edit}, #{list}, #{query}, #{queryType}, #{htmlType}, #{dictType}, #{sort})
     </insert>
 
+    <!-- 根据tableId获取数据库表列集合 -->
+    <select id="listGenTableColumnsByTableId" resultType="GenTableColumn">
+        SELECT c.id id, c.column_name columnName, c.column_comment columnComment, c.column_type columnType, c.java_type javaType,
+         c.java_field javaField, c.pk pk, c.increment increment, c.required required,c.is_insert insert, c.edit edit, c.list list,
+         c.query query, c.query_type queryType, c.html_type htmlType, c.dict_type dictType, c.sort sort
+		FROM gen_table_column c
+		where c.table_id = #{tableId}
+		order by c.sort
+    </select>
+
 </mapper>

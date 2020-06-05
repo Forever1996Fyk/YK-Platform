@@ -44,4 +44,11 @@ public interface GenTableMapper {
      * @date 2020/6/4 20:59
      */
     int insertGenTable(GenTable table);
+
+    /**
+     * 根据tableName获取数据库表信息
+     * @param tableName
+     * @return
+     */
+    GenTable getGenTableByName(String tableName);
 }

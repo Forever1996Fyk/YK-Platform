@@ -7,10 +7,12 @@ import com.yk.generator.model.pojo.GenTable;
 import com.yk.generator.model.query.GenTableQuery;
 import com.yk.generator.service.GenCodeService;
 import com.yk.generator.service.GenTableService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -76,7 +78,30 @@ public class GenController {
      * @param response
      */
     @PostMapping("/genCode/{tableName}")
-    public void genCode(@PathVariable("tableName") String tableName, HttpServletResponse response) {
+    public void genCode(@PathVariable("tableName") String tableName, HttpServletResponse response) throws IOException {
+        byte[] data = genTableService.generatorCode(tableName);
+        genCode(response, data);
 
+    }
+
+    /**
+     * 批量生成代码
+     * @param tableNames
+     * @param response
+     */
+    @PostMapping("/batchGenCode/{tableNames}")
+    public void batchGenCode(@PathVariable("tableNames") String tableNames, HttpServletResponse response) throws IOException {
+        String[] tableNameArr = Convert.toStrArray(tableNames);
+        byte[] data = genTableService.generatorCode(tableNameArr);
+        genCode(response, data);
+
+    }
+
+    private void genCode(HttpServletResponse response, byte[] data) throws IOException {
+        response.reset();
+        response.setHeader("Content-Disposition", "attachment; filename=\"yk-platform.zip\"");
+        response.addHeader("Content-Length", "" + data.length);
+        response.setContentType("application/octet-stream; charset=UTF-8");
+        IOUtils.write(data, response.getOutputStream());
     }
 }

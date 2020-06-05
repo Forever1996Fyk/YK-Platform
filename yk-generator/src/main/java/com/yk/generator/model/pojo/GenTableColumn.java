@@ -88,6 +88,10 @@ public class GenTableColumn extends BaseEntity {
      */
     private Integer sort;
 
+    /**
+     * 判断是否是主键
+     * @return
+     */
     public boolean checkPk() {
         return checkPk(this.pk);
     }
@@ -96,4 +100,31 @@ public class GenTableColumn extends BaseEntity {
         return StringUtils.equals("1", pk);
     }
 
+    /**
+     * 判断是否是通用列
+     * @return
+     */
+    public boolean commonColumn() {
+        return commonColumn(this.javaField);
+    }
+
+    public boolean commonColumn(String javaField) {
+        return StringUtils.equalsAnyIgnoreCase(javaField,
+                "createUserId", "createTime", "updateUserId", "updateTime", "remark",
+                //TreeEntity
+                "parentName", "parentId", "orderNum", "ancestors");
+    }
+
+    /**
+     * 判断是否是集合
+     * @return
+     */
+    public boolean checkList() {
+        return checkList(this.list);
+    }
+
+    public boolean checkList(String list)
+    {
+        return list != null && StringUtils.equals("1", list);
+    }
 }

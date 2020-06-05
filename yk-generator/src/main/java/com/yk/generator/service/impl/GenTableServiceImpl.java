@@ -9,13 +9,16 @@ import com.yk.generator.model.pojo.GenTableColumn;
 import com.yk.generator.model.query.GenTableQuery;
 import com.yk.generator.service.GenTableService;
 import com.yk.generator.util.GenUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @program: YK-Platform
@@ -80,5 +83,29 @@ public class GenTableServiceImpl implements GenTableService {
                 logger.error("表名[{}] 导入失败: [{}]", table.getTableName(), e.getMessage());
             }
         });
+    }
+
+    @Override
+    public byte[] generatorCode(String tableName) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ZipOutputStream zip = new ZipOutputStream(outputStream);
+        GenTable table = genTableMapper.getGenTableByName(tableName);
+        List<GenTableColumn> columns = genTableColumnMapper.listGenTableColumnsByTableId(table.getId());
+        GenUtils.generatorCode(table, columns, zip);
+        IOUtils.closeQuietly(zip);
+        return outputStream.toByteArray();
+    }
+
+    @Override
+    public byte[] generatorCode(String[] tableNameArr) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ZipOutputStream zip = new ZipOutputStream(outputStream);
+        for (String tableName : tableNameArr) {
+            GenTable table = genTableMapper.getGenTableByName(tableName);
+            List<GenTableColumn> columns = genTableColumnMapper.listGenTableColumnsByTableId(table.getId());
+            GenUtils.generatorCode(table, columns, zip);
+        }
+        IOUtils.closeQuietly(zip);
+        return outputStream.toByteArray();
     }
 }

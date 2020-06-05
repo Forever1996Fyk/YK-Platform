@@ -63,4 +63,18 @@ public interface GenTableService {
      * @date 2020/6/4 20:42
      */
     void importGenTable(List<GenTable> tablesList);
+
+    /**
+     * 生成代码
+     * @param tableName
+     * @return
+     */
+    byte[] generatorCode(String tableName);
+
+    /**
+     * 批量生成代码
+     * @param tableNameArr
+     * @return
+     */
+    byte[] generatorCode(String[] tableNameArr);
 }

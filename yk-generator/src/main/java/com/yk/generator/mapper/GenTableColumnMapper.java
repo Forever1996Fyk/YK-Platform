@@ -29,4 +29,11 @@ public interface GenTableColumnMapper {
      * @date 2020/6/4 21:32
      */
     int insertGenTableColumn(GenTableColumn genTableColumn);
+
+    /**
+     * 根据tableId获取数据库表列集合
+     * @param tableId
+     * @return
+     */
+    List<GenTableColumn> listGenTableColumnsByTableId(String tableId);
 }

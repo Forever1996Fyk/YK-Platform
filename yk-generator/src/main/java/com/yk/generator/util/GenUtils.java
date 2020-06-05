@@ -1,13 +1,25 @@
 package com.yk.generator.util;
 
+import com.yk.common.constant.ComConstants;
 import com.yk.common.constant.GenConstants;
 import com.yk.common.util.StringUtils;
 import com.yk.generator.config.GenConfig;
 import com.yk.generator.model.pojo.GenTable;
 import com.yk.generator.model.pojo.GenTableColumn;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RegExUtils;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @ClassName GenUtils
@@ -16,6 +28,7 @@ import java.util.Arrays;
  * @Date 2020/6/4 20:45
  **/
 public class GenUtils {
+    private static final Logger logger = LoggerFactory.getLogger(GenUtils.class);
 
     /**
      * 初始化表信息
@@ -109,6 +122,51 @@ public class GenUtils {
         else if (StringUtils.endsWithIgnoreCase(columnName, "type")
                 || StringUtils.endsWithIgnoreCase(columnName, "sex")) {
             column.setHtmlType(GenConstants.HTML_SELECT);
+        }
+    }
+
+    /**
+     * 生成代码
+     * @param table
+     * @param columns
+     * @param zip
+     */
+    public static void generatorCode(GenTable table, List<GenTableColumn> columns, ZipOutputStream zip) {
+        setPkColumn(table, columns);
+        VelocityInitializer.init();
+        VelocityContext context = VelocityUtils.prepareContext(table);
+
+        //获取模板列表
+        List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
+        templates.forEach(template -> {
+            StringWriter sw = new StringWriter();
+            Template tpl = Velocity.getTemplate(template, ComConstants.UTF8);
+            tpl.merge(context, sw);
+            try {
+                //添加到zip
+                zip.putNextEntry(new ZipEntry(VelocityUtils.getFileName(template, table)));
+                IOUtils.write(sw.toString(), zip, ComConstants.UTF8);
+                IOUtils.closeQuietly(sw);
+                zip.flush();
+                zip.closeEntry();
+            } catch (IOException e) {
+                logger.error("渲染模板失败，表名：[{}], 错误信息: [{}]", table.getTableName(), e);
+            }
+        });
+
+    }
+
+    /**
+     * 设置主键列信息
+     * @param table
+     * @param columns
+     */
+    private static void setPkColumn(GenTable table, List<GenTableColumn> columns) {
+        GenTableColumn genTableColumn = columns.stream().filter(column -> column.checkPk()).findAny().orElse(null);
+        table.setPkColumn(genTableColumn);
+
+        if(StringUtils.isBlank(table.getPkColumn())) {
+            table.setPkColumn(columns.get(0));
         }
     }
 
