@@ -1,7 +1,10 @@
 package com.yk.generator.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
+import com.yk.common.constant.GenConstants;
 import com.yk.common.util.AppUtils;
+import com.yk.common.util.StringUtils;
 import com.yk.generator.mapper.GenTableColumnMapper;
 import com.yk.generator.mapper.GenTableMapper;
 import com.yk.generator.model.pojo.GenTable;
@@ -91,7 +94,8 @@ public class GenTableServiceImpl implements GenTableService {
         ZipOutputStream zip = new ZipOutputStream(outputStream);
         GenTable table = genTableMapper.getGenTableByName(tableName);
         List<GenTableColumn> columns = genTableColumnMapper.listGenTableColumnsByTableId(table.getId());
-        GenUtils.generatorCode(table, columns, zip);
+        table.setColumns(columns);
+        GenUtils.generatorCode(table, zip);
         IOUtils.closeQuietly(zip);
         return outputStream.toByteArray();
     }
@@ -103,9 +107,36 @@ public class GenTableServiceImpl implements GenTableService {
         for (String tableName : tableNameArr) {
             GenTable table = genTableMapper.getGenTableByName(tableName);
             List<GenTableColumn> columns = genTableColumnMapper.listGenTableColumnsByTableId(table.getId());
-            GenUtils.generatorCode(table, columns, zip);
+            table.setColumns(columns);
+            GenUtils.generatorCode(table, zip);
         }
         IOUtils.closeQuietly(zip);
         return outputStream.toByteArray();
+    }
+
+    @Override
+    public GenTable getGenTableById(String tableId) {
+        GenTable genTable = genTableMapper.getGenTableById(tableId);
+        List<GenTableColumn> genTableColumns = genTableColumnMapper.listGenTableColumnsByTableId(tableId);
+        genTable.setColumns(genTableColumns);
+        setTableFromOptions(genTable);
+        return genTable;
+    }
+
+    /**
+     * 设置代码生成其他选项值
+     *
+     * @param genTable 设置后的生成对象
+     */
+    public void setTableFromOptions(GenTable genTable) {
+        JSONObject paramsObj = JSONObject.parseObject(genTable.getOptions());
+        if (StringUtils.isNotNull(paramsObj)) {
+            String treeCode = paramsObj.getString(GenConstants.TREE_CODE);
+            String treeParentCode = paramsObj.getString(GenConstants.TREE_PARENT_CODE);
+            String treeName = paramsObj.getString(GenConstants.TREE_NAME);
+            genTable.setTreeCode(treeCode);
+            genTable.setTreeParentCode(treeParentCode);
+            genTable.setTreeName(treeName);
+        }
     }
 }

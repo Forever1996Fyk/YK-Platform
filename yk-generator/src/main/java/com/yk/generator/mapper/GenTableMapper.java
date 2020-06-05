@@ -51,4 +51,11 @@ public interface GenTableMapper {
      * @return
      */
     GenTable getGenTableByName(String tableName);
+
+    /**
+     * 根据表id获取数据表
+     * @param tableId
+     * @return
+     */
+    GenTable getGenTableById(String tableId);
 }

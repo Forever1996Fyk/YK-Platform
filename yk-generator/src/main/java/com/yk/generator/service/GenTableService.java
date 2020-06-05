@@ -77,4 +77,11 @@ public interface GenTableService {
      * @return
      */
     byte[] generatorCode(String[] tableNameArr);
+
+    /**
+     * 根据表id获取数据表
+     * @param tableId
+     * @return
+     */
+    GenTable getGenTableById(String tableId);
 }

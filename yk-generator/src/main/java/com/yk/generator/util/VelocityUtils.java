@@ -2,6 +2,7 @@ package com.yk.generator.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.yk.common.constant.GenConstants;
 import com.yk.common.util.StringUtils;
 import com.yk.common.util.TimeUtils;
@@ -85,6 +86,7 @@ public class VelocityUtils {
         templates.add("vm/java/service.java.vm");
         templates.add("vm/java/serviceImpl.java.vm");
         templates.add("vm/java/controller.java.vm");
+        templates.add("vm/java/pageController.java.vm");
         templates.add("vm/xml/mapper.xml.vm");
         if (GenConstants.TPL_CRUD.equals(tplCategory)) {
             templates.add("vm/html/list.html.vm");
@@ -122,15 +124,17 @@ public class VelocityUtils {
         if (template.contains("pojo.java.vm")) {
             fileName = StringUtils.format("{}/model/pojo/{}.java", javaPath, className);
         } else if (template.contains("query.java.vm")) {
-            fileName = StringUtils.format("{}/model/query/{}.java", javaPath, className);
+            fileName = StringUtils.format("{}/model/query/{}Query.java", javaPath, className);
         } else if (template.contains("mapper.java.vm")) {
             fileName = StringUtils.format("{}/mapper/{}Mapper.java", javaPath, className);
         } else if (template.contains("service.java.vm")) {
-            fileName = StringUtils.format("{}/service/I{}Service.java", javaPath, className);
+            fileName = StringUtils.format("{}/service/{}Service.java", javaPath, className);
         } else if (template.contains("serviceImpl.java.vm")) {
             fileName = StringUtils.format("{}/service/impl/{}ServiceImpl.java", javaPath, className);
         } else if (template.contains("controller.java.vm")) {
             fileName = StringUtils.format("{}/controller/{}Controller.java", javaPath, className);
+        } else if (template.contains("pageController.java.vm")) {
+            fileName = StringUtils.format("{}/controller/page/{}PageController.java", javaPath, className);
         } else if (template.contains("mapper.xml.vm")) {
             fileName = StringUtils.format("{}/{}Mapper.xml", mybatisPath, className);
         } else if (template.contains("list.html.vm")) {
@@ -168,7 +172,7 @@ public class VelocityUtils {
      * @return 返回需要导入的包列表
      */
     private static HashSet<String> getImportList(List<GenTableColumn> columns) {
-        HashSet<String> importList = new HashSet<String>();
+        HashSet<String> importList = Sets.newHashSet();
         for (GenTableColumn column : columns) {
             if (!column.commonColumn() && GenConstants.TYPE_DATE.equals(column.getJavaType())) {
                 importList.add("java.util.Date");

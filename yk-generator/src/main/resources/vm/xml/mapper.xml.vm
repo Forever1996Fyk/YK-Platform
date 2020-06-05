@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="${packageName}.mapper.${ClassName}Mapper">
+    <!-- 新增系统用户 -->
+    <insert id="insert${ClassName}" parameterType="${ClassName}">
+        insert into ${tableName}(
+        <include refid="${className}_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id}
+#foreach($column in $columns)
+#if($column.columnName != $pkColumn.columnName || !$pkColumn.increment)
+            , #{$column.javaField}
+#end
+#end
+        </trim>
+
+    </insert>
+
+    <!-- 批量新增用户系统 -->
+    <insert id="insert${ClassName}Batch">
+        insert into ${tableName}(
+        <include refid="${className}_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        <trim prefix="values">
+            <foreach collection="list" item="item" index="index" separator=",">
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id}
+#foreach($column in $columns)
+#if($column.columnName != $pkColumn.columnName || !$pkColumn.increment)
+                , #{item.$column.javaField}
+#end
+#end
+                </trim>
+            </foreach>
+        </trim>
+
+
+    </insert>
+
+    <!--  更新系统用户  -->
+    <update id="update${ClassName}" parameterType="${ClassName}">
+        update ${tableName}
+        <set>
+#foreach($column in $columns)
+#if($column.columnName != $pkColumn.columnName)
+    <if test="$column.javaField != null #if($column.javaType == 'String' ) and $column.javaField != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end">$column.columnName = #{$column.javaField},</if>
+#end
+#end
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除系统用户 -->
+    <update id="delete${ClassName}ById">
+        update ${tableName} set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除系统用户 -->
+    <update id="deleteBatch${ClassName}ByIds" parameterType="List">
+        update ${tableName} set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除系统用户 -->
+    <delete id="delete${ClassName}RealById">
+        delete from ${tableName} where id = #{id}
+    </delete>
+
+    <!-- 批量真删除系统用户 -->
+    <delete id="deleteBatch${ClassName}RealByIds">
+        delete from ${tableName} where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统用户 -->
+    <select id="get${ClassName}ById" resultType="${ClassName}">
+        select
+        <include refid="${className}_select_cond"/>
+        from ${tableName} a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询系统用户集合 -->
+    <select id="list${ClassName}s" parameterType="${ClassName}Query" resultType="${ClassName}">
+        select
+        <include refid="${className}_select_cond"/>
+        from ${tableName} a
+        <where>
+#foreach($column in $columns)
+#set($queryType=$column.queryType)
+#set($javaField=$column.javaField)
+#set($javaType=$column.javaType)
+#set($columnName=$column.columnName)
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#if($column.query)
+#if($column.queryType == "EQ")
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName = #{$javaField}</if>
+#elseif($queryType == "NE")
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName != #{$javaField}</if>
+#elseif($queryType == "GT")
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName &gt; #{$javaField}</if>
+#elseif($queryType == "GTE")
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName &gt;= #{$javaField}</if>
+#elseif($queryType == "LT")
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName &lt; #{$javaField}</if>
+#elseif($queryType == "LTE")
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName &lt;= #{$javaField}</if>
+#elseif($queryType == "LIKE")
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName like concat('%', #{$javaField}, '%')</if>
+#elseif($queryType == "BETWEEN")
+    <if test="params.begin$AttrName != null and params.begin$AttrName != '' and params.end$AttrName != null and params.end$AttrName != ''"> and $columnName between #{params.begin$AttrName} and #{params.end$AttrName}</if>
+#else
+    <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != '' and $column.javaField != 'null' and $column.javaField != 'undefined' #end"> and a.$columnName = #{$javaField}</if>
+#end
+#end
+#end
+            AND a.status = 1
+        </where>
+    </select>
+
+    <sql id="${className}_select_cond">
+        a.id id
+#foreach ($column in $columns)
+#if($column.columnName != $pkColumn.columnName || !$pkColumn.increment)
+    , a.${column.columnName} ${column.javaField}
+#end
+#end
+    </sql>
+
+    <sql id="${className}_add_key">
+        id
+#foreach($column in $columns)
+#if($column.columnName != $pkColumn.columnName || !$pkColumn.increment)
+        , $column.columnName
+#end
+#end
+    </sql>
+</mapper>

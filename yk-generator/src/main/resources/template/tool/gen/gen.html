@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<th:block th:include="include :: header('代码生成列表')" />
 </head>
@@ -32,16 +32,13 @@
 			</div>
 			
 			<div class="btn-group-sm" id="toolbar" role="group">
-			     <a class="btn btn-success multiple disabled" onclick="javascript:batchGenCode()" shiro:hasPermission="tool:gen:code">
+			     <a class="btn btn-success" onclick="javascript:batchGenCode()" >
 			        <i class="fa fa-download"></i> 生成
 			    </a>
 				<a class="btn btn-info" onclick="importTable()">
 			        <i class="fa fa-upload"></i> 导入
 			    </a>
-			    <a class="btn btn-primary single disabled" onclick="$.operate.editTab()" shiro:hasPermission="tool:gen:edit">
-		            <i class="fa fa-edit"></i> 修改
-		        </a>
-			    <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="tool:gen:remove">
+			    <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" >
 		            <i class="fa fa-remove"></i> 删除
 		        </a>
 		    </div>
@@ -54,11 +51,12 @@
 	<th:block th:include="include :: footer" />
 	<script th:inline="javascript">
 		var prefix = ctx + "api/gen";
+		var pagePrefix = ctx + "tool/gen";
 
 		$(function() {
 		    var options = {
 		        url: prefix + "/listGenTables",
-		        updateUrl: prefix + "/edit/{id}",
+		        updateUrl: pagePrefix + "/edit/{id}",
 		        removeUrl: prefix + "/remove",
 		        sortName: "createTime",
 		        sortOrder: "desc",
@@ -167,7 +165,7 @@
 		        return;
 		    }
 		    $.modal.confirm("确认要生成选中的" + rows.length + "条数据吗?", function() {
-		    	location.href = prefix + "/batchGenCode?tables=" + rows;
+		    	location.href = prefix + "/batchGenCode/" + rows;
 		        layer.msg('执行成功,正在生成代码请稍后…', { icon: 1 });
 		    });
 		}

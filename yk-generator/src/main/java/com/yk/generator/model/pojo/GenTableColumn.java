@@ -58,7 +58,7 @@ public class GenTableColumn extends BaseEntity {
     /**
      * 是否为插入字段（1是）
      */
-    private String insert;
+    private String isInsert;
     /**
      * 是否编辑字段（1是）
      */

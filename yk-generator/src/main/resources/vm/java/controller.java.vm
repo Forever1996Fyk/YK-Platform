@@ -1,0 +1,118 @@
+package ${basePackage}.web.controller.${moduleName};
+
+import com.yk.common.dto.Result;
+import ${packageName}.model.pojo.${ClassName};
+import ${packageName}.model.query.${ClassName}Query;
+import ${packageName}.service.${ClassName}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+#if($table.crud)
+import com.yk.common.dto.DataTablesViewPage;
+#elseif($table.tree)
+import com.yk.common.utils.StringUtils;
+import com.yk.common.entity.Ztree;
+#end
+
+/**
+ * @program: YK-Platform
+ * @description: ${functionName}controller
+ * @author: ${author}
+ * @create: ${datetime}
+ **/
+@RestController
+@RequestMapping("/api/${moduleName}/${businessName}")
+public class ${ClassName}Controller {
+    @Autowired
+    private ${ClassName}Service ${className}Service;
+
+#if($table.crud)
+    /**
+     * 获取${functionName}集合
+     * @param start
+     * @param pageSize
+     * @param ${className}Query
+     * @return
+     */
+    @GetMapping("/list")
+    public Result list${ClassName}s(@RequestParam(value = "start", defaultValue = "0") int start,
+                               @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
+                               ${ClassName}Query ${className}Query) {
+        List<${ClassName}> list = ${className}Service.list${ClassName}s(start, pageSize, ${className}Query);
+        return Result.success("获取成功", new DataTablesViewPage<>(list));
+    }
+#elseif($table.tree)
+    /**
+     * 查询${functionName}树列表
+     */
+    @GetMapping("/list")
+    public List<${ClassName}> list(${ClassName}Query ${className}Query) {
+        List<${ClassName}> list = ${className}Service.list${ClassName}s(${className}Query);
+        return list;
+    }
+#end
+
+    /**
+     * 新增${functionName}
+     * @param ${className}
+     * @return
+     */
+    @PostMapping("/add${ClassName}")
+    public Result add${ClassName}(@RequestBody ${ClassName} ${className}) {
+        return Result.response(${className}Service.insert${ClassName}(${className}));
+    }
+
+    /**
+     * 修改${functionName}
+     * @param ${className}
+     * @return
+     */
+    @PutMapping("/edit${ClassName}")
+    public Result edit${ClassName}(@RequestBody ${ClassName} ${className}) {
+        return Result.response(${className}Service.update${ClassName}(${className}));
+    }
+#if($table.crud)
+    /**
+     * 根据id删除${functionName}
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/delete${ClassName}ById/{id}")
+    public Result delete${ClassName}ById(@PathVariable("id") String id) {
+        return Result.response(${className}Service.delete${ClassName}ById(id));
+    }
+
+    /**
+     * 批量删除${functionName}
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/deleteBatch${ClassName}ByIds/{ids}")
+    public Result deleteBatch${ClassName}ByIds(@PathVariable("ids") List<String> ids) {
+        return Result.response(${className}Service.deleteBatch${ClassName}ByIds(ids));
+    }
+#elseif($table.tree)
+    /**
+     * 删除
+     */
+    @DeleteMapping("/deleteTreeNode/{${pkColumn.javaField}}")
+    @ResponseBody
+    public Result deleteTreeNode(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}) {
+        return Result.response(${className}Service.delete${ClassName}ById(${pkColumn.javaField}));
+    }
+#end
+
+#if($table.tree)
+
+    /**
+     * 加载${functionName}树列表
+     */
+    @GetMapping("/treeData")
+    @ResponseBody
+    public List<Ztree> treeData() {
+        List<Ztree> ztrees = ${className}Service.list${ClassName}Tree();
+        return ztrees;
+    }
+#end
+}

@@ -1,0 +1,13 @@
+package ${packageName}.model.query;
+
+import ${packageName}.model.pojo.${ClassName};
+
+/**
+ * ${functionName}查询对象 ${tableName}
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+public class ${ClassName}Query extends ${ClassName} {
+
+}

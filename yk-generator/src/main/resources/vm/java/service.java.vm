@@ -1,0 +1,96 @@
+package ${packageName}.service;
+
+import java.util.List;
+
+import ${packageName}.model.pojo.${ClassName};
+import ${packageName}.model.query.${ClassName}Query;
+#if($table.tree)
+import com.yk.common.entity.Ztree;
+#end
+
+/**
+ * ${functionName}Service接口
+ *
+ * @author ${author}
+ * @create ${datetime}
+ */
+public interface ${ClassName}Service {
+    /**
+     * 新增${functionName}
+     * @param ${className} ${functionName}
+     * @return
+     */
+    int insert${ClassName}(${ClassName} ${className});
+
+    /**
+     * 批量新增${functionName}
+     * @param list
+     */
+    int insert${ClassName}Batch(List<${ClassName}> list);
+
+    /**
+     * 更新${functionName}
+     * @param ${className}
+     * @return
+     */
+    int update${ClassName}(${ClassName} ${className});
+
+    /**
+     * 根据id删除${functionName}
+     * @param id
+     * @return
+     */
+    int delete${ClassName}ById(String id);
+
+    /**
+     * 批量删除${functionName}
+     * @param ids
+     * @return
+     */
+    int deleteBatch${ClassName}ByIds(List<String> ids);
+
+    /**
+     * 根据id真删除${functionName}
+     * @param id
+     * @return
+     */
+    int delete${ClassName}RealById(String id);
+
+    /**
+     * 批量真删除${functionName}
+     * @param ids
+     * @return
+     */
+    int deleteBatch${ClassName}RealByIds(List<String> ids);
+
+    /**
+     * 根据id获取${functionName}
+     * @param id
+     * @return
+     */
+    ${ClassName} get${ClassName}ById(String id);
+
+    /**
+     * 查询${functionName}集合
+     * @param ${className}Query
+     * @return
+     */
+    List<${ClassName}> list${ClassName}s(${ClassName}Query ${className}Query);
+
+    /**
+     * 查询${functionName}集合(分页)
+     * @param ${className}Query
+     * @return
+     */
+    List<${ClassName}> list${ClassName}s(int start, int pageSize, ${ClassName}Query ${className}Query);
+
+#if($table.tree)
+
+    /**
+     * 查询${functionName}树列表
+     *
+     * @return 所有${functionName}信息
+     */
+     List<Ztree> list${ClassName}Tree();
+#end
+}

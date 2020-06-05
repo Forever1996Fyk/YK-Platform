@@ -1,0 +1,83 @@
+package ${basePackage}.web.controller.system.page;
+
+import ${packageName}.service.${ClassName}Service;
+import com.yk.common.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @program: YK-Platform
+ * @description: ${functionName}页面跳转controller
+ * @author: YuKai Fan
+ * @create: 2020-06-02 21:54
+ **/
+@Controller
+@RequestMapping("/${moduleName}/${businessName}")
+public class ${ClassName}PageController {
+    private String prefix = "${moduleName}/${businessName}";
+    @Autowired
+    private ${ClassName}Service ${className}Service;
+
+    /**
+     * 跳转${functionName}首页
+     * @return
+     */
+    @GetMapping()
+    public String user() {
+        return prefix + "/${businessName}";
+    }
+
+#if($table.crud)
+    /**
+     * 跳转新增${functionName}页面
+     * @return
+     */
+    @GetMapping("/add")
+    public String add() {
+        return prefix + "/add";
+    }
+#elseif($table.tree)
+    /**
+     * 新增${functionName}
+     */
+    @GetMapping(value = { "/add/{${pkColumn.javaField}}", "/add/" })
+    public String add(@PathVariable(value = "${pkColumn.javaField}", required = false) Long ${pkColumn.javaField}, Model model) {
+        if (StringUtils.isNotBlank(${pkColumn.javaField})) {
+            model.addAttribute("${className}", ${className}Service.get${ClassName}ById(${pkColumn.javaField}));
+        }
+        return prefix + "/add";
+    }
+#end
+
+    /**
+     * 跳转修改${functionName}页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") String id, Model model) {
+        model.addAttribute("${className}", ${className}Service.get${ClassName}ById(id));
+        return prefix + "/edit";
+    }
+
+#if($table.tree)
+
+    /**
+     * 选择${functionName}树
+     */
+#set($BusinessName=$businessName.substring(0,1).toUpperCase() + ${businessName.substring(1)})
+    @GetMapping(value = { "/select${BusinessName}Tree/{${pkColumn.javaField}}", "/select${BusinessName}Tree/" })
+    public String select${BusinessName}Tree(@PathVariable(value = "${pkColumn.javaField}", required = false) String ${pkColumn.javaField}, Model model) {
+        if (StringUtils.isNotBlank(${pkColumn.javaField})) {
+            mmap.put("${className}", ${className}Service.get${ClassName}ById(${pkColumn.javaField}));
+        }
+        return prefix + "/tree";
+    }
+
+#end
+}

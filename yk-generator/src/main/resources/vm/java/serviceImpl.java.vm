@@ -1,0 +1,115 @@
+package ${packageName}.service.impl;
+
+import com.github.pagehelper.PageHelper;
+import com.yk.common.util.AppUtils;
+import com.yk.common.util.TimeUtils;
+import ${packageName}.mapper.${ClassName}Mapper;
+import ${packageName}.model.pojo.${ClassName};
+import ${packageName}.model.query.${ClassName}Query;
+import ${packageName}.service.${ClassName}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+#if($table.tree)
+import com.yk.common.entity.Ztree;
+import com.google.common.collect.Lists;
+#end
+
+/**
+ * @program: YK-Platform
+ * @description: ${functionName}service实现类
+ * @author: ${author}
+ * @create: ${datetime}
+ **/
+@Service
+@Transactional
+public class ${ClassName}ServiceImpl implements ${ClassName}Service {
+    @Autowired
+    private ${ClassName}Mapper ${className}Mapper;
+
+    @Override
+    public int insert${ClassName}(${ClassName} ${className}) {
+        ${className}.setId(AppUtils.randomId());
+        ${className}.setStatus(1);
+        ${className}.setCreateTime(TimeUtils.getCurrentDatetime());
+        ${className}.setUpdateTime(TimeUtils.getCurrentDatetime());
+        return ${className}Mapper.insert${ClassName}(${className});
+    }
+
+    @Override
+    public int insert${ClassName}Batch(List<${ClassName}> list) {
+        return ${className}Mapper.insert${ClassName}Batch(list);
+    }
+
+    @Override
+    public int update${ClassName}(${ClassName} ${className}) {
+        ${className}.setUpdateTime(TimeUtils.getCurrentDatetime());
+        return ${className}Mapper.update${ClassName}(${className});
+    }
+
+    @Override
+    public int delete${ClassName}ById(String id) {
+        return ${className}Mapper.delete${ClassName}ById(id);
+    }
+
+    @Override
+    public int deleteBatch${ClassName}ByIds(List<String> ids) {
+        return ${className}Mapper.deleteBatch${ClassName}ByIds(ids);
+    }
+
+    @Override
+    public int delete${ClassName}RealById(String id) {
+        return ${className}Mapper.delete${ClassName}RealById(id);
+    }
+
+    @Override
+    public int deleteBatch${ClassName}RealByIds(List<String> list) {
+        return ${className}Mapper.deleteBatch${ClassName}RealByIds(list);
+    }
+
+    @Override
+    public ${ClassName} get${ClassName}ById(String id) {
+        return ${className}Mapper.get${ClassName}ById(id);
+    }
+
+    @Override
+    public List<${ClassName}> list${ClassName}s(${ClassName}Query ${className}Query) {
+        return ${className}Mapper.list${ClassName}s(${className}Query);
+    }
+
+    @Override
+    public List<${ClassName}> list${ClassName}s(int start, int pageSize, ${ClassName}Query ${className}Query) {
+        PageHelper.startPage(start, pageSize);
+        return this.list${ClassName}s(${className}Query);
+    }
+#if($table.tree)
+
+    /**
+     * 查询${functionName}树列表
+     *
+     * @return 所有${functionName}信息
+     */
+    @Override
+    public List<Ztree> list${ClassName}Tree() {
+        List<${ClassName}> ${className}List = ${className}Mapper.list${ClassName}s(new ${ClassName}());
+        List<Ztree> ztrees = Lists.newArrayList();
+        for (${ClassName} ${className} : ${className}List)
+        {
+            Ztree ztree = new Ztree();
+            #set($TreeCode=$treeCode.substring(0,1).toUpperCase() + ${treeCode.substring(1)})
+            #set($TreeParentCode=$treeParentCode.substring(0,1).toUpperCase() + ${treeParentCode.substring(1)})
+            #set($TreeName=$treeName.substring(0,1).toUpperCase() + ${treeName.substring(1)})
+            ztree.setId(${className}.get${TreeCode}());
+            ztree.setpId(${className}.get${TreeParentCode}());
+            ztree.setName(${className}.get${TreeName}());
+            ztree.setTitle(${className}.get${TreeName}());
+            ztrees.add(ztree);
+        }
+        return ztrees;
+    }
+#end
+    
+}

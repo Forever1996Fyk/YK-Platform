@@ -42,7 +42,7 @@ public class GenUtils {
         genTable.setClassName(convertClassName(genTable.getTableName()));
         genTable.setPackageName(GenConfig.getPackageName());
         genTable.setModuleName(getModuleName(GenConfig.getPackageName()));
-        genTable.setBusinessName(getBusinessName(GenConfig.getPackageName()));
+        genTable.setBusinessName(getBusinessName(genTable.getTableName()));
         genTable.setFunctionName(replaceText(genTable.getTableComment()));
         genTable.setFunctionAuthor(GenConfig.getAuthor());
     }
@@ -96,7 +96,7 @@ public class GenUtils {
         }
 
         //插入字段(默认所有字段都需要插入)
-        column.setInsert(GenConstants.REQUIRE);
+        column.setIsInsert(GenConstants.REQUIRE);
         //编辑字段
         if (!arraysContains(GenConstants.COLUMN_NAME_NOT_EDIT, columnName) && !column.checkPk()) {
             column.setEdit(GenConstants.REQUIRE);
@@ -128,11 +128,10 @@ public class GenUtils {
     /**
      * 生成代码
      * @param table
-     * @param columns
      * @param zip
      */
-    public static void generatorCode(GenTable table, List<GenTableColumn> columns, ZipOutputStream zip) {
-        setPkColumn(table, columns);
+    public static void generatorCode(GenTable table, ZipOutputStream zip) {
+        setPkColumn(table, table.getColumns());
         VelocityInitializer.init();
         VelocityContext context = VelocityUtils.prepareContext(table);
 
