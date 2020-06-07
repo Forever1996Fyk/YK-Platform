@@ -71,4 +71,23 @@
 		FROM gen_table t
 		where t.id = #{tableId}
     </select>
+
+    <!-- 更新数据表 -->
+    <update id="updateGenTable">
+        update gen_table
+        <set>
+            <if test="tableName != null">table_name = #{tableName},</if>
+            <if test="tableComment != null and tableComment != ''">table_comment = #{tableComment},</if>
+            <if test="className != null and className != ''">class_name = #{className},</if>
+            <if test="functionAuthor != null and functionAuthor != ''">function_author = #{functionAuthor},</if>
+            <if test="tplCategory != null and tplCategory != ''">tpl_category = #{tplCategory},</if>
+            <if test="packageName != null and packageName != ''">package_name = #{packageName},</if>
+            <if test="moduleName != null and moduleName != ''">module_name = #{moduleName},</if>
+            <if test="businessName != null and businessName != ''">business_name = #{businessName},</if>
+            <if test="functionName != null and functionName != ''">function_name = #{functionName},</if>
+            <if test="options != null and options != ''">options = #{options},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

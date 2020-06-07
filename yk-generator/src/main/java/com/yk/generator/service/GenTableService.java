@@ -4,6 +4,7 @@ import com.yk.generator.model.pojo.GenTable;
 import com.yk.generator.model.query.GenTableQuery;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: YK-Platform
@@ -84,4 +85,23 @@ public interface GenTableService {
      * @return
      */
     GenTable getGenTableById(String tableId);
+
+    /**
+     * 验证修改数据表信息
+     * @param genTable
+     */
+    void validateEdit(GenTable genTable);
+
+    /**
+     * 更新数据库表信息
+     * @param genTable
+     */
+    void updateGenTable(GenTable genTable);
+
+    /**
+     * 预览代码
+     * @param tableId
+     * @return
+     */
+    Map<String, Object> previewCode(String tableId);
 }

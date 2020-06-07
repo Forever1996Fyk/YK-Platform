@@ -1,7 +1,9 @@
 package com.yk.system.service;
 
+import com.yk.common.entity.Ztree;
 import com.yk.system.model.pojo.SysMenu;
 import com.yk.system.model.pojo.SysUser;
+import com.yk.system.model.query.SysMenuQuery;
 
 import java.util.List;
 
@@ -73,4 +75,35 @@ public interface SysMenuService {
      * @return
      */
     List<SysMenu> listSysMenusByUser(SysUser sysUser);
+
+    /**
+     * 获取菜单集合(分页)
+     * @param start
+     * @param pageSize
+     * @param sysMenuQuery
+     * @return
+     */
+    List<SysMenu> listSysMenus(int start, int pageSize, SysMenuQuery sysMenuQuery);
+
+    /**
+     * 获取菜单集合
+     * @param sysMenuQuery
+     * @param userId
+     * @return
+     */
+    List<SysMenu> listSysMenus(SysMenuQuery sysMenuQuery, String userId);
+
+    /**
+     * 获取菜单树数据
+     * @param userId
+     * @return
+     */
+    List<Ztree> menuTreeData(String userId);
+
+    /**
+     * 校验菜单名称
+     * @param menu
+     * @return
+     */
+    String checkMenuNameUnique(SysMenu menu);
 }

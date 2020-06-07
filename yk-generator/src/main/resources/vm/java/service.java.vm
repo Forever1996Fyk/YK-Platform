@@ -4,7 +4,7 @@ import java.util.List;
 
 import ${packageName}.model.pojo.${ClassName};
 import ${packageName}.model.query.${ClassName}Query;
-#if($table.tree)
+#if($table.tplCategory == 'tree')
 import com.yk.common.entity.Ztree;
 #end
 
@@ -84,7 +84,7 @@ public interface ${ClassName}Service {
      */
     List<${ClassName}> list${ClassName}s(int start, int pageSize, ${ClassName}Query ${className}Query);
 
-#if($table.tree)
+#if($table.tplCategory == 'tree')
 
     /**
      * 查询${functionName}树列表

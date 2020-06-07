@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-#if($table.tree)
+#if($table.tplCategory == 'tree')
 import com.yk.common.entity.Ztree;
 import com.google.common.collect.Lists;
 #end
@@ -85,7 +85,7 @@ public class ${ClassName}ServiceImpl implements ${ClassName}Service {
         PageHelper.startPage(start, pageSize);
         return this.list${ClassName}s(${className}Query);
     }
-#if($table.tree)
+#if($table.tplCategory == 'tree')
 
     /**
      * 查询${functionName}树列表

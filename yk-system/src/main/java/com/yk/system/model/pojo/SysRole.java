@@ -1,15 +1,15 @@
 package com.yk.system.model.pojo;
 
-import com.yk.common.entity.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import lombok.Data;
+import com.yk.common.entity.BaseEntity;
 
 /**
  * 系统角色对象 tb_sys_role
  * 
  * @author YuKai Fan
- * @create 2020-06-05 22:28:42
+ * @create 2020-06-06 22:42:30
  */
 @Data
 public class SysRole extends BaseEntity {

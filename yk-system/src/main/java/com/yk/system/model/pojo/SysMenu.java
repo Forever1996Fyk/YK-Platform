@@ -41,5 +41,7 @@ public class SysMenu extends BaseEntity {
     private String remark;
     //子菜单
     private List<SysMenu> children = Lists.newArrayList();
+    //父菜单名称
+    private String parentName;
 
 }

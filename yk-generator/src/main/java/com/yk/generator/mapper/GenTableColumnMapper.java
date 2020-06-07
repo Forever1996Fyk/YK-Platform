@@ -36,4 +36,10 @@ public interface GenTableColumnMapper {
      * @return
      */
     List<GenTableColumn> listGenTableColumnsByTableId(String tableId);
+
+    /**
+     * 更新数据库表列信息
+     * @param cenTableColumn
+     */
+    void updateGenTableColumn(GenTableColumn cenTableColumn);
 }

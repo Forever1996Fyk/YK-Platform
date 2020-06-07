@@ -9,7 +9,7 @@ import com.yk.system.model.query.SysRoleQuery;
  * 系统角色Service接口
  *
  * @author YuKai Fan
- * @create 2020-06-05 22:28:42
+ * @create 2020-06-06 22:42:30
  */
 public interface SysRoleService {
     /**
@@ -76,8 +76,6 @@ public interface SysRoleService {
 
     /**
      * 查询系统角色集合(分页)
-     * @param start
-     * @param pageSize
      * @param sysRoleQuery
      * @return
      */

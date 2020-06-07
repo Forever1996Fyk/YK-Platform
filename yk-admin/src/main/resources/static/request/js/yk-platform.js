@@ -545,7 +545,7 @@ var table = {
                 $.bttTable = $('#' + options.id).bootstrapTreeTable({
                 	code: options.code,                                 // 用于设置父子关系
         		    parentCode: options.parentCode,                     // 用于设置父子关系
-        	    	type: 'post',                                       // 请求方式（*）
+        	    	type: 'get',                                       // 请求方式（*）
         	        url: options.url,                                   // 请求后台的URL（*）
         	        data: options.data,                                 // 无url时用于渲染的数据
         	        ajaxParams: options.ajaxParams,                     // 请求数据的ajax的data属性
@@ -586,7 +586,7 @@ var table = {
             	if (typeof table.options.responseHandler == "function") {
             		table.options.responseHandler(res);
                 }
-            	if (res.code != undefined && res.code != 0) {
+            	if (res.code != undefined && res.code != 200) {
             		$.modal.alertWarning(res.msg);
             		return [];
                 } else {
@@ -1193,6 +1193,25 @@ var table = {
         	    };
         	    $.ajax(config)
             },
+			// 编辑保存选项卡信息
+			editSaveTab: function(url, data, callback) {
+				var config = {
+					url: url,
+					type: "put",
+					dataType: "json",
+					data: data,
+					beforeSend: function () {
+						$.modal.loading("正在处理中，请稍后...");
+					},
+					success: function(result) {
+						if (typeof callback == "function") {
+							callback(result);
+						}
+						$.operate.successTabCallback(result);
+					}
+				};
+				$.ajax(config)
+			},
             // 保存结果弹出message刷新table表格
             ajaxSuccess: function (result) {
             	if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTable) {
@@ -1271,10 +1290,10 @@ var table = {
         validate: {
         	// 判断返回标识是否唯一 false 不存在 true 存在
         	unique: function (value) {
-            	if (value == "0") {
-                    return true;
+            	if (value == "1") {
+                    return false;
                 }
-                return false;
+                return true;
             },
             // 表单验证
             form: function (formId) {
@@ -1326,8 +1345,10 @@ var table = {
     			    view: options.view,
     			    data: options.data
     			};
-        	    $.get(options.url, function(data) {
+        	    $.get(options.url, function(res) {
+        	    	var data = res.data;
         			var treeId = $("#treeId").val();
+        			console.log(data);
         			tree = $.fn.zTree.init($("#" + options.id), setting, data);
         			$._tree = tree;
         			var nodes = tree.getNodesByParam("level", options.expandLevel - 1);

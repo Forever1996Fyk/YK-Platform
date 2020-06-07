@@ -31,4 +31,24 @@
 		order by c.sort
     </select>
 
+    <!-- 更新数据库表列信息 -->
+    <update id="updateGenTableColumn">
+        update gen_table_column
+        <set>
+            column_comment = #{columnComment},
+            java_type = #{javaType},
+            java_field = #{javaField},
+            is_insert = #{isInsert},
+            edit = #{edit},
+            list = #{list},
+            query = #{query},
+            required = #{required},
+            query_type = #{queryType},
+            html_type = #{htmlType},
+            dict_type = #{dictType},
+            sort = #{sort},
+        </set>
+        where id = #{id}
+    </update>
+
 </mapper>

@@ -160,7 +160,7 @@ public class GenUtils {
      * @param table
      * @param columns
      */
-    private static void setPkColumn(GenTable table, List<GenTableColumn> columns) {
+    public static void setPkColumn(GenTable table, List<GenTableColumn> columns) {
         GenTableColumn genTableColumn = columns.stream().filter(column -> column.checkPk()).findAny().orElse(null);
         table.setPkColumn(genTableColumn);
 

@@ -27,11 +27,11 @@ public class ${ClassName}PageController {
      * @return
      */
     @GetMapping()
-    public String user() {
+    public String ${businessName}() {
         return prefix + "/${businessName}";
     }
 
-#if($table.crud)
+#if($table.tplCategory == 'crud')
     /**
      * 跳转新增${functionName}页面
      * @return
@@ -40,7 +40,7 @@ public class ${ClassName}PageController {
     public String add() {
         return prefix + "/add";
     }
-#elseif($table.tree)
+#elseif($table.tplCategory == 'tree')
     /**
      * 新增${functionName}
      */
@@ -65,7 +65,7 @@ public class ${ClassName}PageController {
         return prefix + "/edit";
     }
 
-#if($table.tree)
+#if($table.tplCategory == 'tree')
 
     /**
      * 选择${functionName}树

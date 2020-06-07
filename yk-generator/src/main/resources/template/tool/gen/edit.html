@@ -202,15 +202,16 @@
 	    	    },
 	    	},
 			focusCleanup: true
-		}); 
-	    
+		});
+
+		var prefix = ctx + "api/gen";
+
 	    function submitHandler() {
 	        if ($.validate.form()) {
-	        	$.operate.saveTab(prefix + "/edit", $("#form-gen-edit").serializeArray());
+	        	$.operate.editSaveTab(prefix + "/editGenTable", $("#form-gen-edit").serializeArray());
 	        }
 	    }
 	    
-	    var prefix = ctx + "api/gen";
 		$(function() {
 		    var options = {
 		        url: prefix + "/listGenTableColumns",
@@ -229,9 +230,9 @@
                     width: "5%",
                     formatter: function (value, row, index) {
                     	// 编号隐藏域
-                    	var columnIdHtml = $.common.sprintf("<input type='hidden' name='columns[%s].columnId' value='%s'>", index, row.columnId);
+                    	var columnIdHtml = $.common.sprintf("<input type='hidden' name='columns[%s].id' value='%s'>", index, row.id);
                     	// 排序隐藏域
-                    	var sortHtml = $.common.sprintf("<input type='hidden' name='columns[%s].sort' value='%s' id='columns_sort_%s'>", index, row.sort, row.columnId);
+                    	var sortHtml = $.common.sprintf("<input type='hidden' name='columns[%s].sort' value='%s' id='columns_sort_%s'>", index, row.sort, row.id);
                     	return columnIdHtml + sortHtml + $.table.serialNumber(index);
                     },
                     cellStyle: function(value, row, index) {

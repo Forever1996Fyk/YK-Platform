@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: YK-Platform
@@ -88,6 +89,29 @@ public class GenController {
         List<GenTable> tablesList = genTableService.listDbTablesByNames(tableNames);
         genTableService.importGenTable(tablesList);
         return Result.success();
+    }
+
+    /**
+     * 修改保存数据库表信息
+     * @param genTable
+     * @return
+     */
+    @PutMapping("/editGenTable")
+    public Result editGenTable(GenTable genTable) {
+        genTableService.validateEdit(genTable);
+        genTableService.updateGenTable(genTable);
+        return Result.success();
+    }
+
+    /**
+     * 预览代码
+     * @param tableId
+     * @return
+     */
+    @GetMapping("/preview/{tableId}")
+    public Result preview(@PathVariable("tableId") String tableId) {
+        Map<String, Object> map = genTableService.previewCode(tableId);
+        return Result.success(map);
     }
 
     /**

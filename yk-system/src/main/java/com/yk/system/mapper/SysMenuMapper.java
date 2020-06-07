@@ -1,5 +1,6 @@
 package com.yk.system.mapper;
 import com.yk.system.model.pojo.SysMenu;
+import com.yk.system.model.query.SysMenuQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -14,10 +15,10 @@ public interface SysMenuMapper {
 
     /**
      * 新增系统用户
-     * @param sysUser
+     * @param sysMenu
      * @return
      */
-    int insertSysMenu(SysMenu sysUser);
+    int insertSysMenu(SysMenu sysMenu);
 
     /**
      * 批量新增用户系统
@@ -27,10 +28,10 @@ public interface SysMenuMapper {
 
     /**
      * 更新系统用户
-     * @param sysUser
+     * @param sysMenu
      * @return
      */
-    int updateSysMenu(SysMenu sysUser);
+    int updateSysMenu(SysMenu sysMenu);
 
     /**
      * 根据id删除系统用户
@@ -44,7 +45,7 @@ public interface SysMenuMapper {
      * @param ids
      * @return
      */
-    int deleteBatchSysMenuByIds(List<String> ids);
+    int deleteBatchSysMenuByIds(@Param("list") List<String> ids);
 
     /**
      * 根据id真删除系统用户
@@ -58,7 +59,7 @@ public interface SysMenuMapper {
      * @param ids
      * @return
      */
-    int deleteBatchSysMenuRealByIds(List<String> ids);
+    int deleteBatchSysMenuRealByIds(@Param("list") List<String> ids);
 
     /**
      * 根据id获取系统用户
@@ -68,8 +69,37 @@ public interface SysMenuMapper {
     SysMenu getSysMenuById(String id);
 
     /**
-     * 获取所有的菜单
+     * 获取所有的菜单(不包括按钮)
      * @return
      */
-    List<SysMenu> listMenuAll();
+    List<SysMenu> listMenuNotButtonAll();
+
+    /**
+     * 根据用户id获取菜单(不包括按钮)
+     * @param userId
+     * @return
+     */
+    List<SysMenu> listMenuNotButtonByUserId(String userId);
+
+    /**
+     * 获取菜单集合
+     * @param sysMenuQuery
+     * @return
+     */
+    List<SysMenu> listSysMenus(SysMenuQuery sysMenuQuery);
+
+    /**
+     * 根据用户id获取菜单集合
+     * @param sysMenuQuery
+     * @return
+     */
+    List<SysMenu> listSysMenusByUserId(SysMenuQuery sysMenuQuery);
+
+    /**
+     * 检查菜单名称是否唯一
+     * @param menuName
+     * @param parentId
+     * @return
+     */
+    SysMenu checkMenuNameUnique(@Param("menuName") String menuName, @Param("parentId") String parentId);
 }

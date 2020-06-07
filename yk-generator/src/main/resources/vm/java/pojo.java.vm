@@ -3,9 +3,9 @@ package ${packageName}.model.pojo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import lombok.Data;
-#if($table.crud)
+#if($table.tplCategory == 'crud')
 import com.yk.common.entity.BaseEntity;
-#elseif($table.tree)
+#elseif($table.tplCategory == 'tree')
 import com.yk.common.entity.TreeEntity;
 #end
 #foreach ($import in $importList)
@@ -18,9 +18,9 @@ import ${import};
  * @author ${author}
  * @create ${datetime}
  */
-#if($table.crud)
+#if($table.tplCategory == 'crud')
 #set($Entity="BaseEntity")
-#elseif($table.tree)
+#elseif($table.tplCategory == 'tree')
 #set($Entity="TreeEntity")
 #else
 #set($Entity="BaseEntity")

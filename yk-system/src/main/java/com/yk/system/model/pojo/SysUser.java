@@ -50,7 +50,7 @@ public class SysUser extends BaseEntity implements Serializable {
         return isAdmin(this.id);
     }
 
-    private boolean isAdmin(String userId) {
+    public static boolean isAdmin(String userId) {
         return StringUtils.isNotBlank(userId) && "1".equals(userId);
     }
 }

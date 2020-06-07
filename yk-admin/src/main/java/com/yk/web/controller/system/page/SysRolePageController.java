@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @create: 2020-06-02 21:54
  **/
 @Controller
-@RequestMapping("/system/com.yk.system")
+@RequestMapping("/system/role")
 public class SysRolePageController {
     private String prefix = "system/role";
     @Autowired
@@ -27,10 +27,18 @@ public class SysRolePageController {
      * @return
      */
     @GetMapping()
-    public String user() {
-        return prefix + "/user";
+    public String role() {
+        return prefix + "/role";
     }
 
+    /**
+     * 跳转新增系统角色页面
+     * @return
+     */
+    @GetMapping("/add")
+    public String add() {
+        return prefix + "/add";
+    }
 
     /**
      * 跳转修改系统角色页面

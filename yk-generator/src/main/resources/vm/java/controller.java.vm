@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-#if($table.crud)
+#if($table.tplCategory == 'crud')
 import com.yk.common.dto.DataTablesViewPage;
-#elseif($table.tree)
+#elseif($table.tplCategory == 'tree')
 import com.yk.common.utils.StringUtils;
 import com.yk.common.entity.Ztree;
 #end
@@ -27,7 +27,7 @@ public class ${ClassName}Controller {
     @Autowired
     private ${ClassName}Service ${className}Service;
 
-#if($table.crud)
+#if($table.tplCategory == 'crud')
     /**
      * 获取${functionName}集合
      * @param start
@@ -42,7 +42,7 @@ public class ${ClassName}Controller {
         List<${ClassName}> list = ${className}Service.list${ClassName}s(start, pageSize, ${className}Query);
         return Result.success("获取成功", new DataTablesViewPage<>(list));
     }
-#elseif($table.tree)
+#elseif($table.tplCategory == 'tree')
     /**
      * 查询${functionName}树列表
      */
@@ -72,7 +72,7 @@ public class ${ClassName}Controller {
     public Result edit${ClassName}(@RequestBody ${ClassName} ${className}) {
         return Result.response(${className}Service.update${ClassName}(${className}));
     }
-#if($table.crud)
+#if($table.tplCategory == 'crud')
     /**
      * 根据id删除${functionName}
      * @param id
@@ -92,7 +92,7 @@ public class ${ClassName}Controller {
     public Result deleteBatch${ClassName}ByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(${className}Service.deleteBatch${ClassName}ByIds(ids));
     }
-#elseif($table.tree)
+#elseif($table.tplCategory == 'tree')
     /**
      * 删除
      */
@@ -103,7 +103,7 @@ public class ${ClassName}Controller {
     }
 #end
 
-#if($table.tree)
+#if($table.tplCategory == 'tree')
 
     /**
      * 加载${functionName}树列表

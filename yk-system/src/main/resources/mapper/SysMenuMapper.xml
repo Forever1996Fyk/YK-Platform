@@ -3,11 +3,235 @@
 
 <mapper namespace="com.yk.system.mapper.SysMenuMapper">
 
-    <!--  获取所有的菜单 -->
-    <select id="listMenuAll" resultType="SysMenu">
-        select distinct a.id id, a.menu_name menuName, a.parent_id parentId, a.menu_sort menuSort, a.url url, a.target target, a.menu_type menuType, a.perms perms, a.icon icon
+    <!-- 新增系统用户 -->
+    <insert id="insertSysMenu" parameterType="SysMenu">
+        insert into tb_sys_menu(
+        <include refid="sysMenu_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        ( #{id}, #{menuName}, #{parentId}, #{menuSort}, #{url}, #{target}, #{menuType}, #{perms}, #{icon}, #{status},
+        #{remark}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime} )
+    </insert>
+
+    <!-- 批量新增用户系统 -->
+    <insert id="insertSysMenuBatch">
+        insert into tb_sys_menu(
+        <include refid="sysMenu_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.menuName}, #{item.parentId}, #{item.menuSort}, #{item.url}, #{item.target},
+            #{item.menuType}, #{item.perms}, #{item.icon}, #{item.status}, #{item.remark}, #{item.createUserId},
+            #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!--  更新系统用户  -->
+    <update id="updateSysMenu" parameterType="SysMenu">
+        update tb_sys_menu
+        <set>
+            <if test="menuName != null  and menuName != '' and menuName != 'null' and menuName != 'undefined' ">
+                menu_name = #{menuName},
+            </if>
+            <if test="parentId != null  and parentId != '' and parentId != 'null' and parentId != 'undefined' ">
+                parent_id = #{parentId},
+            </if>
+            <if test="menuSort != null ">
+                menu_sort = #{menuSort},
+            </if>
+            <if test="url != null  and url != '' and url != 'null' and url != 'undefined' ">
+                url = #{url},
+            </if>
+            <if test="target != null  and target != '' and target != 'null' and target != 'undefined' ">
+                target = #{target},
+            </if>
+            <if test="menuType != null ">
+                menu_type = #{menuType},
+            </if>
+            <if test="perms != null  and perms != '' and perms != 'null' and perms != 'undefined' ">
+                perms = #{perms},
+            </if>
+            <if test="icon != null  and icon != '' and icon != 'null' and icon != 'undefined' ">
+                icon = #{icon},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="remark != null  and remark != '' and remark != 'null' and remark != 'undefined' ">
+                remark = #{remark},
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createTime != null  and createTime != '' and createTime != 'null' and createTime != 'undefined' ">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="updateTime != null  and updateTime != '' and updateTime != 'null' and updateTime != 'undefined' ">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除系统用户 -->
+    <update id="deleteSysMenuById">
+        update tb_sys_menu set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除系统用户 -->
+    <update id="deleteBatchSysMenuByIds" parameterType="List">
+        update tb_sys_menu set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除系统用户 -->
+    <delete id="deleteSysMenuRealById">
+        delete from tb_sys_menu where id = #{id}
+    </delete>
+
+    <!-- 批量真删除系统用户 -->
+    <delete id="deleteBatchSysMenuRealByIds">
+        delete from tb_sys_menu where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统用户 -->
+    <select id="getSysMenuById" resultType="SysMenu">
+        select
+        <include refid="sysMenu_select_cond"/>, (SELECT menu_name FROM tb_sys_menu WHERE id = a.parent_id) parentName
+        from tb_sys_menu a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询系统用户集合 -->
+    <select id="listSysMenus" parameterType="SysMenuQuery" resultType="SysMenu">
+        select
+        <include refid="sysMenu_select_cond"/>
+        from tb_sys_menu a
+        <where>
+            <if test="menuName != null  and menuName != '' and menuName != 'null' and menuName != 'undefined' ">
+                and a.menu_name like concat('%', #{menuName}, '%')
+            </if>
+            <if test="parentId != null  and parentId != '' and parentId != 'null' and parentId != 'undefined' ">
+                and a.parent_id = #{parentId}
+            </if>
+            <if test="menuSort != null ">
+                and a.menu_sort = #{menuSort}
+            </if>
+            <if test="url != null  and url != '' and url != 'null' and url != 'undefined' ">
+                and a.url = #{url}
+            </if>
+            <if test="target != null  and target != '' and target != 'null' and target != 'undefined' ">
+                and a.target = #{target}
+            </if>
+            <if test="menuType != null ">
+                and a.menu_type = #{menuType}
+            </if>
+            <if test="perms != null  and perms != '' and perms != 'null' and perms != 'undefined' ">
+                and a.perms = #{perms}
+            </if>
+            <if test="icon != null  and icon != '' and icon != 'null' and icon != 'undefined' ">
+                and a.icon = #{icon}
+            </if>
+            <if test="status != null ">
+                and a.status = #{status}
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                and a.create_user_id = #{createUserId}
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                and a.update_user_id = #{updateUserId}
+            </if>
+            AND a.status = 1
+        </where>
+    </select>
+
+    <!-- 根据userId查询系统用户集合 -->
+    <select id="listSysMenusByUserId" parameterType="SysMenuQuery" resultType="SysMenu">
+        select
+        <include refid="sysMenu_select_cond"/>
+        from tb_sys_menu a
+        left join tb_role_menu b on b.menu_id = a.id
+        left join tb_user_role c on c.role_id = b.role_id
+        left join tb_sys_role d on d.id = c.role_id
+        <where>
+            <if test="menuName != null  and menuName != '' and menuName != 'null' and menuName != 'undefined' ">
+                and a.menu_name like concat('%', #{menuName}, '%')
+            </if>
+            <if test="parentId != null  and parentId != '' and parentId != 'null' and parentId != 'undefined' ">
+                and a.parent_id = #{parentId}
+            </if>
+            <if test="menuSort != null ">
+                and a.menu_sort = #{menuSort}
+            </if>
+            <if test="url != null  and url != '' and url != 'null' and url != 'undefined' ">
+                and a.url = #{url}
+            </if>
+            <if test="target != null  and target != '' and target != 'null' and target != 'undefined' ">
+                and a.target = #{target}
+            </if>
+            <if test="menuType != null ">
+                and a.menu_type = #{menuType}
+            </if>
+            <if test="perms != null  and perms != '' and perms != 'null' and perms != 'undefined' ">
+                and a.perms = #{perms}
+            </if>
+            <if test="icon != null  and icon != '' and icon != 'null' and icon != 'undefined' ">
+                and a.icon = #{icon}
+            </if>
+            <if test="status != null ">
+                and a.status = #{status}
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                and a.create_user_id = #{createUserId}
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                and a.update_user_id = #{updateUserId}
+            </if>
+            AND a.status = 1 and c.user_id = #{userId} and d.status = 1
+        </where>
+    </select>
+
+    <sql id="sysMenu_select_cond">
+        a.id id, a.menu_name menuName, a.parent_id parentId, a.menu_sort menuSort, a.url url, a.target target, a.menu_type menuType, ifnull(a.perms,'') perms, a.icon icon, a.status status, a.remark remark, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
+
+    <sql id="sysMenu_add_key">
+        id, menu_name, parent_id, menu_sort, url, target, menu_type, perms, icon, status, remark, create_user_id, create_time, update_user_id, update_time    </sql>
+
+    <!--  获取所有的菜单(不包括按钮) -->
+    <select id="listMenuNotButtonAll" resultType="SysMenu">
+        select distinct a.id id, a.menu_name menuName, a.parent_id parentId, a.menu_sort menuSort, a.url url, a.target target, a.menu_type menuType, ifnull(a.perms,'') perms, a.icon icon
         from tb_sys_menu a
         where a.menu_type in (1, 2) and a.status = 1
         order by a.parent_id, a.menu_sort
+    </select>
+
+    <!--  根据用户id获取菜单(不包括按钮) -->
+    <select id="listMenuNotButtonByUserId" resultType="SysMenu">
+        select distinct a.id id, a.menu_name menuName, a.parent_id parentId, a.menu_sort menuSort, a.url url, a.target target, a.menu_type menuType, ifnull(a.perms,'') perms, a.icon icon
+        from tb_sys_menu a
+        left join tb_role_menu b on b.menu_id = a.id
+        left join tb_user_role c on c.role_id = b.role_id
+        left join tb_sys_role d on d.id = c.role_id
+        where a.menu_type in (1, 2) and a.status = 1 and c.user_id = #{userId} and d.status = 1
+        order by a.parent_id, a.menu_sort
+    </select>
+
+    <!-- 检查菜单名称是否唯一 -->
+    <select id="checkMenuNameUnique" resultType="SysMenu">
+        select a.id id, a.menu_name menuName, a.parent_id parentId
+        from tb_sys_menu a
+        where a.menu_name = #{menuName} and a.parent_id = #{parentId} and a.status = 1
     </select>
 </mapper>

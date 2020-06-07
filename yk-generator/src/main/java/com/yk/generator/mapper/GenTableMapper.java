@@ -58,4 +58,11 @@ public interface GenTableMapper {
      * @return
      */
     GenTable getGenTableById(String tableId);
+
+    /**
+     * 更新数据表
+     * @param genTable
+     * @return
+     */
+    int updateGenTable(GenTable genTable);
 }
