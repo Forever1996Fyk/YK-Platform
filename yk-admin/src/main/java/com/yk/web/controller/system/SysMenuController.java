@@ -4,6 +4,7 @@ import com.yk.common.dto.Result;
 import com.yk.common.entity.Ztree;
 import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysMenu;
+import com.yk.system.model.pojo.SysRole;
 import com.yk.system.model.query.SysMenuQuery;
 import com.yk.system.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,7 @@ public class SysMenuController {
 
     /**
      * 加载所有菜单列表树
+     *
      * @return
      */
     @GetMapping("/menuTreeData")
@@ -110,7 +112,19 @@ public class SysMenuController {
     }
 
     /**
+     * 加载角色菜单列表树
+     */
+    @GetMapping("/roleMenuTreeData")
+    @ResponseBody
+    public Result roleMenuTreeData(SysRole role) {
+        String userId = ShiroUtils.getCurrentUserId();
+        List<Ztree> ztrees = sysMenuService.roleMenuTreeData(role, userId);
+        return Result.success(ztrees);
+    }
+
+    /**
      * 校验菜单名称
+     *
      * @param menu
      * @return
      */

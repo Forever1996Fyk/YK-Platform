@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -99,5 +100,17 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUser getSysUserByEmail(String email) {
         return sysUserMapper.getSysUserByEmail(email);
+    }
+
+    @Override
+    public List<SysUser> listAllocatedUsers(int start, int pageSize, SysUserQuery sysUserQuery) {
+        PageHelper.startPage(start, pageSize);
+        return sysUserMapper.listAllocatedUsers(sysUserQuery);
+    }
+
+    @Override
+    public List<SysUser> listUnallocatedUsers(int start, int pageSize, Serializable sysUserQuery) {
+        PageHelper.startPage(start, pageSize);
+        return sysUserMapper.listUnallocatedUsers(sysUserQuery);
     }
 }

@@ -85,7 +85,7 @@
                 url: prefix + "/list",
                 createUrl: pagePrefix + "/add",
                 updateUrl: pagePrefix + "/edit/{id}",
-                removeUrl: prefix + "/delete${ClassName}ById}/{id}",
+                removeUrl: prefix + "/delete${ClassName}ById/{id}",
                 removeAllUrl: prefix + "/deleteBatch${ClassName}ByIds/{ids}",
                 modalName: "${functionName}",
                 columns: [{

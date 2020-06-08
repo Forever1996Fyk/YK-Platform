@@ -109,4 +109,11 @@ public interface SysMenuMapper {
      * @return
      */
     List<String> listPermsByUserId(String userId);
+
+    /**
+     * 根据角色id获取菜单id
+     * @param roleId
+     * @return
+     */
+    List<String> listMenusByRoleId(String roleId);
 }

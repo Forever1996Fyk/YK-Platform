@@ -3,6 +3,7 @@ import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.query.SysUserQuery;
 import org.apache.ibatis.annotations.Param;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -102,4 +103,18 @@ public interface SysUserMapper {
      * @return
      */
     SysUser getSysUserByUserName(String userName);
+
+    /**
+     * 获取已分配用户角色列表
+     * @param sysUserQuery
+     * @return
+     */
+    List<SysUser> listAllocatedUsers(SysUserQuery sysUserQuery);
+
+    /**
+     * 获取未分配用户角色列表
+     * @param sysUserQuery
+     * @return
+     */
+    List<SysUser> listUnallocatedUsers(Serializable sysUserQuery);
 }

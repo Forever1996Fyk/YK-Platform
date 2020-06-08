@@ -883,12 +883,13 @@ var table = {
         // 操作封装处理
         operate: {
         	// 提交数据
-        	submit: function(url, type, dataType, data, callback) {
+        	submit: function(url, type, dataType, data, callback, contentType) {
             	var config = {
         	        url: url,
         	        type: type,
         	        dataType: dataType,
         	        data: data,
+					contentType: contentType ? contentType:'application/json;charset=UTF-8',
         	        beforeSend: function () {
         	        	$.modal.loading("正在处理中，请稍后...");
         	        },

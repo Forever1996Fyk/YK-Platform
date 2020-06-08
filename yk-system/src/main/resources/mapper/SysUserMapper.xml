@@ -175,6 +175,51 @@
         where a.email = #{email}
     </select>
 
+    <select id="listAllocatedUsers" parameterType="SysUserQuery" resultType="SysUser">
+        select distinct <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        left join tb_user_role b on b.user_id = a.id
+        left join tb_sys_role c on c.id = b.role_id
+        <where>
+            <if test="account != null and account != '' and account != 'null' and account != 'undefined'">
+                AND a.account = #{account}
+            </if>
+            <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="phone != null and phone != '' and phone != 'null' and phone != 'undefined'">
+                AND a.phone = #{phone}
+            </if>
+            <if test="email != null and email != '' and email != 'null' and email != 'undefined'">
+                AND a.email = #{email}
+            </if>
+            AND a.status = 1 and c.id = #{roleId}
+        </where>
+    </select>
+
+    <select id="listUnallocatedUsers" parameterType="SysUserQuery" resultType="SysUser">
+        select distinct <include refid="sysUser_select_cond"/>
+        from tb_sys_user a
+        left join tb_user_role b on b.user_id = a.id
+        left join tb_sys_role c on c.id = b.role_id
+        <where>
+            <if test="account != null and account != '' and account != 'null' and account != 'undefined'">
+                AND a.account = #{account}
+            </if>
+            <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="phone != null and phone != '' and phone != 'null' and phone != 'undefined'">
+                AND a.phone = #{phone}
+            </if>
+            <if test="email != null and email != '' and email != 'null' and email != 'undefined'">
+                AND a.email = #{email}
+            </if>
+            AND a.status = 1 and a.id not in (select a.id from tb_sys_user a inner join tb_user_role b on a.id = b.user_id and b.role_id = #{roleId})
+            and (c.id != #{roleId} or c.id is null )
+        </where>
+    </select>
+
     <sql id="sysUser_select_cond">
         a.id id, a.dept_id deptId, a.account account, a.user_name userName, a.password password, a.phone phone, a.email email, a.sex sex, a.avatar avatar, a.user_type userType, a.salt salt, a.status status
         , a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime

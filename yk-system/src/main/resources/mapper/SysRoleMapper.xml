@@ -120,6 +120,20 @@
         where b.user_id = #{userId} and a.status = 1
     </select>
 
+    <select id="checkRoleNameAndCodeUnique" parameterType="SysRole" resultType="String">
+        select a.id id
+        from tb_sys_role a
+        <where>
+            <if test="roleName != null  and roleName != '' and roleName != 'null' and roleName != 'undefined' ">
+                and a.role_name = #{roleName}
+            </if>
+            <if test="roleCode != null  and roleCode != '' and roleCode != 'null' and roleCode != 'undefined' ">
+                and a.role_code = #{roleCode}
+            </if>
+            AND a.status = 1
+        </where>
+    </select>
+
     <sql id="sysRole_select_cond">
         a.id id, a.role_name roleName, a.role_code roleCode, a.data_scope dataScope, a.role_sort roleSort, a.status status, a.remark remark, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
 

@@ -1,7 +1,6 @@
 package com.yk.web.controller.system.page;
 
 import com.yk.system.service.SysRoleService;
-import com.yk.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,6 +49,30 @@ public class SysRolePageController {
     public String edit(@PathVariable("id") String id, Model model) {
         model.addAttribute("sysRole", sysRoleService.getSysRoleById(id));
         return prefix + "/edit";
+    }
+
+    /**
+     * 跳转到分配用户
+     * @param roleId
+     * @param model
+     * @return
+     */
+    @GetMapping("/authUser/{roleId}")
+    public String authUser(@PathVariable("roleId") String roleId, Model model) {
+        model.addAttribute("role", sysRoleService.getSysRoleById(roleId));
+        return prefix + "/authUser";
+    }
+
+    /**
+     * 跳转到分配用户
+     * @param roleId
+     * @param model
+     * @return
+     */
+    @GetMapping("/authUser/selectUser/{roleId}")
+    public String addAuthUser(@PathVariable("roleId") String roleId, Model model) {
+        model.addAttribute("role", sysRoleService.getSysRoleById(roleId));
+        return prefix + "/selectUser";
     }
 
 }

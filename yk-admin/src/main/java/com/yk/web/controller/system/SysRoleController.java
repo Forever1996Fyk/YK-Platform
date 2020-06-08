@@ -2,12 +2,18 @@ package com.yk.web.controller.system;
 
 import com.yk.common.dto.Result;
 import com.yk.system.model.pojo.SysRole;
+import com.yk.system.model.pojo.SysUser;
+import com.yk.system.model.pojo.UserRole;
 import com.yk.system.model.query.SysRoleQuery;
+import com.yk.system.model.query.SysUserQuery;
 import com.yk.system.service.SysRoleService;
+import com.yk.system.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 import com.yk.common.dto.DataTablesViewPage;
 
 /**
@@ -21,6 +27,8 @@ import com.yk.common.dto.DataTablesViewPage;
 public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
+    @Autowired
+    private SysUserService sysUserService;
 
     /**
      * 获取系统角色集合
@@ -76,4 +84,76 @@ public class SysRoleController {
         return Result.response(sysRoleService.deleteBatchSysRoleByIds(ids));
     }
 
+    /**
+     * 校验角色名称
+     */
+    @GetMapping("/checkRoleNameUnique")
+    @ResponseBody
+    public String checkRoleNameUnique(SysRole role)
+    {
+        return sysRoleService.checkRoleNameUnique(role);
+    }
+
+    /**
+     * 校验角色权限
+     */
+    @GetMapping("/checkRoleCodeUnique")
+    @ResponseBody
+    public String checkRoleCodeUnique(SysRole role)
+    {
+        return sysRoleService.checkRoleCodeUnique(role);
+    }
+
+    /**
+     * 获取已分配用户角色列表
+     * @param start
+     * @param pageSize
+     * @param sysUserQuery
+     * @return
+     */
+    @GetMapping("/authUser/listAllocatedUsers")
+    public Result listAllocatedUsers(@RequestParam(value = "start", defaultValue = "0") int start,
+                                     @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
+                                     SysUserQuery sysUserQuery) {
+
+        List<SysUser> list = sysUserService.listAllocatedUsers(start, pageSize, sysUserQuery);
+        return Result.success(new DataTablesViewPage<>(list));
+    }
+
+    /**
+     * 获取已分配用户角色列表
+     * @param start
+     * @param pageSize
+     * @param sysUserQuery
+     * @return
+     */
+    @GetMapping("/authUser/listUnallocatedUsers")
+    public Result listUnallocatedUsers(@RequestParam(value = "start", defaultValue = "0") int start,
+                                     @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
+                                     SysUserQuery sysUserQuery) {
+
+        List<SysUser> list = sysUserService.listUnallocatedUsers(start, pageSize, sysUserQuery);
+        return Result.success(new DataTablesViewPage<>(list));
+    }
+
+    /**
+     * 批量选择用户授权
+     * @param userRole
+     * @return
+     */
+    @PostMapping("/authUser/selectUserAuthRole")
+    public Result selectUserAuthRole(@RequestBody UserRole userRole) {
+        return Result.response(sysRoleService.insertAuthUsers(userRole.getRoleId(), userRole.getUserId()));
+    }
+
+    /**
+     * 批量取消用户授权
+     * @param roleId
+     * @param userId
+     * @return
+     */
+    @DeleteMapping("/authUser/cancelAuthUsers/{roleId}/{userId}")
+    public Result cancelAuthUsers(@PathVariable("roleId") String roleId, @PathVariable("userId") String userId) {
+        return Result.response(sysRoleService.deleteAuthUsers(roleId, userId));
+    }
 }

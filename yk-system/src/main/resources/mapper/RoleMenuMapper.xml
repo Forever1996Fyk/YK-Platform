@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.system.mapper.RoleMenuMapper">
+    <!-- 新增系统用户 -->
+    <insert id="insertRoleMenu" parameterType="RoleMenu">
+        insert into tb_role_menu(
+        <include refid="roleMenu_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        ( #{roleId}, #{menuId} )
+    </insert>
+
+    <!-- 批量新增用户系统 -->
+    <insert id="insertRoleMenuBatch">
+        insert into tb_role_menu(
+        <include refid="roleMenu_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.roleId}, #{item.menuId})
+        </foreach>
+    </insert>
+
+    <!-- 根据id真删除系统用户 -->
+    <delete id="deleteRoleMenuRealByRoleId">
+        delete from tb_role_menu where role_id = #{roleId}
+    </delete>
+
+    <!-- 批量真删除系统用户 -->
+    <delete id="deleteBatchRoleMenuRealByIds">
+        delete from tb_role_menu where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统用户 -->
+    <select id="getRoleMenuById" resultType="RoleMenu">
+        select
+        <include refid="roleMenu_select_cond"/>
+        from tb_role_menu a
+        where a.role_id = #{roleId} and a.status = 1
+    </select>
+
+    <sql id="roleMenu_select_cond">
+        a.role_id roleId, a.menu_id menuId    </sql>
+
+    <sql id="roleMenu_add_key">
+        role_id, menu_id    </sql>
+</mapper>

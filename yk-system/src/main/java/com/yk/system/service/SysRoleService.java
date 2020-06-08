@@ -88,4 +88,34 @@ public interface SysRoleService {
      * @return
      */
     Set<String> listRoleCodes(String userId);
+
+    /**
+     * 检查角色名称的唯一性
+     * @param role
+     * @return
+     */
+    String checkRoleNameUnique(SysRole role);
+
+    /**
+     * 检查角色code唯一性
+     * @param role
+     * @return
+     */
+    String checkRoleCodeUnique(SysRole role);
+
+    /**
+     * 批量选择用户授权
+     * @param roleId
+     * @param userIds
+     * @return
+     */
+    int insertAuthUsers(String roleId, String userIds);
+
+    /**
+     * 批量取消用户授权
+     * @param roleId
+     * @param userIds
+     * @return
+     */
+    int deleteAuthUsers(String roleId, String userIds);
 }

@@ -9,8 +9,10 @@ import com.yk.common.util.StringUtils;
 import com.yk.common.util.TimeUtils;
 import com.yk.system.mapper.SysMenuMapper;
 import com.yk.system.model.pojo.SysMenu;
+import com.yk.system.model.pojo.SysRole;
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.query.SysMenuQuery;
+import com.yk.system.model.query.SysUserQuery;
 import com.yk.system.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -136,6 +138,20 @@ public class SysMenuServiceImpl implements SysMenuService {
         perms.stream().filter(perm -> StringUtils.isNotBlank(perm))
                 .forEach(perm -> permsSet.addAll(Arrays.asList(perm.trim().split(","))));
         return permsSet;
+    }
+
+    @Override
+    public List<Ztree> roleMenuTreeData(SysRole role, String userId) {
+        String roleId = role.getId();
+        List<Ztree> ztrees = Lists.newArrayList();
+        List<SysMenu> sysMenus = listSysMenus(new SysMenuQuery(), userId);
+        if (StringUtils.isNotBlank(roleId)) {
+            List<String> list = sysMenuMapper.listMenusByRoleId(roleId);
+            ztrees = initZtree(sysMenus, list, true);
+        } else {
+            ztrees = initZtree(sysMenus, null, true);
+        }
+        return ztrees;
     }
 
     private List<Ztree> initZtree(List<SysMenu> sysMenus) {

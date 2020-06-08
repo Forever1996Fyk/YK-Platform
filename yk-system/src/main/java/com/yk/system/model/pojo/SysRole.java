@@ -1,9 +1,12 @@
 package com.yk.system.model.pojo;
 
+import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import lombok.Data;
 import com.yk.common.entity.BaseEntity;
+
+import java.util.List;
 
 /**
  * 系统角色对象 tb_sys_role
@@ -29,14 +32,8 @@ public class SysRole extends BaseEntity {
     private Integer status;
     /** 备注 */
     private String remark;
-    /** 创建人id */
-    private String createUserId;
-    /** 创建时间 */
-    private String createTime;
-    /** 更新人id */
-    private String updateUserId;
-    /** 更新时间 */
-    private String updateTime;
+    /** 菜单id集合 */
+    private String menuId;
 
     @Override
     public String toString() {

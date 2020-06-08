@@ -2,6 +2,7 @@ package com.yk.system.service;
 
 import com.yk.common.entity.Ztree;
 import com.yk.system.model.pojo.SysMenu;
+import com.yk.system.model.pojo.SysRole;
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.query.SysMenuQuery;
 
@@ -114,4 +115,12 @@ public interface SysMenuService {
      * @return
      */
     Set<String> listPermsByUserId(String userId);
+
+    /**
+     * 加载角色菜单列表树
+     * @param role
+     * @param userId
+     * @return
+     */
+    List<Ztree> roleMenuTreeData(SysRole role, String userId);
 }

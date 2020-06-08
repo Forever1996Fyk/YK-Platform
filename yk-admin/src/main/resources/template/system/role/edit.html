@@ -2,11 +2,12 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('编辑系统角色')" />
+    <th:block th:include="include :: ztree-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-role-edit" th:object="${sysRole}">
-            <input name="id" th:field="*{id}" type="hidden">
+            <input name="id" id="roleId" th:field="*{id}" type="hidden">
             <div class="form-group">    
                 <label class="col-sm-3 control-label">角色名称：</label>
                 <div class="col-sm-8">
@@ -31,19 +32,117 @@
                     <textarea name="remark" class="form-control">[[*{remark}]]</textarea>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">菜单权限</label>
+                <div class="col-sm-8">
+                    <div id="menuTrees" class="ztree"></div>
+                </div>
+            </div>
         </form>
     </div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: ztree-js" />
     <script type="text/javascript">
-        var prefix = ctx + "api/system/role";
+        $(function() {
+            var url = ctx + "api/system/menu/roleMenuTreeData?id=" + $("#roleId").val();
+            var options = {
+                id: "menuTrees",
+                url: url,
+                check: { enable: true },
+                expandLevel: 0
+            };
+            $.tree.init(options);
+        });
+        var prefix = ctx + "api/system/role"
         $("#form-role-edit").validate({
+            onkeyup: false,
+            rules:{
+                roleName:{
+                    remote: {
+                        url: prefix + "checkRoleNameUnique",
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            "id": function() {
+                                return $("#roleId").val();
+                            },
+                            "roleName": function() {
+                                return $.common.trim($("#roleName").val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            return $.validate.unique(data);
+                        }
+                    }
+                },
+                roleCode:{
+                    remote: {
+                        url: prefix + "/checkRoleCodeUnique",
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            "id": function() {
+                                return $("#roleId").val();
+                            },
+                            "roleCode": function() {
+                                return $.common.trim($("#roleCode").val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            return $.validate.unique(data);
+                        }
+                    }
+                },
+                roleSort:{
+                    digits:true
+                },
+            },
+            messages: {
+                "roleName": {
+                    remote: "角色名称已经存在"
+                },
+                "roleCode": {
+                    remote: "角色权限已经存在"
+                }
+            },
             focusCleanup: true
         });
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.editSave(prefix + "/editSysRole", $('#form-role-edit').serialize());
+                editSave();
             }
+        }
+
+        function editSave() {
+            var id = $("input[name='id']").val();
+            var roleName = $("input[name='roleName']").val();
+            var roleCode = $("input[name='roleCode']").val();
+            var roleSort = $("input[name='roleSort']").val();
+            var remark = $("input[name='remark']").val();
+            var menuIds = $.tree.getCheckedNodes();
+            $.ajax({
+                cache : true,
+                type : "PUT",
+                url : prefix + "/editSysRole",
+                dataType: "json",
+                contentType: 'application/json;charset=UTF-8',
+                data : JSON.stringify({
+                    "id": id,
+                    "roleName": roleName,
+                    "roleCode": roleCode,
+                    "roleSort": roleSort,
+                    "remark": remark,
+                    "menuId": menuIds
+                }),
+                async : false,
+                error : function(request) {
+                    $.modal.alertError("系统错误");
+                },
+                success : function(data) {
+                    $.operate.successCallback(data);
+                }
+            });
         }
     </script>
 </body>

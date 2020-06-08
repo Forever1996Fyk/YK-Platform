@@ -2,6 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('新增系统角色')" />
+    <th:block th:include="include :: ztree-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -13,7 +14,7 @@
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">角色权限：</label>
+                <label class="col-sm-3 control-label">角色code：</label>
                 <div class="col-sm-8">
                     <input name="roleCode" class="form-control" type="text">
                 </div>
@@ -30,19 +31,109 @@
                     <textarea name="remark" class="form-control"></textarea>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">菜单权限</label>
+                <div class="col-sm-8">
+                    <div id="menuTrees" class="ztree"></div>
+                </div>
+            </div>
         </form>
     </div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: ztree-js" />
     <script type="text/javascript">
+        $(function() {
+            var url = ctx + "api/system/menu/roleMenuTreeData";
+            var options = {
+                id: "menuTrees",
+                url: url,
+                check: { enable: true },
+                expandLevel: 0
+            };
+            $.tree.init(options);
+        });
         var prefix = ctx + "api/system/role"
         $("#form-role-add").validate({
+            rules:{
+                onkeyup: false,
+                roleName:{
+                    remote: {
+                        url: prefix + "/checkRoleNameUnique",
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            "roleName" : function() {
+                                return $.common.trim($("#roleName").val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            return $.validate.unique(data);
+                        }
+                    }
+                },
+                roleKey:{
+                    remote: {
+                        url: prefix + "/checkRoleKeyUnique",
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            "roleCode" : function() {
+                                return $.common.trim($("#roleCode").val());
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            return $.validate.unique(data);
+                        }
+                    }
+                },
+                roleSort:{
+                    digits:true
+                },
+            },
+            messages: {
+                "roleName": {
+                    remote: "角色名称已经存在"
+                },
+                "roleCode": {
+                    remote: "角色权限已经存在"
+                }
+            },
             focusCleanup: true
         });
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/addSysRole", $('#form-role-add').serializeJson());
+                addSave();
             }
+        }
+
+        function addSave() {
+            var roleName = $("input[name='roleName']").val();
+            var roleCode = $("input[name='roleCode']").val();
+            var roleSort = $("input[name='roleSort']").val();
+            var remark = $("input[name='remark']").val();
+            var menuIds = $.tree.getCheckedNodes();
+            $.ajax({
+                cache : true,
+                type : "POST",
+                url : prefix + "/addSysRole",
+                dataType: "json",
+                contentType: 'application/json;charset=UTF-8',
+                data : JSON.stringify({
+                    "roleName": roleName,
+                    "roleCode": roleCode,
+                    "roleSort": roleSort,
+                    "remark": remark,
+                    "menuId": menuIds
+                }),
+                async : false,
+                error : function(request) {
+                    $.modal.alertError("系统错误");
+                },
+                success : function(data) {
+                    $.operate.successCallback(data);
+                }
+            });
         }
     </script>
 </body>

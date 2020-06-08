@@ -243,4 +243,13 @@
         from tb_sys_menu a
         where a.menu_name = #{menuName} and a.parent_id = #{parentId} and a.status = 1
     </select>
+
+    <!-- 根据角色id获取菜单id -->
+    <select id="listMenusByRoleId" resultType="String">
+		select concat(a.id, ifnull(a.perms,''))  perms
+		from tb_sys_menu a
+		left join tb_role_menu b on a.id = b.menu_id
+		where b.role_id = #{roleId}
+		order by a.parent_id, a.menu_sort
+	</select>
 </mapper>

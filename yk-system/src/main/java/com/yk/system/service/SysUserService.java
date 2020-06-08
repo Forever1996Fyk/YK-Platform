@@ -3,6 +3,7 @@ package com.yk.system.service;
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.query.SysUserQuery;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -108,4 +109,22 @@ public interface SysUserService {
      * @return
      */
     SysUser getSysUserByEmail(String email);
+
+    /**
+     * 获取已分配用户角色列表
+     * @param start
+     * @param pageSize
+     * @param sysUserQuery
+     * @return
+     */
+    List<SysUser> listAllocatedUsers(int start, int pageSize, SysUserQuery sysUserQuery);
+
+    /**
+     * 获取未分配的用户列表
+     * @param start
+     * @param pageSize
+     * @param sysUserQuery
+     * @return
+     */
+    List<SysUser> listUnallocatedUsers(int start, int pageSize, Serializable sysUserQuery);
 }

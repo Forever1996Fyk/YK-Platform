@@ -80,4 +80,11 @@ public interface SysRoleMapper {
      * @return
      */
     List<SysRole> listSysRolesByUserId(String userId);
+
+    /**
+     * 检查角色名称与code的唯一性
+     * @param role
+     * @return
+     */
+    String checkRoleNameAndCodeUnique(SysRole role);
 }
