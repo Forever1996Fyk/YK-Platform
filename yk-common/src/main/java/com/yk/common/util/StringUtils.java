@@ -1,5 +1,7 @@
 package com.yk.common.util;
 
+import com.google.common.base.Verify;
+import com.yk.common.constant.UserConstants;
 import com.yk.common.text.StrFormatter;
 
 import java.util.Collection;
@@ -388,5 +390,23 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     @SuppressWarnings("unchecked")
     public static <T> T cast(Object obj) {
         return (T) obj;
+    }
+
+    /**
+     * 验证手机号的正确性
+     * @param phone
+     * @return
+     */
+    public static boolean verifyPhoneNumber(String phone) {
+        return phone.matches(UserConstants.MOBILE_PHONE_NUMBER_PATTERN);
+    }
+
+    /**
+     * 验证邮箱的正确性
+     * @param email
+     * @return
+     */
+    public static boolean verifyEmail(String email) {
+        return email.matches(UserConstants.EMAIL_PATTERN);
     }
 }

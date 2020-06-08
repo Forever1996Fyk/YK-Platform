@@ -1,7 +1,9 @@
 package com.yk.system.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Sets;
 import com.yk.common.util.AppUtils;
+import com.yk.common.util.StringUtils;
 import com.yk.common.util.TimeUtils;
 import com.yk.system.mapper.SysRoleMapper;
 import com.yk.system.model.pojo.SysRole;
@@ -11,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -81,5 +85,14 @@ public class SysRoleServiceImpl implements SysRoleService {
         PageHelper.startPage(start, pageSize);
         return this.listSysRoles(sysRoleQuery);
     }
-    
+
+    @Override
+    public Set<String> listRoleCodes(String userId) {
+        List<SysRole> sysRoles = sysRoleMapper.listSysRolesByUserId(userId);
+        Set<String> roles = Sets.newHashSet();
+        sysRoles.stream().filter(sysRole -> StringUtils.isNotBlank(sysRole))
+                .forEach(sysRole -> roles.addAll(Arrays.asList(sysRole.getRoleCode().trim().split(","))));
+        return roles;
+    }
+
 }

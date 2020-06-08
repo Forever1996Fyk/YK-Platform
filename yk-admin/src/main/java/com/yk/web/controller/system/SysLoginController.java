@@ -29,7 +29,7 @@ public class SysLoginController {
      */
     @PostMapping("/login")
     public Result login(@RequestBody LoginVo loginVo) {
-        UsernamePasswordToken token = new UsernamePasswordToken(loginVo.getAccount(), loginVo.getPassword(), loginVo.getRememberMe());
+        UsernamePasswordToken token = new UsernamePasswordToken(loginVo.getUsername(), loginVo.getPassword(), loginVo.getRememberMe());
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(token);

@@ -36,6 +36,7 @@
 		<lombok.version>1.16.18</lombok.version>
 		<guava.version>25.1-jre</guava.version>
 		<kaptcha.version>2.3.2</kaptcha.version>
+		<bitwalker.version>1.19</bitwalker.version>
 	</properties>
 	
     <!-- 依赖声明 -->
@@ -118,6 +119,13 @@
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
 				<version>${fastjson.version}</version>
+			</dependency>
+
+			<!-- 解析客户端操作系统、浏览器等 -->
+			<dependency>
+				<groupId>eu.bitwalker</groupId>
+				<artifactId>UserAgentUtils</artifactId>
+				<version>${bitwalker.version}</version>
 			</dependency>
 
 			<dependency>

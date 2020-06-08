@@ -114,6 +114,12 @@
         </where>
     </select>
 
+    <select id="listSysRolesByUserId" resultType="SysRole">
+        select a.id id, a.role_name roleName, a.role_code roleCode, a.data_scope dataScope, a.role_sort roleSort
+        from tb_sys_role a left join tb_user_role b on b.role_id = a.id
+        where b.user_id = #{userId} and a.status = 1
+    </select>
+
     <sql id="sysRole_select_cond">
         a.id id, a.role_name roleName, a.role_code roleCode, a.data_scope dataScope, a.role_sort roleSort, a.status status, a.remark remark, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
 

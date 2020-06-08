@@ -24,7 +24,7 @@ public class PasswordService {
         if (!matches(user, password)) {
 
         } else {
-            //清楚登录次数记录
+            //清除登录次数记录
         }
     }
 

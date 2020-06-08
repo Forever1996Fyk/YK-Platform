@@ -51,6 +51,11 @@ public class Result {
         this.data = data;
     }
 
+    public Result(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public static Result response(int rows) {
         return rows > 0 ? success():error();
     }
@@ -89,5 +94,9 @@ public class Result {
 
     public static Result error(String msg, Object data) {
         return new Result(Type.ERROR.value, msg, data);
+    }
+
+    public static Result error(Integer code, String msg) {
+        return new Result(code, msg);
     }
 }

@@ -73,4 +73,11 @@ public interface SysRoleMapper {
      * @return
      */
     List<SysRole> listSysRoles(SysRoleQuery sysRoleQuery);
+
+    /**
+     * 根据用户id获取角色列表
+     * @param userId
+     * @return
+     */
+    List<SysRole> listSysRolesByUserId(String userId);
 }

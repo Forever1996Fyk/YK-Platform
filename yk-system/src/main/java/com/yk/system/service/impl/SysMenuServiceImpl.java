@@ -2,6 +2,7 @@ package com.yk.system.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.yk.common.entity.Ztree;
 import com.yk.common.util.AppUtils;
 import com.yk.common.util.StringUtils;
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @program: YK-Platform
@@ -124,6 +127,15 @@ public class SysMenuServiceImpl implements SysMenuService {
         } else {
             return "0";
         }
+    }
+
+    @Override
+    public Set<String> listPermsByUserId(String userId) {
+        List<String> perms = sysMenuMapper.listPermsByUserId(userId);
+        Set<String> permsSet = Sets.newHashSet();
+        perms.stream().filter(perm -> StringUtils.isNotBlank(perm))
+                .forEach(perm -> permsSet.addAll(Arrays.asList(perm.trim().split(","))));
+        return permsSet;
     }
 
     private List<Ztree> initZtree(List<SysMenu> sysMenus) {

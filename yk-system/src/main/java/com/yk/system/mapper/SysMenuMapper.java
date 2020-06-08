@@ -102,4 +102,11 @@ public interface SysMenuMapper {
      * @return
      */
     SysMenu checkMenuNameUnique(@Param("menuName") String menuName, @Param("parentId") String parentId);
+
+    /**
+     * 根据userId获取权限列表
+     * @param userId
+     * @return
+     */
+    List<String> listPermsByUserId(String userId);
 }

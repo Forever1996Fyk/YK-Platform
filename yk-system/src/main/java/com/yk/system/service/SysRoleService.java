@@ -1,6 +1,7 @@
 package com.yk.system.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.yk.system.model.pojo.SysRole;
 import com.yk.system.model.query.SysRoleQuery;
@@ -81,4 +82,10 @@ public interface SysRoleService {
      */
     List<SysRole> listSysRoles(int start, int pageSize, SysRoleQuery sysRoleQuery);
 
+    /**
+     * 根据userId获取角色Code
+     * @param userId
+     * @return
+     */
+    Set<String> listRoleCodes(String userId);
 }

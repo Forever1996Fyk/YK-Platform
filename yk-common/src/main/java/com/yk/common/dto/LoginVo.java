@@ -14,11 +14,11 @@ import java.io.Serializable;
 public class LoginVo implements Serializable {
     private static final long serialVersionUID = -8019398488087650316L;
     //用户名
-    private String userName;
+    private String username;
     //密码
     private String password;
     //记住我
-    private Boolean rememberMe;
+    private Boolean rememberMe = true;
     //账号
     private String account;
 }

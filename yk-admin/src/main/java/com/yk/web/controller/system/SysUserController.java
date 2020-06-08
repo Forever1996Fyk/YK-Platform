@@ -2,9 +2,12 @@ package com.yk.web.controller.system;
 
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
+import com.yk.framework.shiro.service.PasswordService;
+import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.query.SysUserQuery;
 import com.yk.system.service.SysUserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,8 @@ import java.util.List;
 public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
+    @Autowired
+    private PasswordService passwordService;
 
     /**
      * 获取系统用户集合
@@ -30,6 +35,7 @@ public class SysUserController {
      * @return
      */
     @GetMapping("/list")
+    @RequiresPermissions("system:user:list")
     public Result listSysUsers(@RequestParam(value = "start", defaultValue = "0") int start,
                                @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
                                SysUserQuery sysUserQuery) {
@@ -44,6 +50,8 @@ public class SysUserController {
      */
     @PostMapping("/addSysUser")
     public Result addSysUser(@RequestBody SysUser sysUser) {
+        sysUser.setSalt(ShiroUtils.randomSalt());
+        sysUser.setPassword(passwordService.encryptPassword(sysUser.getUserName(), sysUser.getPassword(), sysUser.getSalt()));
         return Result.response(sysUserService.insertSysUser(sysUser));
     }
 

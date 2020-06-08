@@ -228,6 +228,15 @@
         order by a.parent_id, a.menu_sort
     </select>
 
+    <!-- 根据userId获取权限列表 -->
+    <select id="listPermsByUserId" resultType="String">
+        select distinct a.perms
+        from tb_sys_menu a left join tb_role_menu b on a.id = b.menu_id
+        left join tb_user_role c on c.role_id = b.role_id
+        left join tb_sys_role d on d.id = c.role_id
+        where a.status = 1 and d.status = 1 and c.user_id = #{userId}
+    </select>
+
     <!-- 检查菜单名称是否唯一 -->
     <select id="checkMenuNameUnique" resultType="SysMenu">
         select a.id id, a.menu_name menuName, a.parent_id parentId

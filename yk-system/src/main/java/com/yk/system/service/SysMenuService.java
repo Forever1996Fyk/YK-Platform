@@ -6,6 +6,7 @@ import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.query.SysMenuQuery;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @program: YK-Platform
@@ -106,4 +107,11 @@ public interface SysMenuService {
      * @return
      */
     String checkMenuNameUnique(SysMenu menu);
+
+    /**
+     * 根据userId获取权限列表
+     * @param userId
+     * @return
+     */
+    Set<String> listPermsByUserId(String userId);
 }

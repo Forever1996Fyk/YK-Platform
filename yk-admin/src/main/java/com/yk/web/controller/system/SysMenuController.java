@@ -2,6 +2,7 @@ package com.yk.web.controller.system;
 
 import com.yk.common.dto.Result;
 import com.yk.common.entity.Ztree;
+import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysMenu;
 import com.yk.system.model.query.SysMenuQuery;
 import com.yk.system.service.SysMenuService;
@@ -48,9 +49,8 @@ public class SysMenuController {
      */
     @GetMapping("/listNoPage")
     public List<SysMenu> listSysMenus(SysMenuQuery sysMenuQuery) {
-        //获取当前登录人id todo
-        String userId = "1" ;
-        List<SysMenu> list = sysMenuService.listSysMenus(sysMenuQuery, userId);
+        //获取当前登录人id
+        List<SysMenu> list = sysMenuService.listSysMenus(sysMenuQuery, ShiroUtils.getCurrentUserId());
         return list;
     }
 
@@ -105,8 +105,7 @@ public class SysMenuController {
     @GetMapping("/menuTreeData")
     public Result menuTreeData() {
         //获取当前登录人id todo
-        String userId = "1" ;
-        List<Ztree> ztrees = sysMenuService.menuTreeData(userId);
+        List<Ztree> ztrees = sysMenuService.menuTreeData(ShiroUtils.getCurrentUserId());
         return Result.success(ztrees);
     }
 

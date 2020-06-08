@@ -1,5 +1,6 @@
 package com.yk.web.controller.system.page;
 
+import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysMenu;
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.service.SysMenuService;
@@ -28,10 +29,10 @@ public class SysIndexPageController {
     @GetMapping("/index")
     public String index(Model model) {
 
-        SysUser sysUser = new SysUser();
-        sysUser.setId("1");
+        SysUser sysUser = ShiroUtils.getCurrentSysUser();
         List<SysMenu> menus = sysMenuService.listSysMenusByUser(sysUser);
         model.addAttribute("menus", menus);
+        model.addAttribute("user", sysUser);
         return "index";
     }
 }

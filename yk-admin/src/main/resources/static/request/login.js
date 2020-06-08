@@ -16,26 +16,25 @@ $.validator.setDefaults({
 
 function login() {
 	$.modal.loading($("#btnSubmit").data("loading"));
-	var username = $.common.trim($("input[name='username']").val());
+	var userName = $.common.trim($("input[name='userName']").val());
     var password = $.common.trim($("input[name='password']").val());
     $.ajax({
+        url: ctx + "api/system/login",
         type: "post",
-        url: ctx + "doLogin",
-        data: {
-            "username": username,
-            "password": password,
-        },
+        dataType: "json",
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify({username: userName, password: password}),
         success: function(r) {
             if (r.code == 200) {
                 location.href = ctx + 'index';
             } else {
-            	$.modal.closeLoading();
-            	$('.imgcode').click();
-            	$(".code").val("");
-            	$.modal.msg(r.msg);
+                $.modal.closeLoading();
+                $('.imgcode').click();
+                $(".code").val("");
+                $.modal.msg(r.msg);
             }
         }
-    });
+    })
 }
 
 function validateRule() {
