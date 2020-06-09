@@ -41,6 +41,8 @@ public class SysUser extends BaseEntity implements Serializable {
     private String salt;
     //账号状态(0已删除, 1正常, 2停用)
     private Integer status;
+    //角色id
+    private String roleId;
 
     /**
      * 判断是否是超级管理员

@@ -1,7 +1,9 @@
 package com.yk.framework.shiro.service;
 
 import com.yk.system.model.pojo.SysUser;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class PasswordService {
+    @Autowired
+    private CacheManager cacheManager;
 
     /**
      * 验证登录并校验密码

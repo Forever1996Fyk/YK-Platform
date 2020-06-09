@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.system.mapper.DictDataMapper">
+    <!-- 新增系统用户 -->
+    <insert id="insertDictData" parameterType="DictData">
+        insert into tb_dict_data(
+        <include refid="dictData_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        ( #{id}, #{dictSort}, #{dictLabel}, #{dictValue}, #{dictType}, #{cssClass}, #{listClass}, #{isDefault}, #{remark}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime} )
+    </insert>
+
+    <!-- 批量新增用户系统 -->
+    <insert id="insertDictDataBatch">
+        insert into tb_dict_data(
+        <include refid="dictData_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.dictSort}, #{item.dictLabel}, #{item.dictValue}, #{item.dictType}, #{item.cssClass}, #{item.listClass}, #{item.isDefault}, #{item.remark}, #{item.status}, #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!--  更新系统用户  -->
+    <update id="updateDictData" parameterType="DictData">
+        update tb_dict_data
+        <set>
+            <if test="dictSort != null ">
+                dict_sort = #{dictSort},
+            </if>
+            <if test="dictLabel != null  and dictLabel != '' and dictLabel != 'null' and dictLabel != 'undefined' ">
+                dict_label = #{dictLabel},
+            </if>
+            <if test="dictValue != null  and dictValue != '' and dictValue != 'null' and dictValue != 'undefined' ">
+                dict_value = #{dictValue},
+            </if>
+            <if test="dictType != null  and dictType != '' and dictType != 'null' and dictType != 'undefined' ">
+                dict_type = #{dictType},
+            </if>
+            <if test="cssClass != null  and cssClass != '' and cssClass != 'null' and cssClass != 'undefined' ">
+                css_class = #{cssClass},
+            </if>
+            <if test="listClass != null  and listClass != '' and listClass != 'null' and listClass != 'undefined' ">
+                list_class = #{listClass},
+            </if>
+            <if test="isDefault != null ">
+                is_default = #{isDefault},
+            </if>
+            <if test="remark != null  and remark != '' and remark != 'null' and remark != 'undefined' ">
+                remark = #{remark},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createTime != null  and createTime != '' and createTime != 'null' and createTime != 'undefined' ">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="updateTime != null  and updateTime != '' and updateTime != 'null' and updateTime != 'undefined' ">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateDictDataType" parameterType="String">
+ 		update tb_dict_data set dict_type = #{newDictType} where dict_type = #{oldDictType}
+	</update>
+
+    <!-- 根据id删除系统用户 -->
+    <update id="deleteDictDataById">
+        update tb_dict_data set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除系统用户 -->
+    <update id="deleteBatchDictDataByIds" parameterType="List">
+        update tb_dict_data set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除系统用户 -->
+    <delete id="deleteDictDataRealById">
+        delete from tb_dict_data where id = #{id}
+    </delete>
+
+    <!-- 批量真删除系统用户 -->
+    <delete id="deleteBatchDictDataRealByIds">
+        delete from tb_dict_data where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统用户 -->
+    <select id="getDictDataById" resultType="DictData">
+        select
+        <include refid="dictData_select_cond"/>
+        from tb_dict_data a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询系统用户集合 -->
+    <select id="listDictDatas" parameterType="DictDataQuery" resultType="DictData">
+        select
+        <include refid="dictData_select_cond"/>
+        from tb_dict_data a
+        <where>
+            <if test="dictLabel != null  and dictLabel != '' and dictLabel != 'null' and dictLabel != 'undefined' ">
+                and a.dict_label = #{dictLabel}
+            </if>
+            <if test="dictType != null  and dictType != '' and dictType != 'null' and dictType != 'undefined' ">
+                and a.dict_type = #{dictType}
+            </if>
+            AND a.status = 1
+        </where>
+    </select>
+
+    <sql id="dictData_select_cond">
+        a.id id, a.dict_sort dictSort, a.dict_label dictLabel, a.dict_value dictValue, a.dict_type dictType, a.css_class cssClass, a.list_class listClass, a.is_default isDefault, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
+
+    <sql id="dictData_add_key">
+        id, dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, remark, status, create_user_id, create_time, update_user_id, update_time    </sql>
+</mapper>

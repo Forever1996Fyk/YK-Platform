@@ -9,6 +9,7 @@ import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.service.SysMenuService;
 import com.yk.system.service.SysRoleService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -90,5 +91,12 @@ public class UserRealm extends AuthorizingRealm {
         }
         SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(sysUser, password, getName());
         return simpleAuthenticationInfo;
+    }
+
+    /**
+     * 清楚缓存权限
+     */
+    public void clearCachedAuthorizationInfo() {
+        this.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
     }
 }

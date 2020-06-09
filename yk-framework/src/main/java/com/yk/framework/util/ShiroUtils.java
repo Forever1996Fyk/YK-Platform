@@ -1,9 +1,11 @@
 package com.yk.framework.util;
 
 import com.yk.common.util.StringUtils;
+import com.yk.framework.shiro.realm.UserRealm;
 import com.yk.system.model.pojo.SysUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -83,5 +85,11 @@ public class ShiroUtils {
         SecureRandomNumberGenerator generator = new SecureRandomNumberGenerator();
         String hex = generator.nextBytes(3).toHex();
         return hex;
+    }
+
+    public static void clearCachedAuthorizationInfo() {
+        RealmSecurityManager rsm = (RealmSecurityManager) SecurityUtils.getSecurityManager();
+        UserRealm realm = (UserRealm) rsm.getRealms().iterator().next();
+        realm.clearCachedAuthorizationInfo();
     }
 }

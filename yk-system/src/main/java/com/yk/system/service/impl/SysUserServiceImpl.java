@@ -1,10 +1,14 @@
 package com.yk.system.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.yk.common.util.AppUtils;
+import com.yk.common.util.StringUtils;
 import com.yk.common.util.TimeUtils;
 import com.yk.system.mapper.SysUserMapper;
+import com.yk.system.mapper.UserRoleMapper;
 import com.yk.system.model.pojo.SysUser;
+import com.yk.system.model.pojo.UserRole;
 import com.yk.system.model.query.SysUserQuery;
 import com.yk.system.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,8 @@ import java.util.List;
 public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Override
     public int insertSysUser(SysUser sysUser) {
@@ -32,7 +38,26 @@ public class SysUserServiceImpl implements SysUserService {
         sysUser.setStatus(1);
         sysUser.setCreateTime(TimeUtils.getCurrentDatetime());
         sysUser.setUpdateTime(TimeUtils.getCurrentDatetime());
-        return sysUserMapper.insertSysUser(sysUser);
+        int row = sysUserMapper.insertSysUser(sysUser);
+
+        //添加用户角色关系
+        insertUserRoles(sysUser);
+        return row;
+    }
+
+    private void insertUserRoles(SysUser sysUser) {
+        if (StringUtils.isBlank(sysUser.getRoleId())) {
+            return;
+        }
+        String[] roleIds = sysUser.getRoleId().split(",");
+        List<UserRole> list = Lists.newArrayList();
+        for (String roleId : roleIds) {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(sysUser.getId());
+            userRole.setRoleId(roleId);
+            list.add(userRole);
+        }
+        userRoleMapper.insertUserRoleBatch(list);
     }
 
     @Override
@@ -42,6 +67,10 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public int updateSysUser(SysUser sysUser) {
+        //先删除用户角色关联
+        userRoleMapper.deleteUserRoleRealByUserId(sysUser.getId());
+        // 在新增用户角色关系
+        insertUserRoles(sysUser);
         sysUser.setUpdateTime(TimeUtils.getCurrentDatetime());
         return sysUserMapper.updateSysUser(sysUser);
     }

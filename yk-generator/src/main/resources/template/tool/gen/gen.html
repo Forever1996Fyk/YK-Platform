@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
 	<th:block th:include="include :: header('代码生成列表')" />
 </head>
@@ -32,13 +32,13 @@
 			</div>
 			
 			<div class="btn-group-sm" id="toolbar" role="group">
-			     <a class="btn btn-success" onclick="javascript:batchGenCode()" >
+			     <a class="btn btn-success" onclick="javascript:batchGenCode()" shiro:hasPermission="tool:gen:code">
 			        <i class="fa fa-download"></i> 生成
 			    </a>
 				<a class="btn btn-info" onclick="importTable()">
 			        <i class="fa fa-upload"></i> 导入
 			    </a>
-			    <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" >
+			    <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="tool:gen:deleteBatch">
 		            <i class="fa fa-remove"></i> 删除
 		        </a>
 		    </div>
@@ -52,6 +52,11 @@
 	<script th:inline="javascript">
 		var prefix = ctx + "api/gen";
 		var pagePrefix = ctx + "tool/gen";
+
+		var editFlag = [[${@permission.hasPermi('tool:gen:edit')}]];
+		var deleteFlag = [[${@permission.hasPermi('tool:gen:delete')}]];
+		var previewFlag = [[${@permission.hasPermi('tool:gen:preview')}]];
+		var codeFlag = [[${@permission.hasPermi('tool:gen:code')}]];
 
 		$(function() {
 		    var options = {
@@ -109,10 +114,10 @@
 		            align: 'center',
 		            formatter: function(value, row, index) {
 		                var actions = [];
-		                actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="preview(\'' + row.id + '\')"><i class="fa fa-search"></i>预览</a> ');
-		                actions.push('<a class="btn btn-success btn-xs" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-		                actions.push('<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a> ');
-		                actions.push('<a class="btn btn-primary btn-xs" href="javascript:void(0)" onclick="genCode(\'' + row.tableName + '\')"><i class="fa fa-bug"></i>生成代码</a> ');
+		                actions.push('<a class="btn btn-info btn-xs ' + previewFlag + '" href="javascript:void(0)" onclick="preview(\'' + row.id + '\')"><i class="fa fa-search"></i>预览</a> ');
+		                actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editTab(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+		                actions.push('<a class="btn btn-danger btn-xs ' + deleteFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a> ');
+		                actions.push('<a class="btn btn-primary btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="genCode(\'' + row.tableName + '\')"><i class="fa fa-bug"></i>生成代码</a> ');
 		                return actions.join('');
 		            }
 		        }]

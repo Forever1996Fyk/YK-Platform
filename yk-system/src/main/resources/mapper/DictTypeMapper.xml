@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.system.mapper.DictTypeMapper">
+    <!-- 新增系统用户 -->
+    <insert id="insertDictType" parameterType="DictType">
+        insert into tb_dict_type(
+        <include refid="dictType_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        ( #{id}, #{dictName}, #{dictType}, #{remark}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime} )
+    </insert>
+
+    <!-- 批量新增用户系统 -->
+    <insert id="insertDictTypeBatch">
+        insert into tb_dict_type(
+        <include refid="dictType_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.dictName}, #{item.dictType}, #{item.remark}, #{item.status}, #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!--  更新系统用户  -->
+    <update id="updateDictType" parameterType="DictType">
+        update tb_dict_type
+        <set>
+            <if test="dictName != null  and dictName != '' and dictName != 'null' and dictName != 'undefined' ">
+                dict_name = #{dictName},
+            </if>
+            <if test="dictType != null  and dictType != '' and dictType != 'null' and dictType != 'undefined' ">
+                dict_type = #{dictType},
+            </if>
+            <if test="remark != null  and remark != '' and remark != 'null' and remark != 'undefined' ">
+                remark = #{remark},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createTime != null  and createTime != '' and createTime != 'null' and createTime != 'undefined' ">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="updateTime != null  and updateTime != '' and updateTime != 'null' and updateTime != 'undefined' ">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除系统用户 -->
+    <update id="deleteDictTypeById">
+        update tb_dict_type set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除系统用户 -->
+    <update id="deleteBatchDictTypeByIds" parameterType="List">
+        update tb_dict_type set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除系统用户 -->
+    <delete id="deleteDictTypeRealById">
+        delete from tb_dict_type where id = #{id}
+    </delete>
+
+    <!-- 批量真删除系统用户 -->
+    <delete id="deleteBatchDictTypeRealByIds">
+        delete from tb_dict_type where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统用户 -->
+    <select id="getDictTypeById" resultType="DictType">
+        select
+        <include refid="dictType_select_cond"/>
+        from tb_dict_type a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询系统用户集合 -->
+    <select id="listDictTypes" parameterType="DictTypeQuery" resultType="DictType">
+        select
+        <include refid="dictType_select_cond"/>
+        from tb_dict_type a
+        <where>
+            <if test="dictName != null  and dictName != '' and dictName != 'null' and dictName != 'undefined' ">
+                and a.dict_name like concat('%', #{dictName}, '%')
+            </if>
+            <if test="dictType != null  and dictType != '' and dictType != 'null' and dictType != 'undefined' ">
+                and a.dict_type = #{dictType}
+            </if>
+            AND a.status = 1
+        </where>
+    </select>
+
+    <sql id="dictType_select_cond">
+        a.id id, a.dict_name dictName, a.dict_type dictType, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
+
+    <sql id="dictType_add_key">
+        id, dict_name, dict_type, remark, status, create_user_id, create_time, update_user_id, update_time    </sql>
+</mapper>

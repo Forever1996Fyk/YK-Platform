@@ -7,6 +7,7 @@ import com.yk.system.model.pojo.SysMenu;
 import com.yk.system.model.pojo.SysRole;
 import com.yk.system.model.query.SysMenuQuery;
 import com.yk.system.service.SysMenuService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class SysMenuController {
      * @return
      */
     @GetMapping("/list")
+    @RequiresPermissions("system:menu:list")
     public Result listSysMenus(@RequestParam(value = "start", defaultValue = "0") int start,
                                @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
                                SysMenuQuery sysMenuQuery) {
@@ -49,6 +51,7 @@ public class SysMenuController {
      * @return
      */
     @GetMapping("/listNoPage")
+    @RequiresPermissions("system:menu:list")
     public List<SysMenu> listSysMenus(SysMenuQuery sysMenuQuery) {
         //获取当前登录人id
         List<SysMenu> list = sysMenuService.listSysMenus(sysMenuQuery, ShiroUtils.getCurrentUserId());
@@ -62,6 +65,7 @@ public class SysMenuController {
      * @return
      */
     @PostMapping("/addSysMenu")
+    @RequiresPermissions("system:menu:add")
     public Result addSysMenu(@RequestBody SysMenu sysMenu) {
         return Result.response(sysMenuService.insertSysMenu(sysMenu));
     }
@@ -73,7 +77,9 @@ public class SysMenuController {
      * @return
      */
     @PutMapping("/editSysMenu")
+    @RequiresPermissions("system:menu:edit")
     public Result editSysMenu(@RequestBody SysMenu sysMenu) {
+        ShiroUtils.clearCachedAuthorizationInfo();
         return Result.response(sysMenuService.updateSysMenu(sysMenu));
     }
 
@@ -84,6 +90,7 @@ public class SysMenuController {
      * @return
      */
     @DeleteMapping("/deleteSysMenuById/{id}")
+    @RequiresPermissions("system:menu:delete")
     public Result deleteSysMenuById(@PathVariable("id") String id) {
         return Result.response(sysMenuService.deleteSysMenuById(id));
     }
@@ -95,6 +102,7 @@ public class SysMenuController {
      * @return
      */
     @DeleteMapping("/deleteBatchSysMenuByIds/{ids}")
+    @RequiresPermissions("system:menu:deleteBatch")
     public Result deleteBatchSysMenuByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(sysMenuService.deleteBatchSysMenuByIds(ids));
     }

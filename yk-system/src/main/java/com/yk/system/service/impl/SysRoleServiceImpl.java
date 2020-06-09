@@ -189,4 +189,13 @@ public class SysRoleServiceImpl implements SysRoleService {
         return userRoleMapper.delUserRoleInfos(roleId, Convert.toStrArray(userIds));
     }
 
+    @Override
+    public List<SysRole> listSysRolesByUserId(String id) {
+        List<SysRole> sysRoles = sysRoleMapper.listSysRolesByUserId(id);
+        List<SysRole> roles = this.listSysRoles(new SysRoleQuery());
+        roles.stream().filter(role -> sysRoles.stream().anyMatch(sysRole -> role.getId().equals(sysRole.getId())))
+                .forEach(role -> role.setFlag(true));
+        return roles;
+    }
+
 }

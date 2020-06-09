@@ -118,4 +118,11 @@ public interface SysRoleService {
      * @return
      */
     int deleteAuthUsers(String roleId, String userIds);
+
+    /**
+     * 根据用户id获取角色列表
+     * @param id
+     * @return
+     */
+    List<SysRole> listSysRolesByUserId(String id);
 }

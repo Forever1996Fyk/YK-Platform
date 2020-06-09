@@ -49,6 +49,7 @@ public class SysUserController {
      * @return
      */
     @PostMapping("/addSysUser")
+    @RequiresPermissions("system:user:add")
     public Result addSysUser(@RequestBody SysUser sysUser) {
         sysUser.setSalt(ShiroUtils.randomSalt());
         sysUser.setPassword(passwordService.encryptPassword(sysUser.getUserName(), sysUser.getPassword(), sysUser.getSalt()));
@@ -61,6 +62,7 @@ public class SysUserController {
      * @return
      */
     @PutMapping("/editSysUser")
+    @RequiresPermissions("system:user:edit")
     public Result editSysUser(@RequestBody SysUser sysUser) {
         return Result.response(sysUserService.updateSysUser(sysUser));
     }
@@ -71,6 +73,7 @@ public class SysUserController {
      * @return
      */
     @DeleteMapping("/deleteSysUserById/{id}")
+    @RequiresPermissions("system:user:delete")
     public Result deleteSysUserById(@PathVariable("id") String id) {
         return Result.response(sysUserService.deleteSysUserById(id));
     }
@@ -80,6 +83,7 @@ public class SysUserController {
      * @param ids
      * @return
      */
+    @RequiresPermissions("system:user:deleteBatch")
     @DeleteMapping("/deleteBatchSysUserByIds/{ids}")
     public Result deleteBatchSysUserByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(sysUserService.deleteBatchSysUserByIds(ids));

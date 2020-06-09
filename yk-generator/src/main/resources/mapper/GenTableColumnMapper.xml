@@ -18,7 +18,7 @@
          pk, increment, required, is_insert, edit, list, query, query_type, html_type, dict_type, sort)
 
         values (#{id}, #{tableId}, #{columnName}, #{columnComment}, #{columnType}, #{javaType}, #{javaField}, #{pk}, #{increment},
-        #{required}, #{insert}, #{edit}, #{list}, #{query}, #{queryType}, #{htmlType}, #{dictType}, #{sort})
+        #{required}, #{isInsert}, #{edit}, #{list}, #{query}, #{queryType}, #{htmlType}, #{dictType}, #{sort})
     </insert>
 
     <!-- 根据tableId获取数据库表列集合 -->

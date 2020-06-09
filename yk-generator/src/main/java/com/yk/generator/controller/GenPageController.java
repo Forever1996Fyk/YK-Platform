@@ -2,6 +2,7 @@ package com.yk.generator.controller;
 
 import com.yk.generator.model.pojo.GenTable;
 import com.yk.generator.service.GenTableService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,7 @@ public class GenPageController {
      * @return
      */
     @GetMapping()
+    @RequiresPermissions("tool:gen:view")
     public String gen() {
         return prefix + "/gen";
     }

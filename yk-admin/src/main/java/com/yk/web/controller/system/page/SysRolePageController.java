@@ -1,6 +1,7 @@
 package com.yk.web.controller.system.page;
 
 import com.yk.system.service.SysRoleService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,7 @@ public class SysRolePageController {
      * @return
      */
     @GetMapping()
+    @RequiresPermissions("system:role:view")
     public String role() {
         return prefix + "/role";
     }

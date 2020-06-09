@@ -27,10 +27,10 @@
 			</div>
 	        
 	        <div class="btn-group-sm" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="selectUser()">
+				<a class="btn btn-success" onclick="selectUser()" shiro:hasPermission="system:role:add">
 	                <i class="fa fa-plus"></i> 添加用户
 	            </a>
-				<a class="btn btn-danger multiple disabled" onclick="cancelAuthUserAll()">
+				<a class="btn btn-danger multiple disabled" onclick="cancelAuthUserAll()" shiro:hasPermission="system:role:deleteBatch">
 		            <i class="fa fa-remove"></i> 批量取消授权
 		        </a>
 		        <a class="btn btn-warning" onclick="closeItem()">
@@ -47,6 +47,8 @@
 	<script th:inline="javascript">
 		var prefix = ctx + "api/system/role/authUser";
 		var pagePrefix = ctx + "system/role/authUser";
+
+		var deleteFlag = [[${@permission.hasPermi('system:role:delete')}]];
 
 		$(function() {
 			var options = {
@@ -94,7 +96,7 @@
 		            align: 'center',
 		            formatter: function(value, row, index) {
 		                var actions = [];
-		                actions.push('<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="cancelAuthUser(\'' + row.id + '\')"><i class="fa fa-remove"></i>取消授权</a> ');
+		                actions.push('<a class="btn btn-danger btn-xs ' + deleteFlag + '" href="javascript:void(0)" onclick="cancelAuthUser(\'' + row.id + '\')"><i class="fa fa-remove"></i>取消授权</a> ');
 		                return actions.join('');
 		            }
 		        }]

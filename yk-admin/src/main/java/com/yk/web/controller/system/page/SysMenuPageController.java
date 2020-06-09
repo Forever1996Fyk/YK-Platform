@@ -3,6 +3,7 @@ package com.yk.web.controller.system.page;
 import com.yk.system.model.pojo.SysMenu;
 import com.yk.system.service.SysMenuService;
 import com.yk.common.util.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,7 @@ public class SysMenuPageController {
      * @return
      */
     @GetMapping()
+    @RequiresPermissions("system:menu:view")
     public String menu() {
         return prefix + "/menu" ;
     }

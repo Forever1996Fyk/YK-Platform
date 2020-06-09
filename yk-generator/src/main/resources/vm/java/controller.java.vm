@@ -6,6 +6,7 @@ import ${packageName}.model.query.${ClassName}Query;
 import ${packageName}.service.${ClassName}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 import java.util.List;
 #if($table.tplCategory == 'crud')
@@ -36,6 +37,7 @@ public class ${ClassName}Controller {
      * @return
      */
     @GetMapping("/list")
+    @RequiresPermissions("${permissionPrefix}:list")
     public Result list${ClassName}s(@RequestParam(value = "start", defaultValue = "0") int start,
                                @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
                                ${ClassName}Query ${className}Query) {
@@ -47,6 +49,7 @@ public class ${ClassName}Controller {
      * 查询${functionName}树列表
      */
     @GetMapping("/list")
+    @RequiresPermissions("${permissionPrefix}:list")
     public List<${ClassName}> list(${ClassName}Query ${className}Query) {
         List<${ClassName}> list = ${className}Service.list${ClassName}s(${className}Query);
         return list;
@@ -59,6 +62,7 @@ public class ${ClassName}Controller {
      * @return
      */
     @PostMapping("/add${ClassName}")
+    @RequiresPermissions("${permissionPrefix}:add")
     public Result add${ClassName}(@RequestBody ${ClassName} ${className}) {
         return Result.response(${className}Service.insert${ClassName}(${className}));
     }
@@ -69,6 +73,7 @@ public class ${ClassName}Controller {
      * @return
      */
     @PutMapping("/edit${ClassName}")
+    @RequiresPermissions("${permissionPrefix}:edit")
     public Result edit${ClassName}(@RequestBody ${ClassName} ${className}) {
         return Result.response(${className}Service.update${ClassName}(${className}));
     }
@@ -79,6 +84,7 @@ public class ${ClassName}Controller {
      * @return
      */
     @DeleteMapping("/delete${ClassName}ById/{id}")
+    @RequiresPermissions("${permissionPrefix}:delete")
     public Result delete${ClassName}ById(@PathVariable("id") String id) {
         return Result.response(${className}Service.delete${ClassName}ById(id));
     }
@@ -89,6 +95,7 @@ public class ${ClassName}Controller {
      * @return
      */
     @DeleteMapping("/deleteBatch${ClassName}ByIds/{ids}")
+    @RequiresPermissions("${permissionPrefix}:deleteBatch")
     public Result deleteBatch${ClassName}ByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(${className}Service.deleteBatch${ClassName}ByIds(ids));
     }
@@ -97,7 +104,7 @@ public class ${ClassName}Controller {
      * 删除
      */
     @DeleteMapping("/deleteTreeNode/{${pkColumn.javaField}}")
-    @ResponseBody
+    @RequiresPermissions("${permissionPrefix}:delete")
     public Result deleteTreeNode(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}) {
         return Result.response(${className}Service.delete${ClassName}ById(${pkColumn.javaField}));
     }
@@ -109,7 +116,6 @@ public class ${ClassName}Controller {
      * 加载${functionName}树列表
      */
     @GetMapping("/treeData")
-    @ResponseBody
     public List<Ztree> treeData() {
         List<Ztree> ztrees = ${className}Service.list${ClassName}Tree();
         return ztrees;

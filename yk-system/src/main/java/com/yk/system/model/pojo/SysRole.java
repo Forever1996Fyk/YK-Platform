@@ -34,6 +34,8 @@ public class SysRole extends BaseEntity {
     private String remark;
     /** 菜单id集合 */
     private String menuId;
+    /** 用户是否存在此角色标识 默认不存在 */
+    private boolean flag = false;
 
     @Override
     public String toString() {

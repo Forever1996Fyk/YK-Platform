@@ -11,6 +11,7 @@ import com.yk.generator.service.GenCodeService;
 import com.yk.generator.service.GenTableColumnService;
 import com.yk.generator.service.GenTableService;
 import org.apache.commons.io.IOUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class GenController {
      * @return
      */
     @GetMapping("/listGenTables")
+    @RequiresPermissions("tool:gen:list")
     public Result listGenTables(@RequestParam(value = "start", defaultValue = "0") int start,
                                 @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
                                 GenTableQuery genTableQuery) {
@@ -56,6 +58,7 @@ public class GenController {
      * @return
      */
     @GetMapping("/db/list")
+    @RequiresPermissions("tool:gen:list")
     public Result dataList(@RequestParam(value = "start", defaultValue = "0") int start,
                            @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
                            GenTableQuery genTableQuery) {
@@ -67,7 +70,7 @@ public class GenController {
      * 查询数据表字段列表
      */
     @GetMapping("/listGenTableColumns")
-    @ResponseBody
+    @RequiresPermissions("tool:gen:list")
     public Result listGenTableColumns(@RequestParam(value = "start", defaultValue = "0") int start,
                                       @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
                                       GenTableColumnQuery genTableColumnQuery) {
@@ -83,6 +86,7 @@ public class GenController {
      * @author YuKai Fan
      * @date 2020/6/4 21:47
      */
+    @RequiresPermissions("tool:gen:list")
     @PostMapping("/importTable/{tables}")
     public Result importTable(@PathVariable("tables") String tables) {
         String[] tableNames = Convert.toStrArray(tables);
@@ -97,6 +101,7 @@ public class GenController {
      * @return
      */
     @PutMapping("/editGenTable")
+    @RequiresPermissions("tool:gen:edit")
     public Result editGenTable(GenTable genTable) {
         genTableService.validateEdit(genTable);
         genTableService.updateGenTable(genTable);
@@ -109,6 +114,7 @@ public class GenController {
      * @return
      */
     @GetMapping("/preview/{tableId}")
+    @RequiresPermissions("tool:gen:preview")
     public Result preview(@PathVariable("tableId") String tableId) {
         Map<String, Object> map = genTableService.previewCode(tableId);
         return Result.success(map);
@@ -121,6 +127,7 @@ public class GenController {
      * @param response
      */
     @GetMapping("/genCode/{tableName}")
+    @RequiresPermissions("tool:gen:code")
     public void genCode(@PathVariable("tableName") String tableName, HttpServletResponse response) throws IOException {
         byte[] data = genTableService.generatorCode(tableName);
         genCode(response, data);
@@ -133,6 +140,7 @@ public class GenController {
      * @param response
      */
     @GetMapping("/batchGenCode/{tableNames}")
+    @RequiresPermissions("tool:gen:code")
     public void batchGenCode(@PathVariable("tableNames") String tableNames, HttpServletResponse response) throws IOException {
         String[] tableNameArr = Convert.toStrArray(tableNames);
         byte[] data = genTableService.generatorCode(tableNameArr);

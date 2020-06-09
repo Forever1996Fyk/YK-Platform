@@ -16,4 +16,14 @@ public class ComConstants {
      * GBK 字符集
      */
     public static final String GBK = "GBK";
+
+    /**
+     * 字典管理 cache name
+     */
+    public static final String SYS_DICT_CACHE = "sys-dict";
+
+    /**
+     * 字典管理 cache key
+     */
+    public static final String SYS_DICT_KEY = "sys_dict:";
 }
