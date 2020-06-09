@@ -1,7 +1,10 @@
 package com.yk.web.controller.system;
 
+import com.yk.common.constant.UserConstants;
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
+import com.yk.common.exception.ParameterException;
+import com.yk.common.util.AssertUtils;
 import com.yk.framework.shiro.service.PasswordService;
 import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysUser;
@@ -52,6 +55,7 @@ public class SysUserController {
     @RequiresPermissions("system:user:add")
     public Result addSysUser(@RequestBody SysUser sysUser) {
         sysUser.setSalt(ShiroUtils.randomSalt());
+        sysUser.setPassword(UserConstants.DEFAULT_PASSWORD);
         sysUser.setPassword(passwordService.encryptPassword(sysUser.getUserName(), sysUser.getPassword(), sysUser.getSalt()));
         return Result.response(sysUserService.insertSysUser(sysUser));
     }
@@ -64,6 +68,9 @@ public class SysUserController {
     @PutMapping("/editSysUser")
     @RequiresPermissions("system:user:edit")
     public Result editSysUser(@RequestBody SysUser sysUser) {
+        if (!UserConstants.ADMIN_USER_ID.equals(ShiroUtils.getCurrentUserId()) && UserConstants.ADMIN_USER_ID.equals(sysUser.getId())) {
+            throw new ParameterException("无法修改超级管理员账号!");
+        }
         return Result.response(sysUserService.updateSysUser(sysUser));
     }
 
@@ -75,6 +82,7 @@ public class SysUserController {
     @DeleteMapping("/deleteSysUserById/{id}")
     @RequiresPermissions("system:user:delete")
     public Result deleteSysUserById(@PathVariable("id") String id) {
+        AssertUtils.checkUserAllowed(id);
         return Result.response(sysUserService.deleteSysUserById(id));
     }
 
@@ -86,6 +94,7 @@ public class SysUserController {
     @RequiresPermissions("system:user:deleteBatch")
     @DeleteMapping("/deleteBatchSysUserByIds/{ids}")
     public Result deleteBatchSysUserByIds(@PathVariable("ids") List<String> ids) {
+        ids.forEach(id -> AssertUtils.checkUserAllowed(id));
         return Result.response(sysUserService.deleteBatchSysUserByIds(ids));
     }
 }

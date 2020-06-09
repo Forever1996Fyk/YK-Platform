@@ -7,6 +7,17 @@ package com.yk.common.constant;
  * @create: 2020-06-08 15:33
  **/
 public class UserConstants {
+
+    /**
+     * 超级管理员id
+     */
+    public static final String ADMIN_USER_ID = "1";
+
+    /**
+     * 用户默认密码
+     */
+    public static final String DEFAULT_PASSWORD = "111111";
+
     /**
      * 手机号码格式限制
      */

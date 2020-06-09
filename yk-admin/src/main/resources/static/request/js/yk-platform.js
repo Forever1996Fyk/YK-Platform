@@ -888,7 +888,7 @@ var table = {
         	        url: url,
         	        type: type,
         	        dataType: dataType,
-        	        data: data,
+        	        data: JSON.stringify(data),
 					contentType: contentType ? contentType:'application/json;charset=UTF-8',
         	        beforeSend: function () {
         	        	$.modal.loading("正在处理中，请稍后...");
@@ -909,6 +909,14 @@ var table = {
 			// post 变量参数 请求传输
 			postVariable: function(url, callback) {
 				$.operate.submit(url, "post", "json", callback);
+			},
+			// put请求传输
+			put: function(url, data, callback) {
+				$.operate.submit(url, "put", "json", data, callback);
+			},
+			// put 变量参数 请求传输
+			putVariable: function(url, callback) {
+				$.operate.submit(url, "put", "json", callback);
 			},
             // get请求传输
             get: function(url, callback) {

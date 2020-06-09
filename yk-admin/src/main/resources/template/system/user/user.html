@@ -83,8 +83,12 @@
                     visible: false
                 },
                 {
+                    visible: editFlag == 'hidden' ? false : true,
                     title: '用户状态',
-                    align: 'center'
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return statusTools(row);
+                    }
                 },
                 {
                     field: 'createTime',
@@ -103,6 +107,29 @@
         };
         $.table.init(options);
     });
+
+    /* 用户状态显示 */
+    function statusTools(row) {
+        if (row.status == 2) {
+            return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
+        } else {
+            return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
+        }
+    }
+
+    /* 用户管理-停用 */
+    function disable(userId) {
+        $.modal.confirm("确认要停用用户吗？", function() {
+            $.operate.put(prefix + "/editSysUser", { "id": userId, "status": 2 });
+        })
+    }
+
+    /* 用户管理启用 */
+    function enable(userId) {
+        $.modal.confirm("确认要启用用户吗？", function() {
+            $.operate.put(prefix + "/editSysUser", { "id": userId, "status": 1 });
+        })
+    }
 </script>
 
 </body>

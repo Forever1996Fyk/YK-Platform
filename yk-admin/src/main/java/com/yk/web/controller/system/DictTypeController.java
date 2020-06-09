@@ -1,14 +1,17 @@
 package com.yk.web.controller.system;
 
 import com.yk.common.dto.Result;
+import com.yk.common.entity.Ztree;
 import com.yk.system.model.pojo.DictType;
 import com.yk.system.model.query.DictTypeQuery;
 import com.yk.system.service.DictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 import java.util.List;
+
 import com.yk.common.dto.DataTablesViewPage;
 
 /**
@@ -25,6 +28,7 @@ public class DictTypeController {
 
     /**
      * 获取字典类型集合
+     *
      * @param start
      * @param pageSize
      * @param dictTypeQuery
@@ -33,14 +37,15 @@ public class DictTypeController {
     @GetMapping("/list")
     @RequiresPermissions("system:dict:list")
     public Result listDictTypes(@RequestParam(value = "start", defaultValue = "0") int start,
-                               @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
-                               DictTypeQuery dictTypeQuery) {
+                                @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
+                                DictTypeQuery dictTypeQuery) {
         List<DictType> list = dictTypeService.listDictTypes(start, pageSize, dictTypeQuery);
         return Result.success("获取成功", new DataTablesViewPage<>(list));
     }
 
     /**
      * 新增字典类型
+     *
      * @param dictType
      * @return
      */
@@ -52,6 +57,7 @@ public class DictTypeController {
 
     /**
      * 修改字典类型
+     *
      * @param dictType
      * @return
      */
@@ -60,8 +66,10 @@ public class DictTypeController {
     public Result editDictType(@RequestBody DictType dictType) {
         return Result.response(dictTypeService.updateDictType(dictType));
     }
+
     /**
      * 根据id删除字典类型
+     *
      * @param id
      * @return
      */
@@ -73,6 +81,7 @@ public class DictTypeController {
 
     /**
      * 批量删除字典类型
+     *
      * @param ids
      * @return
      */
@@ -82,4 +91,13 @@ public class DictTypeController {
         return Result.response(dictTypeService.deleteBatchDictTypeByIds(ids));
     }
 
+
+    /**
+     * 加载字典列表树
+     */
+    @GetMapping("/treeData")
+    public Result treeData() {
+        List<Ztree> ztrees = dictTypeService.selectDictTree(new DictTypeQuery());
+        return Result.success(ztrees);
+    }
 }

@@ -358,7 +358,7 @@
 		            width: "13%",
 		            formatter: function (value, row, index) {
 		        		var html = $.common.sprintf("<input class='form-control' type='text' name='columns[%s].dictType' value='%s' id='columns_dict_%s'>", index, value, row.columnId);
-		        		return "<div class='input-group'>" + html + "<span class='input-group-addon input-sm' onclick='selectDictTree(" + row.columnId + ", this)'><i class='fa fa-search'></i></span></div>";
+		        		return "<div class='input-group'>" + html + "<span class='input-group-addon input-sm' onclick='selectDictTree(" + row.id + ", this)'><i class='fa fa-search'></i></span></div>";
 		        	},
 		        	cellStyle: function(value, row, index) {
                         return { css: { "cursor": "default" } };
@@ -418,7 +418,7 @@
 		// 选择字典处理函数
 		function selectDictTree(columnId, obj) {
 			var dictType = $.common.nullToStr($(obj).parent().find("input").val());
-        	var url = ctx + "system/dict/selectDictTree/" + columnId + "/" + dictType;
+        	var url = ctx + "system/dict/type/selectDictTree/" + columnId + "/" + dictType;
 			var options = {
 				title: '选择字典类型',
 				width: "380",

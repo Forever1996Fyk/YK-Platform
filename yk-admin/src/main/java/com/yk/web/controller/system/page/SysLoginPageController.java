@@ -14,10 +14,20 @@ public class SysLoginPageController {
 
     /**
      * 登录页面
+     *
      * @return
      */
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    /**
+     * 跳转到未授权页面
+     * @return
+     */
+    @GetMapping("/unAuth")
+    public String unAuth() {
+        return "error/unAuth";
     }
 }

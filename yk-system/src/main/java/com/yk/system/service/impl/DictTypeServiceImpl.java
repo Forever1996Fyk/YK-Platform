@@ -1,6 +1,9 @@
 package com.yk.system.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
+import com.yk.common.constant.UserConstants;
+import com.yk.common.entity.Ztree;
 import com.yk.common.exception.ParameterException;
 import com.yk.common.util.AppUtils;
 import com.yk.common.util.CacheUtils;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -155,6 +159,27 @@ public class DictTypeServiceImpl implements DictTypeService {
             DictUtils.setDictCache(dictType, dictDataList);
         }
         return null;
+    }
+
+    @Override
+    public List<Ztree> selectDictTree(DictTypeQuery dictTypeQuery) {
+        List<Ztree> ztrees = Lists.newArrayList();
+        List<DictType> dictList = dictTypeMapper.listDictTypes(dictTypeQuery);
+        dictList.forEach(dict -> {
+            Ztree ztree = new Ztree();
+            ztree.setId(dict.getId());
+            ztree.setName(transDictName(dict));
+            ztree.setTitle(dict.getDictType());
+            ztrees.add(ztree);
+        });
+        return ztrees;
+    }
+
+    private String transDictName(DictType dictType) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("(" + dictType.getDictName() + ")");
+        sb.append("&nbsp;&nbsp;&nbsp;" + dictType.getDictType());
+        return sb.toString();
     }
 
 }

@@ -61,6 +61,7 @@ public class DictTypePageController {
 
     /**
      * 查询字典详细
+     *
      * @param dictId
      * @param model
      * @return
@@ -73,4 +74,14 @@ public class DictTypePageController {
         return "system/dict/data/data";
     }
 
+    /**
+     * 选择字典树
+     */
+    @GetMapping("/selectDictTree/{columnId}/{dictType}")
+    public String selectDeptTree(@PathVariable("columnId") String columnId, @PathVariable("dictType") String dictType,
+                                 Model model) {
+        model.addAttribute("columnId", columnId);
+        model.addAttribute("dict", dictTypeService.listDictDataByType(dictType));
+        return prefix + "/tree";
+    }
 }

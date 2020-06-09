@@ -2,6 +2,7 @@ package com.yk.system.service;
 
 import java.util.List;
 
+import com.yk.common.entity.Ztree;
 import com.yk.system.model.pojo.DictData;
 import com.yk.system.model.pojo.DictType;
 import com.yk.system.model.query.DictTypeQuery;
@@ -88,4 +89,11 @@ public interface DictTypeService {
      * @return
      */
     List<DictData> listDictDataByType(String dictType);
+
+    /**
+     * 加载字典树
+     * @param dictType
+     * @return
+     */
+    List<Ztree> selectDictTree(DictTypeQuery dictTypeQuery);
 }

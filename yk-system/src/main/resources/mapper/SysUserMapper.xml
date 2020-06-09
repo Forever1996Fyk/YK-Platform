@@ -139,7 +139,7 @@
             <if test="status != null">
                 AND a.status = #{status}
             </if>
-            AND a.status = 1
+            AND a.status in (1, 2)
         </where>
     </select>
 
@@ -148,7 +148,7 @@
         select
         <include refid="sysUser_select_cond"/>
         from tb_sys_user a
-        where a.account = #{account} and a.status = 1
+        where a.account = #{account}
     </select>
 
     <!-- 根据用户名获取用户信息 -->
