@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.fileupload.mapper.ImageAttachmentMapper">
+    <!-- 新增系统用户 -->
+    <insert id="insertImageAttachment" parameterType="ImageAttachment">
+        insert into tb_image_attachment(
+        <include refid="imageAttachment_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        ( #{id}, #{ownerId}, #{attachAttr}, #{attachMd5}, #{attachSha1}, #{attachOriginTitle}, #{attachName}, #{attachSize}, #{attachSuffix}, #{attachUrl}, #{attachPath}, #{remark}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime} )
+    </insert>
+
+    <!-- 批量新增用户系统 -->
+    <insert id="insertImageAttachmentBatch">
+        insert into tb_image_attachment(
+        <include refid="imageAttachment_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.ownerId}, #{item.attachAttr}, #{item.attachMd5}, #{item.attachSha1}, #{item.attachOriginTitle}, #{item.attachName}, #{item.attachSize}, #{item.attachSuffix}, #{item.attachUrl}, #{item.attachPath}, #{item.remark}, #{item.status}, #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!--  更新系统用户  -->
+    <update id="updateImageAttachment" parameterType="ImageAttachment">
+        update tb_image_attachment
+        <set>
+            <if test="ownerId != null  and ownerId != '' and ownerId != 'null' and ownerId != 'undefined' ">
+                owner_id = #{ownerId},
+            </if>
+            <if test="attachAttr != null  and attachAttr != '' and attachAttr != 'null' and attachAttr != 'undefined' ">
+                attach_attr = #{attachAttr},
+            </if>
+            <if test="attachMd5 != null  and attachMd5 != '' and attachMd5 != 'null' and attachMd5 != 'undefined' ">
+                attach_md5 = #{attachMd5},
+            </if>
+            <if test="attachSha1 != null  and attachSha1 != '' and attachSha1 != 'null' and attachSha1 != 'undefined' ">
+                attach_sha1 = #{attachSha1},
+            </if>
+            <if test="attachOriginTitle != null  and attachOriginTitle != '' and attachOriginTitle != 'null' and attachOriginTitle != 'undefined' ">
+                attach_origin_title = #{attachOriginTitle},
+            </if>
+            <if test="attachName != null  and attachName != '' and attachName != 'null' and attachName != 'undefined' ">
+                attach_name = #{attachName},
+            </if>
+            <if test="attachSize != null ">
+                attach_size = #{attachSize},
+            </if>
+            <if test="attachSuffix != null  and attachSuffix != '' and attachSuffix != 'null' and attachSuffix != 'undefined' ">
+                attach_suffix = #{attachSuffix},
+            </if>
+            <if test="attachUrl != null  and attachUrl != '' and attachUrl != 'null' and attachUrl != 'undefined' ">
+                attach_url = #{attachUrl},
+            </if>
+            <if test="attachPath != null  and attachPath != '' and attachPath != 'null' and attachPath != 'undefined' ">
+                attach_path = #{attachPath},
+            </if>
+            <if test="remark != null  and remark != '' and remark != 'null' and remark != 'undefined' ">
+                remark = #{remark},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createTime != null  and createTime != '' and createTime != 'null' and createTime != 'undefined' ">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="updateTime != null  and updateTime != '' and updateTime != 'null' and updateTime != 'undefined' ">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除系统用户 -->
+    <update id="deleteImageAttachmentById">
+        update tb_image_attachment set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除系统用户 -->
+    <update id="deleteBatchImageAttachmentByIds" parameterType="List">
+        update tb_image_attachment set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除系统用户 -->
+    <delete id="deleteImageAttachmentRealById">
+        delete from tb_image_attachment where id = #{id}
+    </delete>
+
+    <!-- 批量真删除系统用户 -->
+    <delete id="deleteBatchImageAttachmentRealByIds">
+        delete from tb_image_attachment where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统用户 -->
+    <select id="getImageAttachmentById" resultType="ImageAttachment">
+        select
+        <include refid="imageAttachment_select_cond"/>
+        from tb_image_attachment a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询系统用户集合 -->
+    <select id="listImageAttachments" parameterType="ImageAttachmentQuery" resultType="ImageAttachment">
+        select
+        <include refid="imageAttachment_select_cond"/>
+        from tb_image_attachment a
+        <where>
+            <if test="ownerId != null  and ownerId != '' and ownerId != 'null' and ownerId != 'undefined' ">
+                and a.owner_id = #{ownerId}
+            </if>
+            <if test="attachAttr != null  and attachAttr != '' and attachAttr != 'null' and attachAttr != 'undefined' ">
+                and a.attach_attr = #{attachAttr}
+            </if>
+            <if test="attachMd5 != null  and attachMd5 != '' and attachMd5 != 'null' and attachMd5 != 'undefined' ">
+                and a.attach_md5 = #{attachMd5}
+            </if>
+            <if test="attachSha1 != null  and attachSha1 != '' and attachSha1 != 'null' and attachSha1 != 'undefined' ">
+                and a.attach_sha1 = #{attachSha1}
+            </if>
+            <if test="attachOriginTitle != null  and attachOriginTitle != '' and attachOriginTitle != 'null' and attachOriginTitle != 'undefined' ">
+                and a.attach_origin_title = #{attachOriginTitle}
+            </if>
+            <if test="attachName != null  and attachName != '' and attachName != 'null' and attachName != 'undefined' ">
+                and a.attach_name like concat('%', #{attachName}, '%')
+            </if>
+            <if test="attachSize != null ">
+                and a.attach_size like concat('%', #{attachSize}, '%')
+            </if>
+            <if test="attachSuffix != null  and attachSuffix != '' and attachSuffix != 'null' and attachSuffix != 'undefined' ">
+                and a.attach_suffix like concat('%', #{attachSuffix}, '%')
+            </if>
+            <if test="attachUrl != null  and attachUrl != '' and attachUrl != 'null' and attachUrl != 'undefined' ">
+                and a.attach_url like concat('%', #{attachUrl}, '%')
+            </if>
+            <if test="attachPath != null  and attachPath != '' and attachPath != 'null' and attachPath != 'undefined' ">
+                and a.attach_path like concat('%', #{attachPath}, '%')
+            </if>
+            <if test="status != null ">
+                and a.status like concat('%', #{status}, '%')
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                and a.create_user_id like concat('%', #{createUserId}, '%')
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                and a.update_user_id like concat('%', #{updateUserId}, '%')
+            </if>
+            AND a.status = 1
+        </where>
+    </select>
+
+    <sql id="imageAttachment_select_cond">
+        a.id id, a.owner_id ownerId, a.attach_attr attachAttr, a.attach_md5 attachMd5, a.attach_sha1 attachSha1, a.attach_origin_title attachOriginTitle, a.attach_name attachName, a.attach_size attachSize, a.attach_suffix attachSuffix, a.attach_url attachUrl, a.attach_path attachPath, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
+
+    <sql id="imageAttachment_add_key">
+        id, owner_id, attach_attr, attach_md5, attach_sha1, attach_origin_title, attach_name, attach_size, attach_suffix, attach_url, attach_path, remark, status, create_user_id, create_time, update_user_id, update_time    </sql>
+</mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="${packageName}.mapper.${ClassName}Mapper">
-    <!-- 新增系统用户 -->
+    <!-- 新增${functionName} -->
     <insert id="insert${ClassName}" parameterType="${ClassName}">
         insert into ${tableName}(
         <include refid="${className}_add_key">
@@ -13,7 +13,7 @@
         ( #{id}#foreach($column in $columns)#if($column.columnName != $pkColumn.columnName || !$pkColumn.increment), #{$column.javaField}#end#end )
     </insert>
 
-    <!-- 批量新增用户系统 -->
+    <!-- 批量新增${functionName} -->
     <insert id="insert${ClassName}Batch">
         insert into ${tableName}(
         <include refid="${className}_add_key">
@@ -26,7 +26,7 @@
         </foreach>
     </insert>
 
-    <!--  更新系统用户  -->
+    <!--  更新${functionName}  -->
     <update id="update${ClassName}" parameterType="${ClassName}">
         update ${tableName}
         <set>
@@ -41,12 +41,12 @@
         where id = #{id}
     </update>
 
-    <!-- 根据id删除系统用户 -->
+    <!-- 根据id删除${functionName} -->
     <update id="delete${ClassName}ById">
         update ${tableName} set status = 0 where id = #{id}
     </update>
 
-    <!-- 批量删除系统用户 -->
+    <!-- 批量删除${functionName} -->
     <update id="deleteBatch${ClassName}ByIds" parameterType="List">
         update ${tableName} set status = 0 where id in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
@@ -54,12 +54,12 @@
         </foreach>
     </update>
 
-    <!-- 根据id真删除系统用户 -->
+    <!-- 根据id真删除${functionName} -->
     <delete id="delete${ClassName}RealById">
         delete from ${tableName} where id = #{id}
     </delete>
 
-    <!-- 批量真删除系统用户 -->
+    <!-- 批量真删除${functionName} -->
     <delete id="deleteBatch${ClassName}RealByIds">
         delete from ${tableName} where id in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
@@ -67,7 +67,7 @@
         </foreach>
     </delete>
 
-    <!-- 根据id获取系统用户 -->
+    <!-- 根据id获取${functionName} -->
     <select id="get${ClassName}ById" resultType="${ClassName}">
         select
         <include refid="${className}_select_cond"/>
@@ -75,7 +75,7 @@
         where a.id = #{id} and a.status = 1
     </select>
 
-    <!-- 查询系统用户集合 -->
+    <!-- 查询${functionName}集合 -->
     <select id="list${ClassName}s" parameterType="${ClassName}Query" resultType="${ClassName}">
         select
         <include refid="${className}_select_cond"/>

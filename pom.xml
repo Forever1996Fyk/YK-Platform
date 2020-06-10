@@ -161,6 +161,13 @@
                 <artifactId>yk-generator</artifactId>
                 <version>${yk.version}</version>
             </dependency>
+
+            <!-- 文件上传 -->
+            <dependency>
+                <groupId>com.yk</groupId>
+                <artifactId>yk-fileupload</artifactId>
+                <version>${yk.version}</version>
+            </dependency>
             
         </dependencies>
     </dependencyManagement>

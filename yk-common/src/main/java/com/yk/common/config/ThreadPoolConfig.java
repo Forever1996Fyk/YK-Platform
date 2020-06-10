@@ -34,6 +34,10 @@ public class ThreadPoolConfig {
      */
     private int queueCapacity = 1000;
 
+    /**
+     * 自定义线程池
+     * @return
+     */
     @Bean("threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
