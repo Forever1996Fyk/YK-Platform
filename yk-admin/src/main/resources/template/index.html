@@ -47,7 +47,7 @@
 				    </div>
             	</li>
                 <li>
-                    <a th:href="@{/item/itemList}"><i class="fa fa-desktop"></i><span class="nav-label">主页</span><span class="fa arrow"></span></a>
+                    <a th:href="@{/}"><i class="fa fa-desktop"></i><span class="nav-label">主页</span><span class="fa arrow"></span></a>
                 </li>
                 <li th:each="menu : ${menus}">
                     <a th:class="@{${menu.url != '' && menu.url != '#'} ? ${menu.target}}" th:href="@{${menu.url == ''} ? |#| : ${menu.url}}">
@@ -57,7 +57,10 @@
                     </a>
                     <ul class="nav nav-second-level collapse">
                         <li th:each="cmenu : ${menu.children}">
-                            <a th:if="${#lists.isEmpty(cmenu.children)}" th:class="${cmenu.target == ''} ? |menuItem| : ${cmenu.target}" th:utext="${cmenu.menuName}" th:href="@{${cmenu.url}}">二级菜单</a>
+                            <a th:if="${#lists.isEmpty(cmenu.children)}" th:class="${cmenu.target == ''} ? |menuItem| : ${cmenu.target}" th:href="@{${cmenu.url}}">
+                                <i class="fa fa-bar-chart-o" th:class="${cmenu.icon}"></i>
+                                <span class="nav-label" th:text="${cmenu.menuName}">二级菜单</span>
+                            </a>
                             <a th:if="${not #lists.isEmpty(cmenu.children)}" href="#">[[${cmenu.menuName}]]<span class="fa arrow"></span></a>
                             <ul th:if="${not #lists.isEmpty(cmenu.children)}" class="nav nav-third-level">
                                 <li th:each="emenu : ${cmenu.children}">

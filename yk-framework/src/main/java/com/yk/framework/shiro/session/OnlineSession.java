@@ -53,4 +53,8 @@ public class OnlineSession extends SimpleSession {
      * 在线状态
      */
     private OnlineStatus status = OnlineStatus.ON_LINE;
+
+    public void markAttributeChanged() {
+        this.attributeChanged = true;
+    }
 }

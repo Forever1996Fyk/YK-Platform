@@ -102,7 +102,7 @@ public class SysMenuController {
      * @return
      */
     @DeleteMapping("/deleteBatchSysMenuByIds/{ids}")
-    @RequiresPermissions("system:menu:deleteBatch")
+    @RequiresPermissions("system:menu:delete")
     public Result deleteBatchSysMenuByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(sysMenuService.deleteBatchSysMenuByIds(ids));
     }

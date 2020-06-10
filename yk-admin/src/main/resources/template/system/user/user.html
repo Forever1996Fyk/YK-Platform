@@ -33,7 +33,7 @@
             <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:user:add">
                 <i class="fa fa-plus"></i> 新增
             </a>
-            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:user:deleteBatch">
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:user:delete">
                 <i class="fa fa-remove"></i> 删除
             </a>
         </div>
@@ -49,6 +49,7 @@
 
     var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
     var deleteFlag = [[${@permission.hasPermi('system:user:delete')}]];
+    var dictData = [[${@dict.getType('sys_user_sex')}]];
 
     $(function() {
         var options = {
@@ -81,6 +82,14 @@
                     field: 'email',
                     title: '邮箱',
                     visible: false
+                },
+                {
+                    field: 'sex',
+                    title: '性别',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(dictData, value);
+                    }
                 },
                 {
                     visible: editFlag == 'hidden' ? false : true,

@@ -77,7 +77,7 @@ public class DictDataController {
      * @return
      */
     @DeleteMapping("/deleteBatchDictDataByIds/{ids}")
-    @RequiresPermissions("system:dict:deleteBatch")
+    @RequiresPermissions("system:dict:delete")
     public Result deleteBatchDictDataByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(dictDataService.deleteBatchDictDataByIds(ids));
     }

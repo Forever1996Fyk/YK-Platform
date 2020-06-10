@@ -91,7 +91,7 @@ public class SysRoleController {
      * @return
      */
     @DeleteMapping("/deleteBatchSysRoleByIds/{ids}")
-    @RequiresPermissions("system:role:deleteBatch")
+    @RequiresPermissions("system:role:delete")
     public Result deleteBatchSysRoleByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(sysRoleService.deleteBatchSysRoleByIds(ids));
     }

@@ -56,6 +56,7 @@ public class SysUserController {
     public Result addSysUser(@RequestBody SysUser sysUser) {
         sysUser.setSalt(ShiroUtils.randomSalt());
         sysUser.setPassword(UserConstants.DEFAULT_PASSWORD);
+        sysUser.setAccount(sysUser.getPhone());
         sysUser.setPassword(passwordService.encryptPassword(sysUser.getUserName(), sysUser.getPassword(), sysUser.getSalt()));
         return Result.response(sysUserService.insertSysUser(sysUser));
     }
@@ -91,7 +92,7 @@ public class SysUserController {
      * @param ids
      * @return
      */
-    @RequiresPermissions("system:user:deleteBatch")
+    @RequiresPermissions("system:user:delete")
     @DeleteMapping("/deleteBatchSysUserByIds/{ids}")
     public Result deleteBatchSysUserByIds(@PathVariable("ids") List<String> ids) {
         ids.forEach(id -> AssertUtils.checkUserAllowed(id));

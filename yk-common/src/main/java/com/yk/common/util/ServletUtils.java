@@ -30,7 +30,7 @@ import java.util.Map.Entry;
  *
  * @author liuyadu
  */
-public class WebUtils {
+public class ServletUtils {
 
     private final static String staticSuffix = ".css,.js,.png,.jpg,.gif,.jpeg,.bmp,.ico,.swf,.psd,.htc,.htm,.html,.crx,.xpi,.exe,.ipa,.apk,.woff2,.ico,.swf,.ttf,.otf,.svg,.woff";
     /**
@@ -449,6 +449,23 @@ public class WebUtils {
      */
     public static boolean isAjaxRequest(HttpServletRequest request) {
         return (request.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString())) || (request.getHeader("Content-Type") != null && request.getHeader("Content-Type").startsWith("application/json"));
+    }
+
+    /**
+     * 将字符串渲染到客户端
+     *
+     * @param response 渲染对象
+     * @param string   待渲染的字符串
+     * @return null
+     */
+    public static void renderString(HttpServletResponse response, String string) {
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
+            response.getWriter().print(string);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

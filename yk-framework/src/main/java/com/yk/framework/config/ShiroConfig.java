@@ -4,6 +4,10 @@ import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.google.common.collect.Maps;
 import com.yk.common.util.StringUtils;
 import com.yk.framework.shiro.realm.UserRealm;
+import com.yk.framework.shiro.session.OnlineSessionFactory;
+import com.yk.framework.shiro.web.filter.KickOutSessionFilter;
+import com.yk.framework.shiro.web.filter.LogoutFilter;
+import com.yk.framework.shiro.web.session.OnlineWebSessionManager;
 import net.sf.ehcache.CacheManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -156,6 +160,39 @@ public class ShiroConfig {
     }
 
     /**
+     * 自定义session工厂会话
+     * @return
+     */
+    @Bean
+    public OnlineSessionFactory sessionFactory() {
+        return new OnlineSessionFactory();
+    }
+
+    /**
+     * 会话管理器
+     * @return
+     */
+    @Bean
+    public OnlineWebSessionManager sessionManager() {
+        OnlineWebSessionManager manager = new OnlineWebSessionManager();
+        // 加入缓存管理器
+        manager.setCacheManager(ehCacheManager());
+        // 删除过期的session
+        manager.setDeleteInvalidSessions(true);
+        // 设置全局session超时时间
+        manager.setGlobalSessionTimeout(expireTime * 60 * 1000);
+        // 去掉JSESSIONID
+        manager.setSessionIdUrlRewritingEnabled(false);
+        // 定义要使用的无效的Session定时调度器 todo
+        // 是否定时检查session
+        manager.setSessionValidationSchedulerEnabled(true);
+        // 自定义SessionDAO todo
+        // 自定义SessionFactory
+        manager.setSessionFactory(sessionFactory());
+        return manager;
+    }
+
+    /**
      * 安全管理器
      * @param userRealm
      * @return
@@ -169,7 +206,8 @@ public class ShiroConfig {
         securityManager.setRememberMeManager(rememberMeManager());
         // 注入缓存管理器
         securityManager.setCacheManager(ehCacheManager());
-        //session 管理器 todo
+        //session 管理器
+        securityManager.setSessionManager(sessionManager());
 
         return securityManager;
     }
@@ -205,10 +243,12 @@ public class ShiroConfig {
 
         //过滤器配置 todo
         Map<String, Filter> filters = Maps.newLinkedHashMap();
+        filters.put("kickOut", kickOutSessionFilter());
+        filters.put("logout", logoutFilter());
 
         shiroFilterFactoryBean.setFilters(filters);
         //所有请求需要认证
-        filterChainDefinitionMap.put("/**", "user");
+        filterChainDefinitionMap.put("/**", "user, kickOut");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -234,6 +274,35 @@ public class ShiroConfig {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
     }
+
+    /**
+     * 同一个用户多设备登录限制
+     * @return
+     */
+    public KickOutSessionFilter kickOutSessionFilter() {
+        KickOutSessionFilter kickOutSessionFilter = new KickOutSessionFilter();
+        kickOutSessionFilter.setCacheManager(ehCacheManager());
+        kickOutSessionFilter.setSessionManager(sessionManager());
+        // 同一个用户最大的会话数, 默认-1无限制; 比如2的意思是同一个用户允许最多同时两个人登录
+        kickOutSessionFilter.setMaxSession(maxSession);
+        // 是否踢出后来登录的，默认是false; 即后者登录的用户踢出前者登录的用户；踢出顺序
+        kickOutSessionFilter.setKickOutAfter(kickoutAfter);
+        // 被踢出后重定向的地址
+        kickOutSessionFilter.setKickOutUrl("/login?kickOut=1");
+        return kickOutSessionFilter;
+    }
+
+    /**
+     * 退出过滤器
+     * @return
+     */
+    public LogoutFilter logoutFilter() {
+        LogoutFilter logoutFilter = new LogoutFilter();
+        logoutFilter.setCacheManager(ehCacheManager());
+        logoutFilter.setLoginUrl(loginUrl);
+        return logoutFilter;
+    }
+
     /**
      * 记住我
      * @return

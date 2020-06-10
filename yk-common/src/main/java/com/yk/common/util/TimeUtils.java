@@ -1,11 +1,14 @@
 package com.yk.common.util;
 
+import org.apache.commons.lang3.Validate;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -146,6 +149,28 @@ public final class TimeUtils {
      */
     public static LocalDateTime parseTime(String timeStr, TimeFormat format) {
         return LocalDateTime.parse(timeStr, format.formatter);
+    }
+
+    /**
+     * 添加毫秒
+     * @param date
+     * @param amount
+     * @return
+     */
+    public static Date addMilliseconds(Date date, int amount) {
+        return add(date, 14, amount);
+    }
+
+    private static Date add(Date date, int calendarField, int amount) {
+        validateDateNotNull(date);
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(calendarField, amount);
+        return c.getTime();
+    }
+
+    private static void validateDateNotNull(Date date) {
+        Validate.isTrue(date != null, "The date must not be null", new Object[0]);
     }
 
     /**

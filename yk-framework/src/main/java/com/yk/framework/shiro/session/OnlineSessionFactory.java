@@ -1,6 +1,6 @@
 package com.yk.framework.shiro.session;
 
-import com.yk.common.util.WebUtils;
+import com.yk.common.util.ServletUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SessionContext;
@@ -25,12 +25,12 @@ public class OnlineSessionFactory implements SessionFactory {
             WebSessionContext webSessionContext = (WebSessionContext) sessionContext;
             HttpServletRequest request = (HttpServletRequest) webSessionContext.getServletRequest();
             if (request != null) {
-                UserAgent userAgent = UserAgent.parseUserAgentString(WebUtils.getHttpServletRequest().getHeader("User-Agent"));
+                UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getHttpServletRequest().getHeader("User-Agent"));
                 //获取客户端操作系统
                 String os = userAgent.getOperatingSystem().getName();
                 //获取客户端浏览器
                 String browser = userAgent.getBrowser().getName();
-                session.setHost(WebUtils.getRemoteAddress(request));
+                session.setHost(ServletUtils.getRemoteAddress(request));
                 session.setBrowser(browser);
                 session.setOs(os);
             }

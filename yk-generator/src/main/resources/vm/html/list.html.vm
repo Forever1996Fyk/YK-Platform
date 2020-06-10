@@ -63,7 +63,7 @@
                 <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="${permissionPrefix}:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="${permissionPrefix}:deleteBatch">
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="${permissionPrefix}:delete">
                     <i class="fa fa-remove"></i> 删除
                 </a>
             </div>

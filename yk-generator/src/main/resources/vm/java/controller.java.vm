@@ -95,7 +95,7 @@ public class ${ClassName}Controller {
      * @return
      */
     @DeleteMapping("/deleteBatch${ClassName}ByIds/{ids}")
-    @RequiresPermissions("${permissionPrefix}:deleteBatch")
+    @RequiresPermissions("${permissionPrefix}:delete")
     public Result deleteBatch${ClassName}ByIds(@PathVariable("ids") List<String> ids) {
         return Result.response(${className}Service.deleteBatch${ClassName}ByIds(ids));
     }
