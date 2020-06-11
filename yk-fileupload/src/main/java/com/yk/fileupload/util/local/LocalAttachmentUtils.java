@@ -1,6 +1,6 @@
 package com.yk.fileupload.util.local;
 
-import com.yk.common.entity.BaseAttachment;
+import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.util.AttachmentUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,8 +17,8 @@ public class LocalAttachmentUtils {
      * @param file
      * @return
      */
-    public static BaseAttachment getBaseAttachment(MultipartFile file) {
-        BaseAttachment attachment = AttachmentUtils.getBaseAttachment(file);
+    public static ImageAttachment getImageAttachment(MultipartFile file) {
+        ImageAttachment attachment = AttachmentUtils.getImageAttachment(file);
         attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
         return attachment;
     }

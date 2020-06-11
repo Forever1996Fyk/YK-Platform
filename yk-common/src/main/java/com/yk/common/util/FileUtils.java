@@ -40,7 +40,7 @@ public class FileUtils {
     public static String getFileSHA1(MultipartFile multipartFile) {
         if (multipartFile.getSize() == 0) {
             logger.error("文件转化[{SH1}]值错误! 文件大小为空");
-            throw new ParameterException("");
+            throw new ParameterException("文件转化SH1值错误! 文件大小为空");
         }
         byte[] buffer = new byte[4096];
         try (InputStream fis = multipartFile.getInputStream()) {
@@ -92,7 +92,7 @@ public class FileUtils {
     public static String getFileSuffix(String fileName) {
         if (StringUtils.isNotBlank(fileName)) {
             int lastIndexOf = fileName.lastIndexOf(".");
-            return fileName.substring(lastIndexOf);
+            return fileName.substring(lastIndexOf + 1);
         }
         return null;
     }
@@ -116,7 +116,7 @@ public class FileUtils {
      * @return
      */
     public static String genFileName(String attachmentId, String suffix) {
-        return attachmentId + suffix;
+        return attachmentId + "." + suffix;
     }
 
     /**
@@ -126,8 +126,10 @@ public class FileUtils {
     public static void transferTo(String filePath) {
         File file = new File(filePath);
         try {
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
             if (!file.exists()) {
-                file.getParentFile().mkdir();
                 file.createNewFile();
             }
         } catch (IOException e) {

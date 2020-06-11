@@ -16,10 +16,13 @@
     <dependencies>
         <dependency>
             <groupId>com.yk</groupId>
-            <artifactId>yk-common</artifactId>
+            <artifactId>yk-framework</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.yk</groupId>
+            <artifactId>yk-common</artifactId>
+        </dependency>
     </dependencies>
 
-    
 </project>

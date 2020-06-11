@@ -16,5 +16,5 @@ public class FileProperties {
     /**
      * 文件上传位置
      */
-    private String filePath;
+    private String filePath = "E:/uploadVideo/";
 }
