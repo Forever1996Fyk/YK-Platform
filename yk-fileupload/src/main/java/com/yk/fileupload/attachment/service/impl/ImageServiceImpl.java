@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -66,7 +67,12 @@ public class ImageServiceImpl implements AttachmentService<ImageAttachment>, Ini
                 continue;
             }
             MultipartFile file = fileMap.get(entry.getKey());
-            AsyncManager.asyncManager().execute(AsyncFactory.asyncLocalImageFileUpload(file));
+            ImageAttachment attachment = LocalAttachmentUtils.getImageAttachment(file);
+            try {
+                AsyncManager.asyncManager().execute(AsyncFactory.asyncLocalImageFileUpload(file.getInputStream(), attachment));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return result;
     }

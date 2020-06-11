@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+
 /**
  * @program: YK-Platform
  * @description: 异步任务工厂
@@ -22,14 +24,16 @@ public class AsyncFactory {
     private static final Logger logger = LoggerFactory.getLogger(AsyncFactory.class);
 
     /**
-     * 异步上传文件任务
-     * @param file
-     * @return
+     * 异步上传 本地服务文件任务
+     * @author YuKai Fan
+     * @param is 文件流
+     * @param attachment
+     * @return java.lang.Runnable
+     * @date 2020/6/11 22:17
      */
-    public static Runnable asyncLocalImageFileUpload(final MultipartFile file) {
+    public static Runnable asyncLocalImageFileUpload(final InputStream is, final ImageAttachment attachment) {
         return () -> {
-            ImageAttachment attachment = LocalAttachmentUtils.getImageAttachment(file);
-            FileUtils.transferTo(attachment.getAttachPath());
+            FileUtils.transferTo(is, attachment.getAttachPath());
 
             attachment.setCreateTime(TimeUtils.getCurrentDatetime());
             attachment.setUpdateTime(TimeUtils.getCurrentDatetime());

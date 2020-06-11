@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -123,7 +125,7 @@ public class FileUtils {
      * 文件转化
      * @param filePath
      */
-    public static void transferTo(String filePath) {
+    public static File transferTo(String filePath) {
         File file = new File(filePath);
         try {
             if (!file.getParentFile().exists()) {
@@ -134,6 +136,50 @@ public class FileUtils {
             }
         } catch (IOException e) {
             logger.error("文件创建异常![{}], 异常信息为 [{}]", e, e.getMessage());
+            e.printStackTrace();
+        }
+
+        return file;
+    }
+
+    /**
+     * 文件转化
+     * @author YuKai Fan
+     * @param multipartFile 文件对象
+     * @param filePath 文件路径
+     * @return void
+     * @date 2020/6/11 22:15
+     */
+    public static void transferTo(MultipartFile multipartFile, String filePath) {
+        byte[] buffer = new byte[4096];
+        try (OutputStream fos = Files.newOutputStream(transferTo(filePath).toPath()); InputStream fis = multipartFile.getInputStream()) {
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+            fos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 文件转化
+     * @author YuKai Fan
+     * @param fis 文件输入流
+     * @param filePath 文件路径
+     * @return void
+     * @date 2020/6/11 22:14
+     */
+    public static void transferTo(InputStream fis, String filePath) {
+        byte[] buffer = new byte[4096];
+        try (OutputStream fos = Files.newOutputStream(transferTo(filePath).toPath())) {
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+            fos.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
