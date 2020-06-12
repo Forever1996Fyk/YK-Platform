@@ -1,16 +1,11 @@
 package com.yk.fileupload.manager.factory;
 
-import com.yk.common.entity.BaseAttachment;
 import com.yk.common.util.FileUtils;
-import com.yk.common.util.SpringUtils;
 import com.yk.common.util.TimeUtils;
 import com.yk.fileupload.model.pojo.ImageAttachment;
-import com.yk.fileupload.service.ImageAttachmentService;
-import com.yk.fileupload.util.local.LocalAttachmentUtils;
 import com.yk.framework.util.ShiroUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
@@ -39,8 +34,10 @@ public class AsyncFactory {
             attachment.setUpdateTime(TimeUtils.getCurrentDatetime());
             attachment.setCreateUserId(ShiroUtils.getCurrentUserId());
             attachment.setUpdateUserId(ShiroUtils.getCurrentUserId());
-            ImageAttachmentService imageAttachmentService = SpringUtils.getBean(ImageAttachmentService.class);
-            imageAttachmentService.insertImageAttachment(attachment);
+            attachment.setAttachSha1(FileUtils.getFileSHA1(is));
+            attachment.setAttachMd5(FileUtils.getFileMD5(is));
+//            ImageAttachmentService imageAttachmentService = SpringUtils.getBean(ImageAttachmentService.class);
+//            imageAttachmentService.insertImageAttachment(attachment);
         };
     }
 }

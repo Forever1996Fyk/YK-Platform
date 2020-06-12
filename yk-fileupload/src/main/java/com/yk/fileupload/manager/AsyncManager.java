@@ -14,7 +14,7 @@ public class AsyncManager {
     /**
      * 异步操作任务线程池
      */
-    private ThreadPoolTaskExecutor executor = SpringUtils.getBean("threadPoolTaskExecutor");
+    public ThreadPoolTaskExecutor executor = SpringUtils.getBean("threadPoolTaskExecutor");
 
     /**
      * 单例模式

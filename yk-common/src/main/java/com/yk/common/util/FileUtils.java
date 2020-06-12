@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -60,6 +61,28 @@ public class FileUtils {
     }
 
     /**
+     * 根据输入流 获取文件SHA1值
+     *
+     * @param fis
+     * @return
+     */
+    public static String getFileSHA1(InputStream fis) {
+        byte[] buffer = new byte[4096];
+        try {
+            MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                sha1.update(buffer, 0, len);
+            }
+            BigInteger SHA1Bi = new BigInteger(1, sha1.digest());
+            return SHA1Bi.toString(16);
+        } catch (IOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 获取文件MD5值
      *
      * @param multipartFile
@@ -72,6 +95,28 @@ public class FileUtils {
         }
         byte[] buffer = new byte[4096];
         try (InputStream fis = multipartFile.getInputStream()) {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                md5.update(buffer, 0, len);
+            }
+            BigInteger MD5Bi = new BigInteger(1, md5.digest());
+            return MD5Bi.toString(16);
+        } catch (IOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 根据输入流 获取文件MD5值
+     *
+     * @param fis
+     * @return
+     */
+    public static String getFileMD5(InputStream fis) {
+        byte[] buffer = new byte[4096];
+        try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             int len;
             while ((len = fis.read(buffer)) != -1) {
@@ -329,6 +374,19 @@ public class FileUtils {
                 return null;
             }
             return fileMap;
+        }
+        return null;
+    }
+
+    /**
+     * request转为file List
+     * @param request
+     * @return
+     */
+    public static List<MultipartFile> getRequestListFile(HttpServletRequest request) {
+        if (request instanceof MultipartHttpServletRequest) {
+            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+            return multipartHttpServletRequest.getFiles("file_data");
         }
         return null;
     }

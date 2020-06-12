@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('图片附件列表')"/>
+    <th:block th:include="include :: select2-css"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>图片属性：</label>
+                            <input type="text" name="attachAttr"/>
+                        </li>
+                        <li>
+                            <label>图片原名：</label>
+                            <input type="text" name="attachOriginTitle"/>
+                        </li>
+                        <li>
+                            <label>状态：</label>
+                            <select name="status" th:with="type=${@dict.getType('sys_common_status')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                        th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="uploadImages()" shiro:hasPermission="attachment:image:upload">
+                <i class="fa fa-plus"></i> 上传图片
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="attachment:image:delete">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: select2-js"/>
+<script th:inline="javascript">
+    var deleteFlag = [[${@permission.hasPermi('attachment:image:delete')}]];
+
+    var prefix = ctx + "api/imageAttachment";
+    var pagePrefix = ctx + "attachment/image";
+
+    $(function () {
+        var options = {
+            url: prefix + "/listImageAttachments",
+            removeUrl: prefix + "/deleteImageAttachmentById/{id}",
+            removeAllUrl: prefix + "/deleteBatchImageAttachmentByIds/{ids}",
+            modalName: "图片附件",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '图片唯一标识',
+                    visible: false
+                },
+                {
+                    field: 'ownerId',
+                    title: '所属id'
+                },
+                {
+                    field: 'imageView',
+                    title: '图片预览',
+                    formatter: function (value, row, index) {
+                        // 图片预览（注意：如存储在本地直接获取数据库路径，如有配置context-path需要使用ctx+路径）
+                        if (row.positionType == 'local') {
+                            return $.table.imageView(ctx + "api/imageAttachment/showImage/" + row.id);
+                        } else if (row.positionType == 'fastdfs') {
+                            return $.table.imageView(ctx + "api/imageAttachment/showImage/" + row.id);
+                        } else {
+                            return $.table.imageView(ctx + "api/imageAttachment/showImage/" + row.id);
+                        }
+                    }
+                },
+                {
+                    field: 'attachOriginTitle',
+                    title: '图片原名'
+                },
+                {
+                    field: 'attachName',
+                    title: '图片名称'
+                },
+                {
+                    field: 'attachSize',
+                    title: '图片大小'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-danger btn-xs ' + deleteFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function uploadImages() {
+        $.operate.uploadImages(pagePrefix + "/uploadImages");
+    }
+</script>
+</body>
+</html>

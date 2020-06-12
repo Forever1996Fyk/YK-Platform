@@ -11,7 +11,7 @@ import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -27,19 +27,19 @@ public class AttachmentUtils {
      * @param file
      * @return
      */
-    public static ImageAttachment getImageAttachment(MultipartFile file) {
-//        if (file.getSize() == 0) {
-//            throw new FileSizeException(0L);
-//        }
+    public static ImageAttachment getImageAttachment(MultipartFile file) throws IOException {
+        if (file.getInputStream().available() == 0) {
+            throw new FileSizeException(0L);
+        }
         ImageAttachment attachment = new ImageAttachment();
         attachment.setId(AppUtils.randomId());
-        attachment.setAttachSize(file.getSize());
+        attachment.setAttachSize((long) file.getInputStream().available());
         attachment.setStatus(1);
         attachment.setAttachOriginTitle(file.getOriginalFilename());
         attachment.setAttachSuffix(FileUtils.getFileSuffix(file.getOriginalFilename()));
         attachment.setAttachName(FileUtils.genFileName(attachment.getId(), attachment.getAttachSuffix()));
-//        attachment.setAttachSha1(FileUtils.getFileSHA1(file));
-//        attachment.setAttachMd5(FileUtils.getFileMD5(file));
+        attachment.setAttachSha1(FileUtils.getFileSHA1(file.getInputStream()));
+        attachment.setAttachMd5(FileUtils.getFileMD5(file.getInputStream()));
         return attachment;
     }
 
@@ -48,19 +48,19 @@ public class AttachmentUtils {
      * @param file
      * @return
      */
-    public static VideoAttachment getVideoAttachment(MultipartFile file) {
-        if (file.getSize() == 0) {
+    public static VideoAttachment getVideoAttachment(MultipartFile file) throws IOException {
+        if (file.getInputStream().available() == 0) {
             throw new FileSizeException(0L);
         }
         VideoAttachment attachment = new VideoAttachment();
         attachment.setId(AppUtils.randomId());
-        attachment.setAttachSize(file.getSize());
+        attachment.setAttachSize((long) file.getInputStream().available());
         attachment.setStatus(1);
         attachment.setAttachOriginTitle(file.getOriginalFilename());
         attachment.setAttachSuffix(FileUtils.getFileSuffix(file.getOriginalFilename()));
         attachment.setAttachName(FileUtils.genFileName(attachment.getId(), attachment.getAttachSuffix()));
-        attachment.setAttachSha1(FileUtils.getFileSHA1(file));
-        attachment.setAttachMd5(FileUtils.getFileMD5(file));
+        attachment.setAttachSha1(FileUtils.getFileSHA1(file.getInputStream()));
+        attachment.setAttachMd5(FileUtils.getFileMD5(file.getInputStream()));
         return attachment;
     }
 
@@ -69,19 +69,19 @@ public class AttachmentUtils {
      * @param file
      * @return
      */
-    public static DocAttachment getDocAttachment(MultipartFile file) {
-        if (file.getSize() == 0) {
+    public static DocAttachment getDocAttachment(MultipartFile file) throws IOException {
+        if (file.getInputStream().available() == 0) {
             throw new FileSizeException(0L);
         }
         DocAttachment attachment = new DocAttachment();
         attachment.setId(AppUtils.randomId());
-        attachment.setAttachSize(file.getSize());
+        attachment.setAttachSize((long) file.getInputStream().available());
         attachment.setStatus(1);
         attachment.setAttachOriginTitle(file.getOriginalFilename());
         attachment.setAttachSuffix(FileUtils.getFileSuffix(file.getOriginalFilename()));
         attachment.setAttachName(FileUtils.genFileName(attachment.getId(), attachment.getAttachSuffix()));
-        attachment.setAttachSha1(FileUtils.getFileSHA1(file));
-        attachment.setAttachMd5(FileUtils.getFileMD5(file));
+        attachment.setAttachSha1(FileUtils.getFileSHA1(file.getInputStream()));
+        attachment.setAttachMd5(FileUtils.getFileMD5(file.getInputStream()));
         return attachment;
     }
 

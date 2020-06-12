@@ -46,6 +46,8 @@ public class BaseAttachment {
     private String updateUserId;
     /** 更新时间 */
     private String updateTime;
+    /** 附加位置类型 */
+    private String positionType;
 
     @Override
     public String toString() {
@@ -53,6 +55,7 @@ public class BaseAttachment {
                 .append("id", getId())
                 .append("ownerId", getOwnerId())
                 .append("attachAttr", getAttachAttr())
+                .append("positionType", getPositionType())
                 .append("attachMd5", getAttachMd5())
                 .append("attachSha1", getAttachSha1())
                 .append("attachOriginTitle", getAttachOriginTitle())

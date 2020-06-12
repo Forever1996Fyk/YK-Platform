@@ -29,7 +29,7 @@
 #elseif($column.htmlType == "select" || $column.htmlType == "radio" && "" != $dictType)
                             <li>
                                 <label>${comment}：</label>
-                                <select name="${column.javaField}" th:with="type=${@dict.getType('${dictType}')}">
+                                <select name="${column.javaField}" class="form-control m-b" th:with="type=${@dict.getType('${dictType}')}">
                                     <option value="">所有</option>
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                                 </select>

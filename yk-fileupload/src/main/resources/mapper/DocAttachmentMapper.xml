@@ -10,7 +10,7 @@
         </include>
         )
         values
-        ( #{id}, #{ownerId}, #{attachAttr}, #{attachMd5}, #{attachSha1}, #{attachOriginTitle}, #{attachName}, #{attachSize}, #{attachSuffix}, #{attachUrl}, #{attachPath}, #{remark}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime} )
+        ( #{id}, #{ownerId},#{positionType}, #{attachAttr}, #{attachMd5}, #{attachSha1}, #{attachOriginTitle}, #{attachName}, #{attachSize}, #{attachSuffix}, #{attachUrl}, #{attachPath}, #{remark}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime} )
     </insert>
 
     <!-- 批量新增用户系统 -->
@@ -22,7 +22,7 @@
         )
         values
         <foreach collection="list" item="item" index="index" separator=",">
-                (#{item.id}, #{item.ownerId}, #{item.attachAttr}, #{item.attachMd5}, #{item.attachSha1}, #{item.attachOriginTitle}, #{item.attachName}, #{item.attachSize}, #{item.attachSuffix}, #{item.attachUrl}, #{item.attachPath}, #{item.remark}, #{item.status}, #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+                (#{item.id}, #{item.ownerId}, #{item.positionType}, #{item.attachAttr}, #{item.attachMd5}, #{item.attachSha1}, #{item.attachOriginTitle}, #{item.attachName}, #{item.attachSize}, #{item.attachSuffix}, #{item.attachUrl}, #{item.attachPath}, #{item.remark}, #{item.status}, #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
         </foreach>
     </insert>
 
@@ -128,6 +128,9 @@
             <if test="attachAttr != null  and attachAttr != '' and attachAttr != 'null' and attachAttr != 'undefined' ">
                 and a.attach_attr = #{attachAttr}
             </if>
+            <if test="positionType != null  and positionType != '' and positionType != 'null' and positionType != 'undefined' ">
+                and a.position_type = #{positionType}
+            </if>
             <if test="attachMd5 != null  and attachMd5 != '' and attachMd5 != 'null' and attachMd5 != 'undefined' ">
                 and a.attach_md5 = #{attachMd5}
             </if>
@@ -166,8 +169,8 @@
     </select>
 
     <sql id="docAttachment_select_cond">
-        a.id id, a.owner_id ownerId, a.attach_attr attachAttr, a.attach_md5 attachMd5, a.attach_sha1 attachSha1, a.attach_origin_title attachOriginTitle, a.attach_name attachName, a.attach_size attachSize, a.attach_suffix attachSuffix, a.attach_url attachUrl, a.attach_path attachPath, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
+        a.id id, a.owner_id ownerId, a.position_type positionType a.attach_attr attachAttr, a.attach_md5 attachMd5, a.attach_sha1 attachSha1, a.attach_origin_title attachOriginTitle, a.attach_name attachName, a.attach_size attachSize, a.attach_suffix attachSuffix, a.attach_url attachUrl, a.attach_path attachPath, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
 
     <sql id="docAttachment_add_key">
-        id, owner_id, attach_attr, attach_md5, attach_sha1, attach_origin_title, attach_name, attach_size, attach_suffix, attach_url, attach_path, remark, status, create_user_id, create_time, update_user_id, update_time    </sql>
+        id, owner_id, position_type, attach_attr, attach_md5, attach_sha1, attach_origin_title, attach_name, attach_size, attach_suffix, attach_url, attach_path, remark, status, create_user_id, create_time, update_user_id, update_time    </sql>
 </mapper>
