@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -47,8 +49,8 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadLocalAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadLocalAttachment(HttpServletRequest request) {
-        VideoAttachment attachment = videoAttachmentService.uploadLocalAttachment(request, null);
+    public Result uploadLocalAttachment(HttpServletRequest request) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadLocalAttachment(request, null, null);
         return Result.success("上传成功", attachment);
     }
 
@@ -60,8 +62,8 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadLocalAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadLocalAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
-        VideoAttachment attachment = videoAttachmentService.uploadLocalAttachment(request, ownerId);
+    public Result uploadLocalAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadLocalAttachment(request, ownerId, null);
         return Result.success("上传成功", attachment);
     }
 
@@ -73,7 +75,7 @@ public class VideoAttachmentController {
     @PostMapping("/uploadLocalBatchAttachment")
     @RequiresPermissions("attachment:video:upload")
     public Result uploadLocalBatchAttachment(HttpServletRequest request) {
-        return Result.response(videoAttachmentService.uploadLocalBatchAttachment(request, null));
+        return Result.response(videoAttachmentService.uploadLocalBatchAttachment(request, null, null));
     }
 
     /**
@@ -85,7 +87,71 @@ public class VideoAttachmentController {
     @PostMapping("/uploadLocalBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
     public Result uploadLocalBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
-        return Result.response(videoAttachmentService.uploadLocalBatchAttachment(request, ownerId));
+        return Result.response(videoAttachmentService.uploadLocalBatchAttachment(request, ownerId, null));
+    }
+
+    /**
+     * FastDfs上传 视频上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadFastDfsAttachment")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadFastDfsAttachment(HttpServletRequest request) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadFastDFSAttachment(request, null, null);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * FastDfs上传 视频上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadFastDfsAttachment/{ownerId}")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadFastDfsAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadFastDFSAttachment(request, ownerId, null);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * 批量FastDfs上传 视频上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadFastDfsBatchAttachment")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadFastDfsBatchAttachment(HttpServletRequest request) {
+        return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, null, null));
+    }
+
+    /**
+     * 批量FastDfs上传 视频上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadFastDfsBatchAttachment/{ownerId}")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadFastDfsBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+        return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
+    }
+
+
+
+    /**
+     * 获取视频播放流
+     * @author YuKai Fan
+     * @param request
+     * @param response
+     * @param attId
+     * @return void
+     * @date 2020/6/12 21:18
+     */
+    @GetMapping("/getVideoStream/{attId}")
+    public void getLocalVideo(HttpServletRequest request, HttpServletResponse response, @PathVariable("attId") String attId) {
+        videoAttachmentService.getLocalVideo(request, response, attId);
     }
 
     /**
@@ -101,7 +167,7 @@ public class VideoAttachmentController {
 
     /**
      * 批量删除本地视频附件
-     * @param id
+     * @param ids
      * @return
      */
     @DeleteMapping("/deleteBatchVideoAttachmentByIds/{ids}")

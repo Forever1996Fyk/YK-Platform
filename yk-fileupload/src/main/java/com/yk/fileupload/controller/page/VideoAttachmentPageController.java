@@ -1,7 +1,9 @@
 package com.yk.fileupload.controller.page;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -28,9 +30,27 @@ public class VideoAttachmentPageController {
      * 跳转 批量上传视频页面
      * @return
      */
-    @GetMapping("/uploadVideos")
-    public String uploadVideos() {
-        return prefix + "/uploadVideos";
+    @GetMapping("/uploadLocalVideos")
+    public String uploadLocalVideos() {
+        return prefix + "/uploadLocalVideos";
+    }
+
+    /**
+     * 跳转 批量上传视频页面
+     * @return
+     */
+    @GetMapping("/uploadFastDfsVideos")
+    public String uploadFastDfsVideos() {
+        return prefix + "/uploadFastDfsVideos";
+    }
+
+    /**
+     * 跳转 批量上传视频页面
+     * @return
+     */
+    @GetMapping("/uploadOSSVideos")
+    public String uploadOSSVideos() {
+        return prefix + "/uploadOSSVideos";
     }
 
     /**
@@ -40,5 +60,15 @@ public class VideoAttachmentPageController {
     @GetMapping("/uploadVideo")
     public String uploadVideo() {
         return prefix + "/uploadVideo";
+    }
+
+    /**
+     * 跳转 预览视频页面
+     * @return
+     */
+    @GetMapping("/previewVideo/{attId}")
+    public String previewVideo(@PathVariable("attId") String attId, Model model) {
+        model.addAttribute("attId", attId);
+        return prefix + "/previewVideo";
     }
 }

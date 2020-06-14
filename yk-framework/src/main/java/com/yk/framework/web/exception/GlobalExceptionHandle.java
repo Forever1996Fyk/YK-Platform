@@ -2,6 +2,7 @@ package com.yk.framework.web.exception;
 
 import com.yk.common.dto.Result;
 import com.yk.common.exception.ParameterException;
+import com.yk.common.exception.file.FileException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,20 @@ public class GlobalExceptionHandle {
     public Result parameterException(HttpServletRequest request, ParameterException e) {
         logger.error("业务参数异常: [{}], 异常信息为: [{}]", e.getMessage(), e);
         return Result.error(902, e.getMessage());
+    }
+
+    /**
+     * 文件异常
+     * @author YuKai Fan
+     * @param request
+     * @param e
+     * @return com.yk.common.dto.Result
+     * @date 2020/6/13 23:07
+     */
+    @ExceptionHandler(FileException.class)
+    public Result fileException(HttpServletRequest request, FileException e) {
+        logger.error("文件异常: [{}], 异常信息为: [{}]", e.getMessage(), e);
+        return Result.error(e.getCode(), e.getMessage());
     }
 
     /**

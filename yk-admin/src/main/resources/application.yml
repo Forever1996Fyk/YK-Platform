@@ -90,3 +90,26 @@ shiro:
     maxSession: 1
     # 踢出之前登录的/之后登录的用户，默认踢出之前登录的用户
     kickoutAfter: false
+
+# 文件上传配置
+file:
+  # 本地文件上传位置(正式环境 /yk/upload/)
+  localFilePath: E:/ykUpload/
+  # fastDFS文件服务根地址
+  fastDFSAddr: http://www.yukaifan.top:8080/
+
+# fastDFS配置
+fastdfs:
+  # 最大连接数 并发量较大的话可加大连接数
+  maxStorageConnection: 8
+  # 连接超时时间(默认10秒)
+  connectTimeout: 1000
+  networkTimeout: 3000
+  charset: UTF-8
+  # 是否开始防盗链
+  httpAntiStealToken: false
+  # 防盗秘钥(服务端与客户端必须一致)
+  httpSecretKey: 13a1d2ead6a24a6747dbd0f7462adf86
+  httpTrackerHttpPort: 80
+  # tracker访问地址
+  trackerServers: www.yukaifan.top:22122

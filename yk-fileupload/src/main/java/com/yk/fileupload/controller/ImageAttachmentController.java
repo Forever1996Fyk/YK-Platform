@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,8 +49,8 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadLocalAttachment")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadLocalAttachment(HttpServletRequest request) {
-        ImageAttachment attachment = imageAttachmentService.uploadLocalAttachment(request, null);
+    public Result uploadLocalAttachment(HttpServletRequest request) throws IOException {
+        ImageAttachment attachment = imageAttachmentService.uploadLocalAttachment(request, null, null);
         return Result.success("上传成功", attachment);
     }
 
@@ -61,8 +62,8 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadLocalAttachment/{ownerId}")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadLocalAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
-        ImageAttachment attachment = imageAttachmentService.uploadLocalAttachment(request, ownerId);
+    public Result uploadLocalAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
+        ImageAttachment attachment = imageAttachmentService.uploadLocalAttachment(request, ownerId, null);
         return Result.success("上传成功", attachment);
     }
 
@@ -74,7 +75,7 @@ public class ImageAttachmentController {
     @PostMapping("/uploadLocalBatchAttachment")
     @RequiresPermissions("attachment:image:upload")
     public Result uploadLocalBatchAttachment(HttpServletRequest request) {
-        return Result.response(imageAttachmentService.uploadLocalBatchAttachment(request, null));
+        return Result.response(imageAttachmentService.uploadLocalBatchAttachment(request, null, null));
     }
 
     /**
@@ -86,7 +87,55 @@ public class ImageAttachmentController {
     @PostMapping("/uploadLocalBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:image:upload")
     public Result uploadLocalBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
-        return Result.response(imageAttachmentService.uploadLocalBatchAttachment(request, ownerId));
+        return Result.response(imageAttachmentService.uploadLocalBatchAttachment(request, ownerId, null));
+    }
+
+    /**
+     * fastDFS上传 图片上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadFastDfsAttachment")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadFastDFSAttachment(HttpServletRequest request) throws IOException {
+        ImageAttachment attachment = imageAttachmentService.uploadFastDFSAttachment(request, null, null);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * fastDFS上传 图片上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadFastDfsAttachment/{ownerId}")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadFastDFSAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
+        ImageAttachment attachment = imageAttachmentService.uploadFastDFSAttachment(request, ownerId, null);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * 批量fastDFS上传 图片上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadFastDfsBatchAttachment")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadFastDFSBatchAttachment(HttpServletRequest request) {
+        return Result.response(imageAttachmentService.uploadFastDFSBatchAttachment(request, null, null));
+    }
+
+    /**
+     * 批量fastDFS上传 图片上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadFastDfsBatchAttachment/{ownerId}")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadFastDFSBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+        return Result.response(imageAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
     }
 
     /**

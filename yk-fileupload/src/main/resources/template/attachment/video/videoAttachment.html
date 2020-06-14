@@ -39,8 +39,14 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            <a class="btn btn-success" onclick="uploadVideos()" shiro:hasPermission="attachment:video:upload">
-                <i class="fa fa-plus"></i> 上传视频
+            <a class="btn btn-success" onclick="uploadLocalVideos()" shiro:hasPermission="attachment:video:upload">
+                <i class="fa fa-upload"></i> 本地上传视频
+            </a>
+            <a class="btn btn-info" onclick="uploadFastDfsVideos()" shiro:hasPermission="attachment:video:upload">
+                <i class="fa fa-upload"></i> FastDFS上传视频
+            </a>
+            <a class="btn btn-primary" onclick="uploadOSSVideos()" shiro:hasPermission="attachment:video:upload">
+                <i class="fa fa-upload"></i> OSS上传视频
             </a>
             <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
                shiro:hasPermission="attachment:video:delete">
@@ -59,6 +65,8 @@
 
     var prefix = ctx + "api/videoAttachment";
     var pagePrefix = ctx + "attachment/video";
+    var dictData = [[${@dict.getType('sys_common_status')}]];
+    var dictDataUploadType = [[${@dict.getType('file_upload_type')}]];
 
     $(function () {
         var options = {
@@ -83,6 +91,15 @@
                     title: '视频属性'
                 },
                 {
+                    field: 'positionType',
+                    title: '图片上传类型',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(dictDataUploadType, value);
+                    }
+
+                },
+                {
                     field: 'attachOriginTitle',
                     title: '视频原名'
                 },
@@ -100,13 +117,18 @@
                 },
                 {
                     field: 'status',
-                    title: '状态'
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(dictData, value);
+                    }
                 },
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs ' + deleteFlag + '" href="javascript:void(0)" onclick="previewVideo(\'' + row.id + '\')"><i class="fa fa-eye"></i>预览视频</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + deleteFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
@@ -118,8 +140,29 @@
     /**
      * 上传视频
      */
-    function uploadVideos() {
-        $.operate.uploadVideos(pagePrefix + "/uploadVideos");
+    function uploadLocalVideos() {
+        $.operate.uploadVideos(pagePrefix + "/uploadLocalVideos");
+    }
+
+    /**
+     * 上传视频
+     */
+    function uploadFastDfsVideos() {
+        $.operate.uploadVideos(pagePrefix + "/uploadFastDfsVideos");
+    }
+
+    /**
+     * 上传视频
+     */
+    function uploadOSSVideos() {
+        $.operate.uploadVideos(pagePrefix + "/uploadOSSVideos");
+    }
+
+    /**
+     * 预览视频
+     */
+    function previewVideo(id) {
+        $.operate.previewVideo(pagePrefix + "/previewVideo/" + id);
     }
 </script>
 </body>

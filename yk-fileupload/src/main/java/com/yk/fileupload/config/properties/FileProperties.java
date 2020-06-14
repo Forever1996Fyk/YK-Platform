@@ -1,6 +1,7 @@
 package com.yk.fileupload.config.properties;
 
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -16,5 +17,12 @@ public class FileProperties {
     /**
      * 文件上传位置
      */
-    private String filePath = "E:/ykUpload/";
+    @Value("${file.localFilePath}")
+    private String filePath;
+
+    /**
+     * fastDFS文件根地址
+     */
+    @Value(("${file.fastDFSAddr}"))
+    private String fastDFSAddr;
 }

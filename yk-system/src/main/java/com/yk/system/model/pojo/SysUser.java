@@ -43,6 +43,10 @@ public class SysUser extends BaseEntity implements Serializable {
     private Integer status;
     //角色id
     private String roleId;
+    /**
+     * 头像链接
+     */
+    private String avatarUrl;
 
     /**
      * 判断是否是超级管理员

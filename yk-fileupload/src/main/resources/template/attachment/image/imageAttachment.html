@@ -39,8 +39,14 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            <a class="btn btn-success" onclick="uploadImages()" shiro:hasPermission="attachment:image:upload">
-                <i class="fa fa-plus"></i> 上传图片
+            <a class="btn btn-success" onclick="uploadLocalImages()" shiro:hasPermission="attachment:image:upload">
+                <i class="fa fa-upload"></i> 本地上传图片
+            </a>
+            <a class="btn btn-info" onclick="uploadFastDfsImages()" shiro:hasPermission="attachment:image:upload">
+                <i class="fa fa-upload"></i> FastDFS上传图片
+            </a>
+            <a class="btn btn-primary" onclick="uploadOSSImages()" shiro:hasPermission="attachment:image:upload">
+                <i class="fa fa-upload"></i> OSS上传图片
             </a>
             <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
                shiro:hasPermission="attachment:image:delete">
@@ -59,6 +65,8 @@
 
     var prefix = ctx + "api/imageAttachment";
     var pagePrefix = ctx + "attachment/image";
+    var dictData = [[${@dict.getType('sys_common_status')}]];
+    var dictDataUploadType = [[${@dict.getType('file_upload_type')}]];
 
     $(function () {
         var options = {
@@ -66,6 +74,7 @@
             removeUrl: prefix + "/deleteImageAttachmentById/{id}",
             removeAllUrl: prefix + "/deleteBatchImageAttachmentByIds/{ids}",
             modalName: "图片附件",
+            rememberSelected: true,
             columns: [{
                 checkbox: true
             },
@@ -79,6 +88,19 @@
                     title: '所属id'
                 },
                 {
+                    field: 'attachAttr',
+                    title: '视频属性'
+                },
+                {
+                    field: 'positionType',
+                    title: '图片上传类型',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(dictDataUploadType, value);
+                    }
+
+                },
+                {
                     field: 'imageView',
                     title: '图片预览',
                     formatter: function (value, row, index) {
@@ -86,9 +108,9 @@
                         if (row.positionType == 'local') {
                             return $.table.imageView(ctx + "api/imageAttachment/showImage/" + row.id);
                         } else if (row.positionType == 'fastdfs') {
-                            return $.table.imageView(ctx + "api/imageAttachment/showImage/" + row.id);
+                            return $.table.imageView(row.attachUrl);
                         } else {
-                            return $.table.imageView(ctx + "api/imageAttachment/showImage/" + row.id);
+                            return $.table.imageView(row.attachUrl);
                         }
                     }
                 },
@@ -105,6 +127,14 @@
                     title: '图片大小'
                 },
                 {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(dictData, value);
+                    }
+                },
+                {
                     title: '操作',
                     align: 'center',
                     formatter: function (value, row, index) {
@@ -117,8 +147,16 @@
         $.table.init(options);
     });
 
-    function uploadImages() {
-        $.operate.uploadImages(pagePrefix + "/uploadImages");
+    function uploadLocalImages() {
+        $.operate.uploadImages(pagePrefix + "/uploadLocalImages");
+    }
+
+    function uploadFastDfsImages() {
+        $.operate.uploadImages(pagePrefix + "/uploadFastDfsImages");
+    }
+
+    function uploadOSSImages() {
+        $.operate.uploadImages(pagePrefix + "/uploadOssImages");
     }
 </script>
 </body>

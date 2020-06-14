@@ -12,10 +12,10 @@ import com.yk.fileupload.attachment.service.ImageAttachmentService;
 import com.yk.fileupload.mapper.ImageAttachmentMapper;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.query.ImageAttachmentQuery;
+import com.yk.fileupload.util.fastdfs.FastDfsAttachmentUtils;
 import com.yk.fileupload.util.local.LocalAttachmentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,39 +32,39 @@ import java.util.List;
  * @create: 2020-06-10 22:32
  **/
 @Service
-@Transactional
 public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     @Autowired
     private ImageAttachmentMapper imageAttachmentMapper;
 
     @Override
-    public ImageAttachment uploadLocalAttachment(HttpServletRequest request, String ownerId) {
+    public ImageAttachment uploadLocalAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         MultipartFile file = FileUtils.getRequestFile(request);
         ImageAttachment attachment = null;
-        try {
-            attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId);
-            FileUtils.transferTo(attachment.getAttachPath());
+        attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
+        FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
 
-            attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
-            imageAttachmentMapper.insertImageAttachment(attachment);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
+        imageAttachmentMapper.insertImageAttachment(attachment);
         return attachment;
     }
 
     @Override
-    public ImageAttachment uploadFastDFSAttachment(HttpServletRequest request, String ownerId) {
+    public ImageAttachment uploadFastDFSAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
+        MultipartFile file = FileUtils.getRequestFile(request);
+        ImageAttachment attachment = null;
+        attachment = FastDfsAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
+        attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
+        imageAttachmentMapper.insertImageAttachment(attachment);
+        return attachment;
+    }
+
+    @Override
+    public ImageAttachment uploadOSSAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return null;
     }
 
     @Override
-    public ImageAttachment uploadOSSAttachment(HttpServletRequest request, String ownerId) {
-        return null;
-    }
-
-    @Override
-    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId) {
+    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -73,7 +73,7 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
         List<ImageAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
             try {
-                ImageAttachment attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId);
+                ImageAttachment attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
                 FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
 
                 attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
@@ -88,12 +88,29 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId) {
-        return 0;
+    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+        List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
+        if (CollectionUtils.isEmpty(requestListFile)) {
+            throw new RequestToFileException();
+        }
+        int result = 1;
+        List<ImageAttachment> list = Lists.newArrayList();
+        for (MultipartFile file : requestListFile) {
+            try {
+                ImageAttachment attachment = FastDfsAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
+                attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
+                list.add(attachment);
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = 0;
+            }
+        }
+        imageAttachmentMapper.insertImageAttachmentBatch(list);
+        return result;
     }
 
     @Override
-    public int uploadOSSBatchAttachment(HttpServletRequest request, String ownerId) {
+    public int uploadOSSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return 0;
     }
 
@@ -110,6 +127,10 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
         } else {
             ImageAttachment attachment = imageAttachmentMapper.getImageAttachmentById(attId);
             image = LocalAttachmentUtils.getLocalImage(attachment.getAttachPath());
+        }
+
+        if (image == null) {
+            return;
         }
 
         response.setContentType("image/jpeg;charset=UTF-8");

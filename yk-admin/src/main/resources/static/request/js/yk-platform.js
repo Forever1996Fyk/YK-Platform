@@ -148,7 +148,7 @@ var table = {
             	var curParams = {
             			// 传递参数查询参数
                         pageSize:       params.limit,
-                        pageNum:        params.offset / params.limit + 1,
+                        start:        params.offset / params.limit + 1,
                         searchValue:    params.search,
                         orderByColumn:  params.sort,
                         isAsc:          params.order
@@ -1069,10 +1069,15 @@ var table = {
 				table.set();
 				$.modal.open("上传图片", url);
 			},
-			//上传图片
+			//上传视频
 			uploadVideo: function(url) {
 				table.set();
 				$.modal.open("上传视频", url);
+			},
+			//预览视频
+			previewVideo: function(url) {
+				table.set();
+				$.modal.open("预览视频", url, 850, 650);
 			},
             // 修改信息，以tab页展现
             editTab: function(id) {
@@ -1158,12 +1163,13 @@ var table = {
 				$.ajax(config)
 			},
             // 保存信息 弹出提示框
-            saveModal: function(url, data, callback) {
+            saveModal: function(url, data, callback, type) {
             	var config = {
         	        url: url,
-        	        type: "post",
+        	        type: type?type:"post",
         	        dataType: "json",
-        	        data: data,
+					contentType: 'application/json;charset=UTF-8',
+        	        data: JSON.stringify(data),
         	        beforeSend: function () {
         	        	$.modal.loading("正在处理中，请稍后...");
         	        },
@@ -1618,6 +1624,14 @@ var table = {
             isMobile: function () {
                 return navigator.userAgent.match(/(Android|iPhone|SymbianOS|Windows Phone|iPad|iPod)/i);
             },
+			//获取统一图片请求地址
+			getImageUrl: function (attId) {
+				return ctx + "api/imageAttachment/showImage/" + attId;
+			},
+			//获取统一视频播放地址
+			getVideoUrl: function (attId) {
+				return ctx + "api/videoAttachment/getVideoStream/" + attId;
+			}
         }
     });
 })(jQuery);

@@ -3,6 +3,8 @@ package com.yk.fileupload.attachment.service;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.model.query.VideoAttachmentQuery;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -42,4 +44,15 @@ public interface VideoAttachmentService extends AttachmentService<VideoAttachmen
      * @return
      */
     int deleteBatchVideoAttachmentByIds(List<String> ids);
+
+    /**
+     * 获取视频播放流
+     * @author YuKai Fan
+     * @param request
+     * @param response
+     * @param attId
+     * @return void
+     * @date 2020/6/12 21:19
+     */
+    void getLocalVideo(HttpServletRequest request, HttpServletResponse response, String attId);
 }

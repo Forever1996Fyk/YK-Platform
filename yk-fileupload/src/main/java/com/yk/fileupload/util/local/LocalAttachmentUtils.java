@@ -3,6 +3,7 @@ package com.yk.fileupload.util.local;
 import com.yk.common.exception.file.FileReadErrorException;
 import com.yk.common.util.FileUtils;
 import com.yk.common.util.TimeUtils;
+import com.yk.fileupload.manager.factory.AsyncFactory;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.util.AttachmentUtils;
@@ -28,13 +29,14 @@ public class LocalAttachmentUtils {
      * @param file
      * @return
      */
-    public static ImageAttachment getImageAttachment(MultipartFile file, String ownerId) throws IOException {
+    public static ImageAttachment getImageAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
         ImageAttachment attachment = AttachmentUtils.getImageAttachment(file);
         attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
         attachment.setCreateTime(TimeUtils.getCurrentDatetime());
         attachment.setUpdateTime(TimeUtils.getCurrentDatetime());
         attachment.setCreateUserId(ShiroUtils.getCurrentUserId());
         attachment.setUpdateUserId(ShiroUtils.getCurrentUserId());
+        attachment.setAttachAttr(attachAttr);
         attachment.setOwnerId(ownerId);
         return attachment;
     }
@@ -44,13 +46,14 @@ public class LocalAttachmentUtils {
      * @param file
      * @return
      */
-    public static VideoAttachment getVideoAttachment(MultipartFile file, String ownerId) throws IOException {
+    public static VideoAttachment getVideoAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
         VideoAttachment attachment = AttachmentUtils.getVideoAttachment(file);
         attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
         attachment.setCreateTime(TimeUtils.getCurrentDatetime());
         attachment.setUpdateTime(TimeUtils.getCurrentDatetime());
         attachment.setCreateUserId(ShiroUtils.getCurrentUserId());
         attachment.setUpdateUserId(ShiroUtils.getCurrentUserId());
+        attachment.setAttachAttr(attachAttr);
         attachment.setOwnerId(ownerId);
         return attachment;
     }

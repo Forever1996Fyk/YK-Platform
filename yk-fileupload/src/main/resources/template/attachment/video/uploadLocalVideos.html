@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('本地视频上传')"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <label class="font-noraml">本地视频上传</label>
+                        <div class="file-loading">
+                            <input id="uploadVideo" type="file" multiple>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+
+<script type="text/javascript" th:inline="javascript">
+    var prefix = ctx + "api/videoAttachment";
+
+
+    var option = {
+        theme: 'explorer-fas',
+        uploadUrl: prefix + '/uploadLocalAttachment',
+        overwriteInitial: false,
+        allowedFileExtensions: ['mp4', 'flv', 'avi', 'wmv', 'mpg', 'mpg4', 'mov', 'mkv', 'f4v', 'm4v', 'rmvb', 'rm', '3gp', 'm3u8', 'kux'],
+        maxFileCount: 5,
+        initialPreviewAsData: true,
+        maxFileSize: 1024 * 1024,
+    };
+
+    $(function () {
+        $("#uploadVideo").fileinput(option);
+    });
+
+    function submitHandler() {
+        $.modal.close();
+        parent.$.table.refresh();
+    }
+</script>
+</body>
+</html>

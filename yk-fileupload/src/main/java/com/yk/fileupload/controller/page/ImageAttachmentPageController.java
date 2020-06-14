@@ -30,9 +30,26 @@ public class ImageAttachmentPageController {
      * 跳转 批量上传图片页面
      * @return
      */
-    @GetMapping("/uploadImages")
-    public String uploadImages() {
-        return prefix + "/uploadImages";
+    @GetMapping("/uploadLocalImages")
+    public String uploadLocalImages() {
+        return prefix + "/uploadLocalImages";
+    }
+
+    /**
+     * 跳转 批量上传图片页面
+     * @return
+     */
+    @GetMapping("/uploadFastDfsImages")
+    public String uploadFastDfsImages() {
+        return prefix + "/uploadFastDfsImages";
+    }
+    /**
+     * 跳转 批量上传图片页面
+     * @return
+     */
+    @GetMapping("/uploadOssImages")
+    public String uploadOssImages() {
+        return prefix + "/uploadOssImages";
     }
 
     /**

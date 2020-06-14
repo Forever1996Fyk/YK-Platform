@@ -107,16 +107,24 @@
     <!-- 根据id获取系统用户 -->
     <select id="getSysUserById" resultType="SysUser">
         select
-        <include refid="sysUser_select_cond"/>
-        from tb_sys_user a
+        <include refid="sysUser_select_cond"/>,
+        case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
+        when 'fastdfs' then b.attachment_url
+        when 'oss' then b.attachment_url
+        end avatarUrl
+        from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.id = #{id} and a.status = 1
     </select>
 
     <!-- 查询系统用户集合 -->
     <select id="listSysUsers" parameterType="SysUserQuery" resultType="SysUser">
         select
-        <include refid="sysUser_select_cond"/>
-        from tb_sys_user a
+        <include refid="sysUser_select_cond"/>,
+        case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
+        when 'fastdfs' then b.attachment_url
+        when 'oss' then b.attachment_url
+        end avatarUrl
+        from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         <where>
             <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
                 AND a.id = #{id}
@@ -146,32 +154,48 @@
     <!-- 根据账号获取用户信息 -->
     <select id="getSysUserByAccount" resultType="SysUser">
         select
-        <include refid="sysUser_select_cond"/>
-        from tb_sys_user a
+        <include refid="sysUser_select_cond"/>,
+        case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
+        when 'fastdfs' then b.attachment_url
+        when 'oss' then b.attachment_url
+        end avatarUrl
+        from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.account = #{account}
     </select>
 
     <!-- 根据用户名获取用户信息 -->
     <select id="getSysUserByUserName" resultType="SysUser">
         select
-        <include refid="sysUser_select_cond"/>
-        from tb_sys_user a
+        <include refid="sysUser_select_cond"/>,
+        case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
+        when 'fastdfs' then b.attachment_url
+        when 'oss' then b.attachment_url
+        end avatarUrl
+        from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.user_name = #{userName}
     </select>
 
     <!-- 根据手机号获取用户信息 -->
     <select id="getSysUserByPhoneNumber" resultType="SysUser">
         select
-        <include refid="sysUser_select_cond"/>
-        from tb_sys_user a
+        <include refid="sysUser_select_cond"/>,
+        case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
+        when 'fastdfs' then b.attachment_url
+        when 'oss' then b.attachment_url
+        end avatarUrl
+        from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.phone = #{phone}
     </select>
 
     <!-- 根据邮箱获取用户信息 -->
     <select id="getSysUserByEmail" resultType="SysUser">
         select
-        <include refid="sysUser_select_cond"/>
-        from tb_sys_user a
+        <include refid="sysUser_select_cond"/>,
+        case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
+        when 'fastdfs' then b.attachment_url
+        when 'oss' then b.attachment_url
+        end avatarUrl
+        from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.email = #{email}
     </select>
 

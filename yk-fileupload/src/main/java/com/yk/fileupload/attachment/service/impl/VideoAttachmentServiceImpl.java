@@ -2,23 +2,35 @@ package com.yk.fileupload.attachment.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.yk.common.constant.ComConstants;
 import com.yk.common.enums.PositionTypeEnum;
 import com.yk.common.exception.file.RequestToFileException;
 import com.yk.common.util.FileUtils;
+import com.yk.common.util.StringUtils;
 import com.yk.fileupload.attachment.service.VideoAttachmentService;
+import com.yk.fileupload.config.NonStaticResourceHttpRequestHandler;
+import com.yk.fileupload.config.properties.FastDfsProperties;
 import com.yk.fileupload.mapper.VideoAttachmentMapper;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.model.query.VideoAttachmentQuery;
+import com.yk.fileupload.util.fastdfs.FastDfsAttachmentUtils;
 import com.yk.fileupload.util.local.LocalAttachmentUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -28,17 +40,21 @@ import java.util.List;
  * @create: 2020-06-12 16:24
  **/
 @Service
-@Transactional
+@AllArgsConstructor
 public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     @Autowired
     private VideoAttachmentMapper videoAttachmentMapper;
+    @Autowired
+    private FastDfsProperties fastDfsProperties;
+
+    private final NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
 
     @Override
-    public VideoAttachment uploadLocalAttachment(HttpServletRequest request, String ownerId) {
+    public VideoAttachment uploadLocalAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         MultipartFile file = FileUtils.getRequestFile(request);
         VideoAttachment attachment = null;
         try {
-            attachment = LocalAttachmentUtils.getVideoAttachment(file, ownerId);
+            attachment = LocalAttachmentUtils.getVideoAttachment(file, ownerId, attachAttr);
             FileUtils.transferTo(attachment.getAttachPath());
 
             attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
@@ -50,17 +66,26 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public VideoAttachment uploadFastDFSAttachment(HttpServletRequest request, String ownerId) {
+    public VideoAttachment uploadFastDFSAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+        MultipartFile file = FileUtils.getRequestFile(request);
+        VideoAttachment attachment = null;
+        try {
+            attachment = FastDfsAttachmentUtils.getVideoAttachment(file, ownerId, attachAttr);
+            attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
+            videoAttachmentMapper.insertVideoAttachment(attachment);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return attachment;
+    }
+
+    @Override
+    public VideoAttachment uploadOSSAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return null;
     }
 
     @Override
-    public VideoAttachment uploadOSSAttachment(HttpServletRequest request, String ownerId) {
-        return null;
-    }
-
-    @Override
-    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId) {
+    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -69,7 +94,7 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
         List<VideoAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
             try {
-                VideoAttachment attachment = LocalAttachmentUtils.getVideoAttachment(file, ownerId);
+                VideoAttachment attachment = LocalAttachmentUtils.getVideoAttachment(file, ownerId, attachAttr);
                 FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
 
                 attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
@@ -84,12 +109,30 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId) {
-        return 0;
+    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+        List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
+        if (CollectionUtils.isEmpty(requestListFile)) {
+            throw new RequestToFileException();
+        }
+        int result = 1;
+        List<VideoAttachment> list = Lists.newArrayList();
+        for (MultipartFile file : requestListFile) {
+            try {
+                VideoAttachment attachment = FastDfsAttachmentUtils.getVideoAttachment(file, ownerId, attachAttr);
+
+                attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
+                list.add(attachment);
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = 0;
+            }
+        }
+        videoAttachmentMapper.insertVideoAttachmentBatch(list);
+        return result;
     }
 
     @Override
-    public int uploadOSSBatchAttachment(HttpServletRequest request, String ownerId) {
+    public int uploadOSSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return 0;
     }
 
@@ -117,5 +160,29 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     @Override
     public int deleteBatchVideoAttachmentByIds(List<String> ids) {
         return videoAttachmentMapper.deleteBatchVideoAttachmentByIds(ids);
+    }
+
+    @Override
+    public void getLocalVideo(HttpServletRequest request, HttpServletResponse response, String attId) {
+        VideoAttachment attachment = videoAttachmentMapper.getVideoAttachmentById(attId);
+        File file = new File(attachment.getAttachPath());
+        Path path = Paths.get(attachment.getAttachPath());
+        try {
+            if (Files.exists(path)) {
+                String mimeType = null;
+                mimeType = Files.probeContentType(path);
+                if (StringUtils.isNotBlank(mimeType)) {
+                    response.setContentType(mimeType);
+                }
+                request.setAttribute(NonStaticResourceHttpRequestHandler.ATTR_FILE, path);
+                nonStaticResourceHttpRequestHandler.handleRequest(request, response);
+
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.setCharacterEncoding(ComConstants.UTF8);
+            }
+        } catch (IOException | ServletException e) {
+            e.printStackTrace();
+        }
     }
 }
