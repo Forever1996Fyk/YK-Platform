@@ -41,7 +41,7 @@ public class TrackerServerPool {
     private TrackerServerPool() {
     }
 
-    private static GenericObjectPool<TrackerServer> getObjectPool() {
+    private static synchronized GenericObjectPool<TrackerServer> getObjectPool() {
         if (trackerServerPool == null) {
             try {
                 // 加载配置文件

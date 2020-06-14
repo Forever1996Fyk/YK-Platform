@@ -9,7 +9,9 @@
 		<video id="viewVideo" width="800" class="video-js vjs-default-skin" controls preload="none"
 			   poster="http://video-js.zencoder.com/oceans-clip.png"
 			   data-setup="{}">
-			<source th:src="'/api/videoAttachment/getVideoStream/' + ${attId}" type="video/mp4">
+			<source th:if="${attachment.positionType} == 'local'" th:src="'/api/videoAttachment/getVideoStream/' + ${attachment.id}" type="video/mp4">
+			<source th:if="${attachment.positionType} == 'fastdfs'" th:src="${attachment.attachUrl}" type="video/mp4">
+			<source th:if="${attachment.positionType} == 'oss'" th:src="${attachment.attachUrl}" type="video/mp4">
 		</video>
 	</div>
 	<th:block th:include="include :: footer" />
@@ -20,8 +22,8 @@
 			myPlayer.pause();
 		}
 
-		videojs("viewVideo", {autoplay: true}, function () {
-			myPlayer.play();
+		var myPlayer = videojs("viewVideo", {autoplay: true}, function () {
+			this.play();
 		})
 	</script>
 </body>

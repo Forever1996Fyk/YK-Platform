@@ -55,7 +55,7 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
         VideoAttachment attachment = null;
         try {
             attachment = LocalAttachmentUtils.getVideoAttachment(file, ownerId, attachAttr);
-            FileUtils.transferTo(attachment.getAttachPath());
+            FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
 
             attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
             videoAttachmentMapper.insertVideoAttachment(attachment);
@@ -137,7 +137,17 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public void downloadAttachment() {
+    public void downloadLocalAttachment(HttpServletResponse response, String attId) {
+        VideoAttachment attachment = videoAttachmentMapper.getVideoAttachmentById(attId);
+    }
+
+    @Override
+    public void downloadFastDfsAttachment(HttpServletResponse response, String attId) {
+
+    }
+
+    @Override
+    public void downloadOSSAttachment(HttpServletResponse response, String attId) {
 
     }
 
@@ -184,5 +194,10 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
         } catch (IOException | ServletException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public VideoAttachment getVideoAttachmentById(String attId) {
+        return videoAttachmentMapper.getVideoAttachmentById(attId);
     }
 }

@@ -55,4 +55,13 @@ public interface VideoAttachmentService extends AttachmentService<VideoAttachmen
      * @date 2020/6/12 21:19
      */
     void getLocalVideo(HttpServletRequest request, HttpServletResponse response, String attId);
+
+    /**
+     * 根据附件id获取视频附件
+     * @author YuKai Fan
+     * @param attId
+     * @return com.yk.fileupload.model.pojo.VideoAttachment
+     * @date 2020/6/14 18:28
+     */
+    VideoAttachment getVideoAttachmentById(String attId);
 }

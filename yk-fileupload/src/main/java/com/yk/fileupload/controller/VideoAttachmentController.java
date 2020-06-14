@@ -138,8 +138,6 @@ public class VideoAttachmentController {
         return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
     }
 
-
-
     /**
      * 获取视频播放流
      * @author YuKai Fan
@@ -152,6 +150,18 @@ public class VideoAttachmentController {
     @GetMapping("/getVideoStream/{attId}")
     public void getLocalVideo(HttpServletRequest request, HttpServletResponse response, @PathVariable("attId") String attId) {
         videoAttachmentService.getLocalVideo(request, response, attId);
+    }
+
+    /**
+     * 下载本地视频附件
+     * @author YuKai Fan
+     * @param attId
+     * @return void
+     * @date 2020/6/14 18:57
+     */
+    @PostMapping("/downloadLocalVideoAttachment/{attId}")
+    public void downloadLocalVideoAttachment(@PathVariable("attId") String attId) {
+
     }
 
     /**

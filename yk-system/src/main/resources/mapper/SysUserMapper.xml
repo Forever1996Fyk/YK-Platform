@@ -109,8 +109,8 @@
         select
         <include refid="sysUser_select_cond"/>,
         case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
-        when 'fastdfs' then b.attachment_url
-        when 'oss' then b.attachment_url
+        when 'fastdfs' then b.attach_url
+        when 'oss' then b.attach_url
         end avatarUrl
         from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.id = #{id} and a.status = 1
@@ -121,8 +121,8 @@
         select
         <include refid="sysUser_select_cond"/>,
         case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
-        when 'fastdfs' then b.attachment_url
-        when 'oss' then b.attachment_url
+        when 'fastdfs' then b.attach_url
+        when 'oss' then b.attach_url
         end avatarUrl
         from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         <where>
@@ -156,8 +156,8 @@
         select
         <include refid="sysUser_select_cond"/>,
         case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
-        when 'fastdfs' then b.attachment_url
-        when 'oss' then b.attachment_url
+        when 'fastdfs' then b.attach_url
+        when 'oss' then b.attach_url
         end avatarUrl
         from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.account = #{account}
@@ -168,8 +168,8 @@
         select
         <include refid="sysUser_select_cond"/>,
         case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
-        when 'fastdfs' then b.attachment_url
-        when 'oss' then b.attachment_url
+        when 'fastdfs' then b.attach_url
+        when 'oss' then b.attach_url
         end avatarUrl
         from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.user_name = #{userName}
@@ -180,8 +180,8 @@
         select
         <include refid="sysUser_select_cond"/>,
         case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
-        when 'fastdfs' then b.attachment_url
-        when 'oss' then b.attachment_url
+        when 'fastdfs' then b.attach_url
+        when 'oss' then b.attach_url
         end avatarUrl
         from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.phone = #{phone}
@@ -192,8 +192,8 @@
         select
         <include refid="sysUser_select_cond"/>,
         case b.position_type when 'local' then concat('/api/imageAttachment/showImage/', a.avatar)
-        when 'fastdfs' then b.attachment_url
-        when 'oss' then b.attachment_url
+        when 'fastdfs' then b.attach_url
+        when 'oss' then b.attach_url
         end avatarUrl
         from tb_sys_user a left join tb_image_attachment b on b.id = a.avatar
         where a.email = #{email}

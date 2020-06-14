@@ -115,7 +115,17 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public void downloadAttachment() {
+    public void downloadLocalAttachment(HttpServletResponse response, String attId) {
+
+    }
+
+    @Override
+    public void downloadFastDfsAttachment(HttpServletResponse response, String attId) {
+
+    }
+
+    @Override
+    public void downloadOSSAttachment(HttpServletResponse response, String attId) {
 
     }
 

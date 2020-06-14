@@ -3,6 +3,7 @@ package com.yk.fileupload.attachment.service;
 import com.yk.common.entity.BaseAttachment;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -63,7 +64,32 @@ public interface AttachmentService<T extends BaseAttachment> {
 
 
     /**
-     * 附件下载
+     * 本地附件下载
+     * @author YuKai Fan
+     * @param response
+     * @param attId
+     * @return void
+     * @date 2020/6/14 18:59
      */
-    void downloadAttachment();
+    void downloadLocalAttachment(HttpServletResponse response, String attId);
+
+    /**
+     * fastDFS附件下载
+     * @author YuKai Fan
+     * @param response
+     * @param attId
+     * @return void
+     * @date 2020/6/14 18:59
+     */
+    void downloadFastDfsAttachment(HttpServletResponse response, String attId);
+
+    /**
+     * OSS附件下载
+     * @author YuKai Fan
+     * @param response
+     * @param attId
+     * @return void
+     * @date 2020/6/14 18:59
+     */
+    void downloadOSSAttachment(HttpServletResponse response, String attId);
 }

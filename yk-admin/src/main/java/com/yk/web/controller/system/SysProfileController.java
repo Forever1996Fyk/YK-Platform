@@ -59,7 +59,7 @@ public class SysProfileController {
     @PostMapping("/updateAvatar")
     public Result updateAvatar(HttpServletRequest request) throws IOException {
         SysUser sysUser = ShiroUtils.getCurrentSysUser();
-        ImageAttachment attachment = imageAttachmentService.uploadLocalAttachment(request, sysUser.getId(), AttachmentAttrEnum.USER_AVATAR.getValue());
+        ImageAttachment attachment = imageAttachmentService.uploadFastDFSAttachment(request, sysUser.getId(), AttachmentAttrEnum.USER_AVATAR.getValue());
         sysUser.setAvatar(attachment.getId());
 
         if (sysUserService.updateSysUser(sysUser) > 0) {

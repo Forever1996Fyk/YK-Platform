@@ -29,7 +29,7 @@ public class LocalAttachmentUtils {
      * @param file
      * @return
      */
-    public static ImageAttachment getImageAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
+    public static synchronized ImageAttachment getImageAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
         ImageAttachment attachment = AttachmentUtils.getImageAttachment(file);
         attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
         attachment.setCreateTime(TimeUtils.getCurrentDatetime());
@@ -46,7 +46,7 @@ public class LocalAttachmentUtils {
      * @param file
      * @return
      */
-    public static VideoAttachment getVideoAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
+    public static synchronized VideoAttachment getVideoAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
         VideoAttachment attachment = AttachmentUtils.getVideoAttachment(file);
         attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
         attachment.setCreateTime(TimeUtils.getCurrentDatetime());
