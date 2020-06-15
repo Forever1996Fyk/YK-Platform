@@ -81,7 +81,7 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public VideoAttachment uploadOSSAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public VideoAttachment uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return null;
     }
 
@@ -133,7 +133,7 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public int uploadOSSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return 0;
     }
 
@@ -144,13 +144,13 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public void downloadFastDfsAttachment(HttpServletResponse response, String attId) {
-
+    public ResponseEntity<byte[]> downloadFastDfsAttachment(HttpServletResponse response, String attId) {
+        VideoAttachment attachment = videoAttachmentMapper.getVideoAttachmentById(attId);
+        return FastDfsAttachmentUtils.downloadFastDfsAttachment(response, attachment);
     }
 
     @Override
-    public void downloadOSSAttachment(HttpServletResponse response, String attId) {
-
+    public void downloadOssAttachment(HttpServletResponse response, String attId) {
     }
 
     @Override

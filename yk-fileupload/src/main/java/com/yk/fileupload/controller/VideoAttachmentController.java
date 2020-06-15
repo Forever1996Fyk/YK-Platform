@@ -140,6 +140,54 @@ public class VideoAttachmentController {
     }
 
     /**
+     * Oss上传 视频上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadOssAttachment")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadOssAttachment(HttpServletRequest request) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadOssAttachment(request, null, null);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * Oss上传 视频上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadOssAttachment/{ownerId}")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadOssAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadFastDFSAttachment(request, ownerId, null);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * 批量Oss上传 视频上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadOssBatchAttachment")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadOssBatchAttachment(HttpServletRequest request) {
+        return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, null, null));
+    }
+
+    /**
+     * 批量Oss上传 视频上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadOssBatchAttachment/{ownerId}")
+    @RequiresPermissions("attachment:video:upload")
+    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+        return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
+    }
+
+    /**
      * 获取视频播放流
      * @author YuKai Fan
      * @param request
@@ -163,6 +211,18 @@ public class VideoAttachmentController {
     @GetMapping("/downloadLocalVideoAttachment/{attId}")
     public ResponseEntity<byte[]> downloadLocalVideoAttachment(HttpServletRequest request, @PathVariable("attId") String attId) throws IOException {
         return videoAttachmentService.downloadLocalAttachment(request, attId);
+    }
+
+    /**
+     * 下载本地视频附件
+     * @author YuKai Fan
+     * @param attId
+     * @return void
+     * @date 2020/6/14 18:57
+     */
+    @GetMapping("/downloadFastDfsAttachment/{attId}")
+    public ResponseEntity<byte[]> downloadFastDfsAttachment(HttpServletResponse response, @PathVariable("attId") String attId) throws IOException {
+         return videoAttachmentService.downloadFastDfsAttachment(response, attId);
     }
 
     /**

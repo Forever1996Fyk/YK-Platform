@@ -2,6 +2,7 @@ package com.yk.fileupload.util.fastdfs;
 
 import com.google.common.collect.Lists;
 import com.yk.common.entity.BaseAttachment;
+import com.yk.common.enums.ContentTypeEnum;
 import com.yk.common.exception.file.FastDfsException;
 import com.yk.common.util.SpringUtils;
 import com.yk.common.util.StringUtils;
@@ -18,11 +19,19 @@ import org.csource.fastdfs.StorageClient1;
 import org.csource.fastdfs.TrackerServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -152,7 +161,55 @@ public class FastDfsAttachmentUtils {
         }
 
         // 返还对象
-//        TrackerServerPool.returnObject(trackerServer);
+        TrackerServerPool.returnObject(trackerServer);
         return path;
+    }
+
+    public static ResponseEntity<byte[]> downloadFastDfsAttachment(HttpServletResponse response, BaseAttachment attachment) {
+        return download(attachment, null, response);
+    }
+
+    public static ResponseEntity<byte[]> download(BaseAttachment attachment, OutputStream os, HttpServletResponse response) {
+        if (StringUtils.isBlank(attachment.getAttachPath())) {
+            throw new FastDfsException("FastDfs文件地址错误!");
+        }
+        // 文件名
+        String fileName = attachment.getAttachOriginTitle();
+        if (StringUtils.isBlank(fileName)) {
+            fileName = "未命名文件";
+        }
+
+        String contentType = ContentTypeEnum.getContentTypeBySuffix(attachment.getAttachSuffix());
+        logger.info("下载文件, 文件路径 = {}, 文件名称 = {}", attachment.getAttachPath(), fileName);
+
+        TrackerServer trackerServer = TrackerServerPool.getTrackerServer();
+        StorageClient1 storageClient = new StorageClient1(trackerServer, null);
+        try {
+            // 下载
+            byte[] bytes = storageClient.download_file1(attachment.getAttachPath());
+
+            if (bytes == null) {
+                bytes = "暂未找到具体文件".getBytes();
+                int index = fileName.indexOf('.');
+                if (index > 0) {
+                    fileName = fileName.substring(0, index);
+                }
+                fileName += ".zip";
+                fileName = "未上传文件" + fileName;
+            }
+            // 设置附件名
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, "UTF-8"));
+
+            // 返还对象
+            TrackerServerPool.returnObject(trackerServer);
+
+            return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+
+        } catch (IOException | MyException e) {
+            e.printStackTrace();
+            throw new FastDfsException("FastDfs文件下载失败");
+        }
     }
 }

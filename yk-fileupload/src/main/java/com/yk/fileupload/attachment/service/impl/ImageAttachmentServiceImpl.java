@@ -60,7 +60,7 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public ImageAttachment uploadOSSAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public ImageAttachment uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return null;
     }
 
@@ -111,7 +111,7 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public int uploadOSSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
         return 0;
     }
 
@@ -121,12 +121,12 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public void downloadFastDfsAttachment(HttpServletResponse response, String attId) {
-
+    public ResponseEntity<byte[]> downloadFastDfsAttachment(HttpServletResponse response, String attId) {
+        return null;
     }
 
     @Override
-    public void downloadOSSAttachment(HttpServletResponse response, String attId) {
+    public void downloadOssAttachment(HttpServletResponse response, String attId) {
 
     }
 

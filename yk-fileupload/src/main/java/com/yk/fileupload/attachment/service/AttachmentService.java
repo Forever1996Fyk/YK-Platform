@@ -37,7 +37,7 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @param ownerId
      * @return
      */
-    T uploadOSSAttachment(HttpServletRequest request, String ownerId, String attachAttr);
+    T uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr);
 
     /**
      * 本地服务 批量上传附件
@@ -61,7 +61,7 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @param ownerId
      * @return
      */
-    int uploadOSSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr);
+    int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr);
 
 
     /**
@@ -82,7 +82,7 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @return void
      * @date 2020/6/14 18:59
      */
-    void downloadFastDfsAttachment(HttpServletResponse response, String attId);
+    ResponseEntity<byte[]> downloadFastDfsAttachment(HttpServletResponse response, String attId);
 
     /**
      * OSS附件下载
@@ -92,5 +92,5 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @return void
      * @date 2020/6/14 18:59
      */
-    void downloadOSSAttachment(HttpServletResponse response, String attId);
+    void downloadOssAttachment(HttpServletResponse response, String attId);
 }
