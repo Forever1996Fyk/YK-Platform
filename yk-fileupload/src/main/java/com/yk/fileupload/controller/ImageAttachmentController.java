@@ -162,7 +162,7 @@ public class ImageAttachmentController {
 
     /**
      * 批量删除本地图片附件
-     * @param id
+     * @param ids
      * @return
      */
     @DeleteMapping("/deleteBatchImageAttachmentByIds/{ids}")

@@ -1,19 +1,26 @@
 package com.yk.fileupload.util.local;
 
+import com.yk.common.entity.BaseAttachment;
 import com.yk.common.exception.file.FileReadErrorException;
-import com.yk.common.util.FileUtils;
+import com.yk.common.util.AppUtils;
 import com.yk.common.util.TimeUtils;
-import com.yk.fileupload.manager.factory.AsyncFactory;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.util.AttachmentUtils;
 import com.yk.framework.util.ShiroUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 
 /**
  * @program: YK-Platform
@@ -75,5 +82,30 @@ public class LocalAttachmentUtils {
         }
 
         return null;
+    }
+
+    /**
+     * 下载本地附件
+     * @param request
+     * @param attachment
+     */
+    public static ResponseEntity<byte[]> downloadLocalAttachment(HttpServletRequest request, BaseAttachment attachment) throws IOException {
+        byte[] bytes = getLocalImage(attachment.getAttachPath());
+        String fileName = attachment.getAttachOriginTitle();
+        if (bytes == null) {
+            bytes = "暂未找到具体文件".getBytes();
+            int index = fileName.indexOf('.');
+            if (index > 0) {
+                fileName = fileName.substring(0, index);
+            }
+            fileName += ".zip";
+            fileName = "未上传文件" + fileName;
+        }
+        // 设置附件名
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, "UTF-8"));
+
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 }

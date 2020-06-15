@@ -18,6 +18,7 @@ import com.yk.fileupload.util.fastdfs.FastDfsAttachmentUtils;
 import com.yk.fileupload.util.local.LocalAttachmentUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -137,8 +138,9 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public void downloadLocalAttachment(HttpServletResponse response, String attId) {
+    public ResponseEntity<byte[]> downloadLocalAttachment(HttpServletRequest request, String attId) throws IOException {
         VideoAttachment attachment = videoAttachmentMapper.getVideoAttachmentById(attId);
+        return LocalAttachmentUtils.downloadLocalAttachment(request, attachment);
     }
 
     @Override

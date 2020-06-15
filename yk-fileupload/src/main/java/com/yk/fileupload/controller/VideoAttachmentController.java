@@ -7,6 +7,7 @@ import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.model.query.VideoAttachmentQuery;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -159,9 +160,9 @@ public class VideoAttachmentController {
      * @return void
      * @date 2020/6/14 18:57
      */
-    @PostMapping("/downloadLocalVideoAttachment/{attId}")
-    public void downloadLocalVideoAttachment(@PathVariable("attId") String attId) {
-
+    @GetMapping("/downloadLocalVideoAttachment/{attId}")
+    public ResponseEntity<byte[]> downloadLocalVideoAttachment(HttpServletRequest request, @PathVariable("attId") String attId) throws IOException {
+        return videoAttachmentService.downloadLocalAttachment(request, attId);
     }
 
     /**

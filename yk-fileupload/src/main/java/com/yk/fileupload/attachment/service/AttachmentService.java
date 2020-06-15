@@ -1,6 +1,7 @@
 package com.yk.fileupload.attachment.service;
 
 import com.yk.common.entity.BaseAttachment;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,12 +67,12 @@ public interface AttachmentService<T extends BaseAttachment> {
     /**
      * 本地附件下载
      * @author YuKai Fan
-     * @param response
+     * @param request
      * @param attId
      * @return void
      * @date 2020/6/14 18:59
      */
-    void downloadLocalAttachment(HttpServletResponse response, String attId);
+    ResponseEntity<byte[]> downloadLocalAttachment(HttpServletRequest request, String attId) throws IOException;
 
     /**
      * fastDFS附件下载

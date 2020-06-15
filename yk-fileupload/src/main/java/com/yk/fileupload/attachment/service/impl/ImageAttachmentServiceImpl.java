@@ -15,6 +15,7 @@ import com.yk.fileupload.model.query.ImageAttachmentQuery;
 import com.yk.fileupload.util.fastdfs.FastDfsAttachmentUtils;
 import com.yk.fileupload.util.local.LocalAttachmentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -115,8 +116,8 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public void downloadLocalAttachment(HttpServletResponse response, String attId) {
-
+    public ResponseEntity<byte[]> downloadLocalAttachment(HttpServletRequest request, String attId) {
+        return null;
     }
 
     @Override
