@@ -2,7 +2,6 @@ package com.yk.fileupload.util.local;
 
 import com.yk.common.entity.BaseAttachment;
 import com.yk.common.exception.file.FileReadErrorException;
-import com.yk.common.util.AppUtils;
 import com.yk.common.util.TimeUtils;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.pojo.VideoAttachment;
@@ -16,10 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
@@ -36,7 +34,7 @@ public class LocalAttachmentUtils {
      * @param file
      * @return
      */
-    public static synchronized ImageAttachment getImageAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
+    public static ImageAttachment getImageAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
         ImageAttachment attachment = AttachmentUtils.getImageAttachment(file);
         attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
         attachment.setCreateTime(TimeUtils.getCurrentDatetime());
@@ -53,7 +51,7 @@ public class LocalAttachmentUtils {
      * @param file
      * @return
      */
-    public static synchronized VideoAttachment getVideoAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
+    public static VideoAttachment getVideoAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
         VideoAttachment attachment = AttachmentUtils.getVideoAttachment(file);
         attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
         attachment.setCreateTime(TimeUtils.getCurrentDatetime());

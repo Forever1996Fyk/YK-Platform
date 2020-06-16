@@ -10,7 +10,6 @@ import com.yk.common.enums.CannedAccessControlEnum;
 import com.yk.common.enums.RedundancyEnum;
 import com.yk.common.enums.StorageClassEnum;
 import com.yk.common.exception.file.OssException;
-import com.yk.common.util.FileUtils;
 import com.yk.common.util.StringUtils;
 import com.yk.common.util.TimeUtils;
 import com.yk.fileupload.config.properties.AliyunOssProperties;
@@ -40,7 +39,11 @@ public class AliyunOssUtil {
     private final static String ACCESS_KEY_SECRET = AliyunOssProperties.getInstance().getAccessKeySecret();
     private final static String ENDPOINT = AliyunOssProperties.getInstance().getEndpoint();
 
-    private static OSS client = new OSSClientBuilder().build(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
+    private static OSS client;
+
+    static {
+        client = new OSSClientBuilder().build(ENDPOINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
+    }
 
     private static void createBucket(Bucket bucket) {
         // 判断名称是否已存在

@@ -49,9 +49,13 @@
     };
 
     $(function () {
-        $("#uploadImage").fileinput(option).on("filebatchuploaderror", function (event, data, msg) {
-            console.log(data);
-            console.log(msg);
+        $("#uploadImage").fileinput(option).on("fileuploaded", function (event, data, msg) {
+            var res = data.response;
+            if (res.code === 200) {
+                $.modal.msgSuccess(res.message);
+            } else {
+                $.modal.msgError(res.message);
+            }
         });
     });
 
