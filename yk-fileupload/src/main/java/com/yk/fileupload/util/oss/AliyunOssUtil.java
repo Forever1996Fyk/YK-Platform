@@ -97,7 +97,7 @@ public class AliyunOssUtil {
         attachment.setUpdateUserId(ShiroUtils.getCurrentUserId());
         attachment.setAttachAttr(attachAttr);
         attachment.setOwnerId(ownerId);
-//        attachment.setAttachUrl(simpleUpload(file.getInputStream(), bucket, attachment.getAttachPath()));
+        attachment.setAttachUrl(simpleUpload(file.getInputStream(), bucket, attachment.getAttachPath()));
         return attachment;
     }
 

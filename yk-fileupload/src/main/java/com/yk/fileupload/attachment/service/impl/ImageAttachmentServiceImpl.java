@@ -64,8 +64,6 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     public ImageAttachment uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) throws IOException {
         MultipartFile file = FileUtils.getRequestFile(request);
         ImageAttachment attachment = AliyunOssUtil.getImageAttachment(file, ownerId, attachAttr, bucket);
-
-        System.out.println("附件id: " + attachment.getId());
         attachment.setPositionType(PositionTypeEnum.OSS.getContent());
         imageAttachmentMapper.insertImageAttachment(attachment);
         return null;
