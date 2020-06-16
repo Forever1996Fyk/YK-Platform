@@ -27,18 +27,32 @@
 <script type="text/javascript" th:inline="javascript">
     var prefix = ctx + "api/imageAttachment";
 
+    var bucketName = "yk-platform";
+    var storageType = 'Standard';
+    var dataRedundancyType = 'Local';
+    var cannedACL = 'PubR';
+
     var option = {
         theme: 'explorer-fas',
-        uploadUrl: prefix + '/uploadOSSAttachment',
+        uploadUrl: prefix + '/uploadOssAttachment',
         overwriteInitial: false,
         allowedFileExtensions: ['jpg', 'jpe', 'jpeg', 'gif', 'png', 'webp', 'bmp', 'tif', 'tiff', 'fax', 'ico'],
         maxFileCount: 10,
         initialPreviewAsData: true,
         maxFileSize: 20 * 1024,
+        uploadExtraData : {
+            bucketName: bucketName,
+            storageType: storageType,
+            dataRedundancyType: dataRedundancyType,
+            cannedACL: cannedACL
+        }
     };
 
     $(function () {
-        $("#uploadImage").fileinput(option);
+        $("#uploadImage").fileinput(option).on("filebatchuploaderror", function (event, data, msg) {
+            console.log(data);
+            console.log(msg);
+        });
     });
 
     function submitHandler() {

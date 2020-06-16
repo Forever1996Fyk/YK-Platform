@@ -55,9 +55,9 @@ public class VideoAttachmentPageController {
      * 跳转 批量上传视频页面
      * @return
      */
-    @GetMapping("/uploadOSSVideos")
-    public String uploadOSSVideos() {
-        return prefix + "/uploadOSSVideos";
+    @GetMapping("/uploadOssVideos")
+    public String uploadOssVideos() {
+        return prefix + "/uploadOssVideos";
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.yk.fileupload.attachment.service;
 
 import com.yk.common.entity.BaseAttachment;
+import com.yk.common.entity.Bucket;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +36,10 @@ public interface AttachmentService<T extends BaseAttachment> {
      * OSS服务 上传附件
      * @param request
      * @param ownerId
+     * @param bucket
      * @return
      */
-    T uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr);
+    T uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) throws IOException;
 
     /**
      * 本地服务 批量上传附件
@@ -61,7 +63,7 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @param ownerId
      * @return
      */
-    int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr);
+    int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket);
 
 
     /**

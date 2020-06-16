@@ -113,3 +113,10 @@ fastdfs:
   httpTrackerHttpPort: 80
   # tracker访问地址
   trackerServers: www.yukaifan.top:22122
+
+# 阿里云配置
+aliyun:
+  oss:
+    accessKeyId: xxxxxx
+    accessKeySecret: xxxxxxx
+    endpoint: xxxxxx

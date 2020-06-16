@@ -1059,10 +1059,20 @@ var table = {
 				table.set();
 				$.modal.open("上传图片", url, "1600", "650");
 			},
+			//上传图片
+			uploadImagesTab: function(url) {
+				table.set();
+				$.modal.openTab("上传图片", url);
+			},
 			//上传视频
 			uploadVideos: function(url) {
 				table.set();
 				$.modal.open("上传视频", url, "1600", "650");
+			},
+			//上传视频
+			uploadVideosTab: function(url) {
+				table.set();
+				$.modal.openTab("上传视频", url);
 			},
 			//上传图片
 			uploadImage: function(url) {

@@ -3,6 +3,7 @@ package com.yk.fileupload.attachment.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.yk.common.constant.ComConstants;
+import com.yk.common.entity.Bucket;
 import com.yk.common.enums.PositionTypeEnum;
 import com.yk.common.exception.file.FileReadErrorException;
 import com.yk.common.exception.file.RequestToFileException;
@@ -14,6 +15,7 @@ import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.query.ImageAttachmentQuery;
 import com.yk.fileupload.util.fastdfs.FastDfsAttachmentUtils;
 import com.yk.fileupload.util.local.LocalAttachmentUtils;
+import com.yk.fileupload.util.oss.AliyunOssUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -52,15 +54,20 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     @Override
     public ImageAttachment uploadFastDFSAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         MultipartFile file = FileUtils.getRequestFile(request);
-        ImageAttachment attachment = null;
-        attachment = FastDfsAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
+        ImageAttachment attachment = FastDfsAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
         attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
         imageAttachmentMapper.insertImageAttachment(attachment);
         return attachment;
     }
 
     @Override
-    public ImageAttachment uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public ImageAttachment uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) throws IOException {
+        MultipartFile file = FileUtils.getRequestFile(request);
+        ImageAttachment attachment = AliyunOssUtil.getImageAttachment(file, ownerId, attachAttr, bucket);
+
+        System.out.println("附件id: " + attachment.getId());
+        attachment.setPositionType(PositionTypeEnum.OSS.getContent());
+        imageAttachmentMapper.insertImageAttachment(attachment);
         return null;
     }
 
@@ -111,8 +118,25 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
-        return 0;
+    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) {
+        List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
+        if (CollectionUtils.isEmpty(requestListFile)) {
+            throw new RequestToFileException();
+        }
+        int result = 1;
+        List<ImageAttachment> list = Lists.newArrayList();
+        for (MultipartFile file : requestListFile) {
+            try {
+                ImageAttachment attachment = AliyunOssUtil.getImageAttachment(file, ownerId, attachAttr, bucket);
+                attachment.setPositionType(PositionTypeEnum.OSS.getContent());
+                list.add(attachment);
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = 0;
+            }
+        }
+        imageAttachmentMapper.insertImageAttachmentBatch(list);
+        return result;
     }
 
     @Override

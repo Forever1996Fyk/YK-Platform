@@ -2,6 +2,7 @@ package com.yk.fileupload.controller;
 
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
+import com.yk.common.entity.Bucket;
 import com.yk.fileupload.attachment.service.VideoAttachmentService;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.model.query.VideoAttachmentQuery;
@@ -146,8 +147,8 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssAttachment(HttpServletRequest request) throws IOException {
-        VideoAttachment attachment = videoAttachmentService.uploadOssAttachment(request, null, null);
+    public Result uploadOssAttachment(HttpServletRequest request, @RequestBody Bucket bucket) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadOssAttachment(request, null, null, bucket);
         return Result.success("上传成功", attachment);
     }
 
@@ -159,8 +160,8 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
-        VideoAttachment attachment = videoAttachmentService.uploadFastDFSAttachment(request, ownerId, null);
+    public Result uploadOssAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId, @RequestBody Bucket bucket) throws IOException {
+        VideoAttachment attachment = videoAttachmentService.uploadOssAttachment(request, ownerId, null, bucket);
         return Result.success("上传成功", attachment);
     }
 
@@ -171,8 +172,8 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request) {
-        return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, null, null));
+    public Result uploadOssBatchAttachment(HttpServletRequest request, @RequestBody Bucket bucket) {
+        return Result.response(videoAttachmentService.uploadOssBatchAttachment(request, null, null, bucket));
     }
 
     /**
@@ -183,8 +184,8 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
-        return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
+    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId, @RequestBody Bucket bucket) {
+        return Result.response(videoAttachmentService.uploadOssBatchAttachment(request, ownerId, null, bucket));
     }
 
     /**

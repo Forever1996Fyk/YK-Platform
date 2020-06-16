@@ -2,6 +2,9 @@ package com.yk.fileupload.controller;
 
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
+import com.yk.common.entity.Bucket;
+import com.yk.common.util.MapUtils;
+import com.yk.common.util.ServletUtils;
 import com.yk.fileupload.attachment.service.ImageAttachmentService;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.query.ImageAttachmentQuery;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: YK-Platform
@@ -136,6 +140,62 @@ public class ImageAttachmentController {
     @RequiresPermissions("attachment:image:upload")
     public Result uploadFastDFSBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
         return Result.response(imageAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
+    }
+
+    /**
+     * OSS上传 图片上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadOssAttachment")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadOssAttachment(HttpServletRequest request) throws IOException {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
+        ImageAttachment attachment = imageAttachmentService.uploadOssAttachment(request, null, null, bucket);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * OSS上传 图片上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadOssAttachment/{ownerId}")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadOssAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
+        ImageAttachment attachment = imageAttachmentService.uploadOssAttachment(request, ownerId, null, bucket);
+        return Result.success("上传成功", attachment);
+    }
+
+    /**
+     * 批量OSS上传 图片上传附件
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadOssBatchAttachment")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadOssBatchAttachment(HttpServletRequest request) {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
+        return Result.response(imageAttachmentService.uploadOssBatchAttachment(request, null, null, bucket));
+    }
+
+    /**
+     * 批量OSS上传 图片上传附件
+     * @param request
+     * @param ownerId
+     * @return
+     */
+    @PostMapping("/uploadOssBatchAttachment/{ownerId}")
+    @RequiresPermissions("attachment:image:upload")
+    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
+        return Result.response(imageAttachmentService.uploadOssBatchAttachment(request, ownerId, null, bucket));
     }
 
     /**

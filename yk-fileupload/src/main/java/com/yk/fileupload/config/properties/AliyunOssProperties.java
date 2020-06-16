@@ -3,6 +3,7 @@ package com.yk.fileupload.config.properties;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 /**
  * @ClassName AliyunOssProperties
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date 2020/6/15 20:44
  * @Version 1.0
  **/
-@Configuration
+@Component
 @Getter
 public class AliyunOssProperties {
 
@@ -19,6 +20,10 @@ public class AliyunOssProperties {
 
     public static AliyunOssProperties getInstance() {
         return aliyunOssProperties;
+    }
+
+    public AliyunOssProperties() {
+        aliyunOssProperties = this;
     }
 
     /**

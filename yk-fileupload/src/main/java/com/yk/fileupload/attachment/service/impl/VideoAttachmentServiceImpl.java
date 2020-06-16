@@ -3,6 +3,7 @@ package com.yk.fileupload.attachment.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.yk.common.constant.ComConstants;
+import com.yk.common.entity.Bucket;
 import com.yk.common.enums.PositionTypeEnum;
 import com.yk.common.exception.file.RequestToFileException;
 import com.yk.common.util.FileUtils;
@@ -16,6 +17,7 @@ import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.model.query.VideoAttachmentQuery;
 import com.yk.fileupload.util.fastdfs.FastDfsAttachmentUtils;
 import com.yk.fileupload.util.local.LocalAttachmentUtils;
+import com.yk.fileupload.util.oss.AliyunOssUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -81,8 +83,12 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public VideoAttachment uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
-        return null;
+    public VideoAttachment uploadOssAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) throws IOException {
+        MultipartFile file = FileUtils.getRequestFile(request);
+        VideoAttachment attachment = AliyunOssUtil.getVideoAttachment(file, ownerId, attachAttr, bucket);
+        attachment.setPositionType(PositionTypeEnum.OSS.getContent());
+        videoAttachmentMapper.insertVideoAttachment(attachment);
+        return attachment;
     }
 
     @Override
@@ -133,8 +139,25 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
-        return 0;
+    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) {
+        List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
+        if (CollectionUtils.isEmpty(requestListFile)) {
+            throw new RequestToFileException();
+        }
+        int result = 1;
+        List<VideoAttachment> list = Lists.newArrayList();
+        for (MultipartFile file : requestListFile) {
+            try {
+                VideoAttachment attachment = AliyunOssUtil.getVideoAttachment(file, ownerId, attachAttr, bucket);
+                attachment.setPositionType(PositionTypeEnum.OSS.getContent());
+                list.add(attachment);
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = 0;
+            }
+        }
+        videoAttachmentMapper.insertVideoAttachmentBatch(list);
+        return result;
     }
 
     @Override
