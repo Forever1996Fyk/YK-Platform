@@ -270,26 +270,4 @@ public class DocAttachmentController {
     public void previewLocalDoc(HttpServletRequest request, HttpServletResponse response, @PathVariable("attId") String attId) throws IOException {
         docAttachmentService.previewLocalDoc(request, response, attId);
     }
-
-    /**
-     * 预览文档
-     * @param request
-     * @param response
-     * @param attId
-     */
-    @PostMapping("/previewFastDfsDoc/{attId}")
-    public void previewFastDfsDoc(HttpServletRequest request, HttpServletResponse response, @PathVariable("attId") String attId) {
-        docAttachmentService.previewFastDfsDoc(request, response, attId);
-    }
-
-    /**
-     * 预览文档
-     * @param request
-     * @param response
-     * @param attId
-     */
-    @PostMapping("/previewOssDoc/{attId}")
-    public void previewOssDoc(HttpServletRequest request, HttpServletResponse response, @PathVariable("attId") String attId) {
-        docAttachmentService.previewOssDoc(request, response, attId);
-    }
 }

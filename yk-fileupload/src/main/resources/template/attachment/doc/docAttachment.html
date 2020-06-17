@@ -148,13 +148,14 @@
      * 预览视频
      */
     function previewDoc(id, positionType, attachName, attachUrl) {
+        var previewPrefixUrl = 'http://www.yukaifan.top:8012/onlinePreview?url=';
         if (positionType == 'local') {
-            var url = 'http://localhost' + prefix + "/previewLocalDoc/" + id + "?fullfilename=" + attachName;
-            window.open('http://www.yukaifan.top:8012/onlinePreview?url=' + encodeURIComponent(url));
+            var url = 'http://localhost' + prefix + "/downloadLocalDocAttachment/" + id + "?fullfilename=" + attachName;
+            window.open(previewPrefixUrl + encodeURIComponent(url));
         } else if (positionType == 'fastdfs') {
-            window.open('http://www.yukaifan.top:8012/onlinePreview?url=' + encodeURIComponent(attachUrl));
+            window.open(previewPrefixUrl + encodeURIComponent(attachUrl));
         } else {
-            window.open('http://www.yukaifan.top:8012/onlinePreview?url=' + encodeURIComponent(attachUrl));
+            window.open(previewPrefixUrl + encodeURIComponent(attachUrl));
         }
     }
 
