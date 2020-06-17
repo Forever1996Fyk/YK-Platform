@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('OSS视频上传')"/>
+    <th:block th:include="include :: header('OSS文档上传')"/>
     <th:block th:include="include :: bootstrap-fileinput-css"/>
 </head>
 <body class="gray-bg">
@@ -11,9 +11,9 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
                     <div class="form-group">
-                        <label class="font-noraml">OSS视频上传</label>
+                        <label class="font-noraml">OSS文档上传</label>
                         <div class="file-loading">
-                            <input id="uploadVideo" type="file" multiple>
+                            <input id="uploadImage" type="file" multiple>
                         </div>
                     </div>
                 </div>
@@ -25,8 +25,9 @@
 <th:block th:include="include :: bootstrap-fileinput-js"/>
 
 <script type="text/javascript" th:inline="javascript">
-    var prefix = ctx + "api/videoAttachment";
+    var prefix = ctx + "api/docAttachment";
 
+    var bucketName = "yk-platform";
     var storageType = 'Standard';
     var dataRedundancyType = 'Local';
     var cannedACL = 'PubR';
@@ -35,11 +36,12 @@
         theme: 'explorer-fas',
         uploadUrl: prefix + '/uploadOssAttachment',
         overwriteInitial: false,
-        allowedFileExtensions: ['mp4', 'flv', 'avi', 'wmv', 'mpg', 'mpg4', 'mov', 'mkv', 'f4v', 'm4v', 'rmvb', 'rm', '3gp', 'm3u8', 'kux'],
-        maxFileCount: 5,
+        allowedFileExtensions: ['zip', 'rar', 'doc', 'docx', 'xls', 'xlsx', 'pdf', 'ppt', 'txt'],
+        maxFileCount: 10,
         initialPreviewAsData: true,
-        maxFileSize: 1024 * 1024,
+        maxFileSize: 20 * 1024,
         uploadExtraData : {
+            bucketName: bucketName,
             storageType: storageType,
             dataRedundancyType: dataRedundancyType,
             cannedACL: cannedACL
@@ -47,7 +49,7 @@
     };
 
     $(function () {
-        $("#uploadVideo").fileinput(option).on("fileuploaded", function (event, data, msg) {
+        $("#uploadImage").fileinput(option).on("fileuploaded", function (event, data, msg) {
             var res = data.response;
             if (res.code === 200) {
                 $.modal.msgSuccess(res.message);

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('FastDFS文档上传')"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <label class="font-noraml">FastDFS文档上传</label>
+                        <div class="file-loading">
+                            <input id="uploadImage" type="file" multiple>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+
+<script type="text/javascript" th:inline="javascript">
+    var prefix = ctx + "api/docAttachment";
+
+    var option = {
+        theme: 'explorer-fas',
+        uploadUrl: prefix + '/uploadFastDfsAttachment',
+        overwriteInitial: false,
+        allowedFileExtensions: ['zip', 'rar', 'doc', 'docx', 'xls', 'xlsx', 'pdf', 'ppt', 'txt'],
+        maxFileCount: 10,
+        initialPreviewAsData: true,
+        maxFileSize: 20 * 1024,
+    };
+
+    $(function () {
+        $("#uploadImage").fileinput(option);
+    });
+
+    function submitHandler() {
+        $.modal.close();
+        parent.$.table.refresh();
+    }
+</script>
+</body>
+</html>

@@ -3,10 +3,12 @@ package com.yk.fileupload.util.local;
 import com.yk.common.entity.BaseAttachment;
 import com.yk.common.exception.file.FileReadErrorException;
 import com.yk.common.util.TimeUtils;
+import com.yk.fileupload.model.pojo.DocAttachment;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.util.AttachmentUtils;
 import com.yk.framework.util.ShiroUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -15,9 +17,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 
 /**
@@ -64,6 +70,24 @@ public class LocalAttachmentUtils {
     }
 
     /**
+     * 获取本地文档附件对象
+     * @param file
+     * @param ownerId
+     * @param attachAttr
+     * @return
+     */
+    public static DocAttachment getDocAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
+        DocAttachment attachment = AttachmentUtils.getDocAttachment(file);
+        attachment.setAttachPath(AttachmentUtils.genFilePath(attachment.getAttachSuffix(), attachment.getAttachName()));
+        attachment.setCreateTime(TimeUtils.getCurrentDatetime());
+        attachment.setUpdateTime(TimeUtils.getCurrentDatetime());
+        attachment.setCreateUserId(ShiroUtils.getCurrentUserId());
+        attachment.setUpdateUserId(ShiroUtils.getCurrentUserId());
+        attachment.setAttachAttr(attachAttr);
+        attachment.setOwnerId(ownerId);
+        return attachment;
+    }
+    /**
      * 获取文件字节流
      * @param attachPath
      * @return
@@ -105,5 +129,19 @@ public class LocalAttachmentUtils {
         headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, "UTF-8"));
 
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
+    public static void previewLocalDoc(HttpServletResponse response, DocAttachment attachment) {
+        File file = new File(attachment.getAttachPath());
+        try {
+            OutputStream os = response.getOutputStream();
+            FileInputStream fis = new FileInputStream(file);
+            IOUtils.copy(fis, os);
+
+            fis.close();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

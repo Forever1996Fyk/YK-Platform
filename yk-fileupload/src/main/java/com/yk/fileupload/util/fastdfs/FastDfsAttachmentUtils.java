@@ -9,6 +9,7 @@ import com.yk.common.util.StringUtils;
 import com.yk.common.util.TimeUtils;
 import com.yk.fileupload.config.properties.FileProperties;
 import com.yk.fileupload.manager.TrackerServerPool;
+import com.yk.fileupload.model.pojo.DocAttachment;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.util.AttachmentUtils;
@@ -80,7 +81,27 @@ public class FastDfsAttachmentUtils {
         attachment.setAttachPath(upload(file, attachment));
         attachment.setAttachUrl(fileProperties.getFastDFSAddr() + attachment.getAttachPath());
         return attachment;
+    }
 
+    /**
+     * 获取文档附件对象
+     * @param file
+     * @param ownerId
+     * @param attachAttr
+     * @return
+     * @throws IOException
+     */
+    public static DocAttachment getDocAttachment(MultipartFile file, String ownerId, String attachAttr) throws IOException {
+        DocAttachment attachment = AttachmentUtils.getDocAttachment(file);
+        attachment.setCreateTime(TimeUtils.getCurrentDatetime());
+        attachment.setUpdateTime(TimeUtils.getCurrentDatetime());
+        attachment.setCreateUserId(ShiroUtils.getCurrentUserId());
+        attachment.setUpdateUserId(ShiroUtils.getCurrentUserId());
+        attachment.setAttachAttr(attachAttr);
+        attachment.setOwnerId(ownerId);
+        attachment.setAttachPath(upload(file, attachment));
+        attachment.setAttachUrl(fileProperties.getFastDFSAddr() + attachment.getAttachPath());
+        return attachment;
     }
 
     /**
@@ -178,7 +199,6 @@ public class FastDfsAttachmentUtils {
             fileName = "未命名文件";
         }
 
-        String contentType = ContentTypeEnum.getContentTypeBySuffix(attachment.getAttachSuffix());
         logger.info("下载文件, 文件路径 = {}, 文件名称 = {}", attachment.getAttachPath(), fileName);
 
         TrackerServer trackerServer = TrackerServerPool.getTrackerServer();

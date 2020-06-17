@@ -7,6 +7,8 @@ import com.yk.common.entity.Bucket;
 import com.yk.common.enums.PositionTypeEnum;
 import com.yk.common.exception.file.RequestToFileException;
 import com.yk.common.util.FileUtils;
+import com.yk.common.util.MapUtils;
+import com.yk.common.util.ServletUtils;
 import com.yk.common.util.StringUtils;
 import com.yk.fileupload.attachment.service.VideoAttachmentService;
 import com.yk.fileupload.config.NonStaticResourceHttpRequestHandler;
@@ -35,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: YK-Platform
@@ -173,7 +176,9 @@ public class VideoAttachmentServiceImpl implements VideoAttachmentService {
     }
 
     @Override
-    public void downloadOssAttachment(HttpServletResponse response, String attId) {
+    public ResponseEntity downloadOssAttachment(String attId) throws IOException {
+        VideoAttachment attachment = videoAttachmentMapper.getVideoAttachmentById(attId);
+        return AliyunOssUtil.downloadOssObject(attachment);
     }
 
     @Override

@@ -117,6 +117,7 @@ fastdfs:
 # 阿里云配置
 aliyun:
   oss:
-    accessKeyId: xxxxxx
-    accessKeySecret: xxxxxxx
-    endpoint: xxxxxx
+    accessKeyId: LTAIoc5iy7rzY5oF
+    accessKeySecret: B7INLs3bwisLsUjcAcwNWx0RU4zCKI
+    endpoint: oss-cn-qingdao.aliyuncs.com
+    bucketName: yk-platform

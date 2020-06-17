@@ -3,6 +3,8 @@ package com.yk.fileupload.controller;
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
 import com.yk.common.entity.Bucket;
+import com.yk.common.util.MapUtils;
+import com.yk.common.util.ServletUtils;
 import com.yk.fileupload.attachment.service.VideoAttachmentService;
 import com.yk.fileupload.model.pojo.VideoAttachment;
 import com.yk.fileupload.model.query.VideoAttachmentQuery;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: YK-Platform
@@ -147,7 +150,9 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssAttachment(HttpServletRequest request, @RequestBody Bucket bucket) throws IOException {
+    public Result uploadOssAttachment(HttpServletRequest request) throws IOException {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         VideoAttachment attachment = videoAttachmentService.uploadOssAttachment(request, null, null, bucket);
         return Result.success("上传成功", attachment);
     }
@@ -160,7 +165,9 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId, @RequestBody Bucket bucket) throws IOException {
+    public Result uploadOssAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         VideoAttachment attachment = videoAttachmentService.uploadOssAttachment(request, ownerId, null, bucket);
         return Result.success("上传成功", attachment);
     }
@@ -172,7 +179,9 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request, @RequestBody Bucket bucket) {
+    public Result uploadOssBatchAttachment(HttpServletRequest request) {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         return Result.response(videoAttachmentService.uploadOssBatchAttachment(request, null, null, bucket));
     }
 
@@ -184,7 +193,9 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId, @RequestBody Bucket bucket) {
+    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+        Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
+        Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         return Result.response(videoAttachmentService.uploadOssBatchAttachment(request, ownerId, null, bucket));
     }
 
@@ -215,7 +226,7 @@ public class VideoAttachmentController {
     }
 
     /**
-     * 下载本地视频附件
+     * 下载FastDfs视频附件
      * @author YuKai Fan
      * @param attId
      * @return void
@@ -224,6 +235,18 @@ public class VideoAttachmentController {
     @GetMapping("/downloadFastDfsAttachment/{attId}")
     public ResponseEntity<byte[]> downloadFastDfsAttachment(HttpServletResponse response, @PathVariable("attId") String attId) throws IOException {
          return videoAttachmentService.downloadFastDfsAttachment(response, attId);
+    }
+
+    /**
+     * 下载OSS视频附件
+     * @author YuKai Fan
+     * @param attId
+     * @return void
+     * @date 2020/6/14 18:57
+     */
+    @GetMapping("/downloadOssAttachment/{attId}")
+    public ResponseEntity downloadOssAttachment(@PathVariable("attId") String attId) throws IOException {
+        return videoAttachmentService.downloadOssAttachment(attId);
     }
 
     /**

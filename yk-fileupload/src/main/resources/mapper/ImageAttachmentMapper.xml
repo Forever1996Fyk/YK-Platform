@@ -166,6 +166,7 @@
             </if>
             AND a.status = 1
         </where>
+        order by a.create_time desc
     </select>
 
     <sql id="imageAttachment_select_cond">

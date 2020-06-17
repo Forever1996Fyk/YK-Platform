@@ -6,9 +6,7 @@
 </head>
 <body class="white-bg">
 	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
-		<video id="viewVideo" width="800" class="video-js vjs-default-skin" controls preload="none"
-			   poster="http://video-js.zencoder.com/oceans-clip.png"
-			   data-setup="{}">
+		<video id="viewVideo" width="800" class="video-js vjs-default-skin" controls preload="none">
 			<source th:if="${attachment.positionType} == 'local'" th:src="'/api/videoAttachment/getVideoStream/' + ${attachment.id}" type="video/mp4">
 			<source th:if="${attachment.positionType} == 'fastdfs'" th:src="${attachment.attachUrl}" type="video/mp4">
 			<source th:if="${attachment.positionType} == 'oss'" th:src="${attachment.attachUrl}" type="video/mp4">

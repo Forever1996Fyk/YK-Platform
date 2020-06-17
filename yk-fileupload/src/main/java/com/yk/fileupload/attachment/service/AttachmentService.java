@@ -89,10 +89,9 @@ public interface AttachmentService<T extends BaseAttachment> {
     /**
      * OSS附件下载
      * @author YuKai Fan
-     * @param response
      * @param attId
      * @return void
      * @date 2020/6/14 18:59
      */
-    void downloadOssAttachment(HttpServletResponse response, String attId);
+    ResponseEntity downloadOssAttachment(String attId) throws IOException;
 }

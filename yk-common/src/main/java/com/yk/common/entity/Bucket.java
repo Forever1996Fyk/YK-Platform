@@ -14,8 +14,6 @@ import java.io.Serializable;
 public class Bucket implements Serializable {
     private static final long serialVersionUID = 7876293024977658325L;
 
-    //存储空间名称
-    private String bucketName;
     //存储类型
     private String storageType;
     //数据容灾类型

@@ -43,4 +43,10 @@ public class AliyunOssProperties {
      */
     @Value("${aliyun.oss.endpoint}")
     private String endpoint;
+
+    /**
+     * bucketName
+     */
+    @Value("${aliyun.oss.bucketName}")
+    private String bucketName;
 }

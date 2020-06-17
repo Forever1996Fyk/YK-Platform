@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('视频附件列表')"/>
-    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: header('文档附件列表')"/>
 </head>
 <body class="gray-bg">
 <div class="container-div">
@@ -12,16 +11,16 @@
                 <div class="select-list">
                     <ul>
                         <li>
-                            <label>视频属性：</label>
+                            <label>文档属性：</label>
                             <input type="text" name="attachAttr"/>
                         </li>
                         <li>
-                            <label>视频名称：</label>
-                            <input type="text" name="attachName"/>
+                            <label>文档原名：</label>
+                            <input type="text" name="attachOriginTitle"/>
                         </li>
                         <li>
                             <label>状态：</label>
-                            <select name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+                            <select name="status" th:with="type=${@dict.getType('sys_common_status')}">
                                 <option value="">所有</option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
                                         th:value="${dict.dictValue}"></option>
@@ -39,17 +38,17 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            <a class="btn btn-success" onclick="uploadLocalVideos()" shiro:hasPermission="attachment:video:upload">
-                <i class="fa fa-upload"></i> 本地上传视频
+            <a class="btn btn-success" onclick="uploadLocalDocs()" shiro:hasPermission="attachment:doc:upload">
+                <i class="fa fa-upload"></i> 本地上传文档
             </a>
-            <a class="btn btn-info" onclick="uploadFastDfsVideos()" shiro:hasPermission="attachment:video:upload">
-                <i class="fa fa-upload"></i> FastDFS上传视频
+            <a class="btn btn-info" onclick="uploadFastDfsDocs()" shiro:hasPermission="attachment:doc:upload">
+                <i class="fa fa-upload"></i> FastDFS上传文档
             </a>
-            <a class="btn btn-primary" onclick="uploadOSSVideos()" shiro:hasPermission="attachment:video:upload">
-                <i class="fa fa-upload"></i> OSS上传视频
+            <a class="btn btn-primary" onclick="uploadOSSDocs()" shiro:hasPermission="attachment:doc:upload">
+                <i class="fa fa-upload"></i> OSS上传文档
             </a>
             <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
-               shiro:hasPermission="attachment:video:delete">
+               shiro:hasPermission="attachment:doc:delete">
                 <i class="fa fa-remove"></i> 删除
             </a>
         </div>
@@ -59,27 +58,27 @@
     </div>
 </div>
 <th:block th:include="include :: footer"/>
-<th:block th:include="include :: select2-js" />
 <script th:inline="javascript">
-    var deleteFlag = [[${@permission.hasPermi('attachment:video:delete')}]];
+    var deleteFlag = [[${@permission.hasPermi('attachment:doc:delete')}]];
 
-    var prefix = ctx + "api/videoAttachment";
-    var pagePrefix = ctx + "attachment/video";
+    var prefix = ctx + "api/docAttachment";
+    var pagePrefix = ctx + "attachment/doc";
     var dictData = [[${@dict.getType('sys_common_status')}]];
     var dictDataUploadType = [[${@dict.getType('file_upload_type')}]];
 
     $(function () {
         var options = {
-            url: prefix + "/listVideoAttachments",
-            removeUrl: prefix + "/deleteVideoAttachmentById/{id}",
-            removeAllUrl: prefix + "/deleteBatchVideoAttachmentByIds/{ids}",
-            modalName: "视频附件",
+            url: prefix + "/listDocAttachments",
+            removeUrl: prefix + "/deleteDocAttachmentById/{id}",
+            removeAllUrl: prefix + "/deleteBatchDocAttachmentByIds/{ids}",
+            modalName: "文档附件",
+            rememberSelected: true,
             columns: [{
                 checkbox: true
             },
                 {
                     field: 'id',
-                    title: '视频唯一标识',
+                    title: '文档唯一标识',
                     visible: false
                 },
                 {
@@ -92,28 +91,23 @@
                 },
                 {
                     field: 'positionType',
-                    title: '图片上传类型',
+                    title: '文档上传类型',
                     align: 'center',
                     formatter: function(value, row, index) {
                         return $.table.selectDictLabel(dictDataUploadType, value);
                     }
-
                 },
                 {
                     field: 'attachOriginTitle',
-                    title: '视频原名'
+                    title: '文档原名'
                 },
                 {
                     field: 'attachName',
-                    title: '视频名称'
+                    title: '文档名称'
                 },
                 {
                     field: 'attachSize',
-                    title: '视频大小'
-                },
-                {
-                    field: 'remark',
-                    title: '备注'
+                    title: '文档大小'
                 },
                 {
                     field: 'status',
@@ -128,8 +122,8 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="previewVideo(\'' + row.id + '\')"><i class="fa fa-eye"></i>预览视频</a> ');
-                        actions.push('<a class="btn btn-success btn-xs" href="javascript:void(0)" onclick="downloadVideo(\'' + row.id + '\', \'' + row.positionType + '\')"><i class="fa fa-eye"></i>下载视频</a> ');
+                        actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="previewDoc(\'' + row.id + '\', \'' + row.positionType + '\', \'' + row.attachName + '\', \'' + row.attachUrl + '\')"><i class="fa fa-eye"></i>预览文档</a> ');
+                        actions.push('<a class="btn btn-success btn-xs" href="javascript:void(0)" onclick="downloadDoc(\'' + row.id + '\', \'' + row.positionType + '\')"><i class="fa fa-eye"></i>下载文档</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + deleteFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
@@ -138,40 +132,38 @@
         $.table.init(options);
     });
 
-    /**
-     * 上传视频
-     */
-    function uploadLocalVideos() {
-        $.operate.uploadVideos(pagePrefix + "/uploadLocalVideos");
+    function uploadLocalDocs() {
+        $.operate.uploadDocs(pagePrefix + "/uploadLocalDocs");
     }
 
-    /**
-     * 上传视频
-     */
-    function uploadFastDfsVideos() {
-        $.operate.uploadVideos(pagePrefix + "/uploadFastDfsVideos");
+    function uploadFastDfsDocs() {
+        $.operate.uploadDocs(pagePrefix + "/uploadFastDfsDocs");
     }
 
-    /**
-     * 上传视频
-     */
-    function uploadOSSVideos() {
-        $.operate.uploadVideos(pagePrefix + "/uploadOssVideos");
+    function uploadOSSDocs() {
+        $.operate.uploadDocs(pagePrefix + "/uploadOssDocs");
     }
 
     /**
      * 预览视频
      */
-    function previewVideo(id) {
-        $.operate.previewVideo(pagePrefix + "/previewVideo/" + id);
+    function previewDoc(id, positionType, attachName, attachUrl) {
+        if (positionType == 'local') {
+            var url = 'http://localhost' + prefix + "/previewLocalDoc/" + id + "?fullfilename=" + attachName;
+            window.open('http://www.yukaifan.top:8012/onlinePreview?url=' + encodeURIComponent(url));
+        } else if (positionType == 'fastdfs') {
+            window.open('http://www.yukaifan.top:8012/onlinePreview?url=' + encodeURIComponent(attachUrl));
+        } else {
+            window.open('http://www.yukaifan.top:8012/onlinePreview?url=' + encodeURIComponent(attachUrl));
+        }
     }
 
     /**
      * 下载视频
      */
-    function downloadVideo(id, positionType) {
+    function downloadDoc(id, positionType) {
         if (positionType == 'local') {
-            window.location.href = prefix + "/downloadLocalVideoAttachment/" + id;
+            window.location.href = prefix + "/downloadLocalDocAttachment/" + id;
         } else if (positionType == 'fastdfs') {
             window.location.href = prefix + "/downloadFastDfsAttachment/" + id;
         } else {

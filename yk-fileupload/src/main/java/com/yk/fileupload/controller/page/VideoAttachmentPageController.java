@@ -1,5 +1,7 @@
 package com.yk.fileupload.controller.page;
 
+import com.yk.common.enums.FileTypeEnum;
+import com.yk.common.exception.ParameterException;
 import com.yk.fileupload.attachment.service.VideoAttachmentService;
 import com.yk.fileupload.mapper.VideoAttachmentMapper;
 import com.yk.fileupload.model.pojo.VideoAttachment;
@@ -76,6 +78,9 @@ public class VideoAttachmentPageController {
     @GetMapping("/previewVideo/{attId}")
     public String previewVideo(@PathVariable("attId") String attId, Model model) {
         VideoAttachment attachment = videoAttachmentService.getVideoAttachmentById(attId);
+        if (!FileTypeEnum.MP4.getValue().equals(attachment.getAttachSuffix())) {
+            throw new ParameterException("目前只能预览MP4视频");
+        }
         model.addAttribute("attachment", attachment);
         return prefix + "/previewVideo";
     }

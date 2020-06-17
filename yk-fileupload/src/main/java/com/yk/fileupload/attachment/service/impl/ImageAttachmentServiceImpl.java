@@ -148,8 +148,8 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public void downloadOssAttachment(HttpServletResponse response, String attId) {
-
+    public ResponseEntity downloadOssAttachment(String attId) {
+        return null;
     }
 
     @Override

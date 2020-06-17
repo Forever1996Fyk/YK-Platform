@@ -96,6 +96,16 @@ public class AttachmentUtils {
     }
 
     /**
+     * 生成OSS文件所在路径
+     * @param suffix
+     * @param attachName
+     * @return
+     */
+    public static String genOssFilePath(String suffix, String attachName) {
+        return getModulePath(suffix) + genDateMkdir() + attachName;
+    }
+
+    /**
      * 根据后缀名 判断文件类型, 获取对应的模块路径
      * @param suffix
      * @return

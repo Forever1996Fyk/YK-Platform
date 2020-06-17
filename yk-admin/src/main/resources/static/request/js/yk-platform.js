@@ -1074,6 +1074,16 @@ var table = {
 				table.set();
 				$.modal.openTab("上传视频", url);
 			},
+			//上传文档
+			uploadDocs: function(url) {
+				table.set();
+				$.modal.open("上传文档", url, "1600", "650");
+			},
+			//上传文档
+			uploadDocsTab: function(url) {
+				table.set();
+				$.modal.openTab("上传文档", url);
+			},
 			//上传图片
 			uploadImage: function(url) {
 				table.set();

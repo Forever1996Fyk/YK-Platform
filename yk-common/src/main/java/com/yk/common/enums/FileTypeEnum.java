@@ -88,6 +88,7 @@ public enum FileTypeEnum {
      * MS Word/Excel.
      */
     XLS_DOC("xls"), XLSX_DOCX("xlsx"),
+    DOC("doc"),DOCX("docx"), TXT("txt"),PPT("ppt"),
     /**
      * Visio
      */

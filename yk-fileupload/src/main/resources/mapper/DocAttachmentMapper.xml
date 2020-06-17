@@ -169,7 +169,7 @@
     </select>
 
     <sql id="docAttachment_select_cond">
-        a.id id, a.owner_id ownerId, a.position_type positionType a.attach_attr attachAttr, a.attach_md5 attachMd5, a.attach_sha1 attachSha1, a.attach_origin_title attachOriginTitle, a.attach_name attachName, a.attach_size attachSize, a.attach_suffix attachSuffix, a.attach_url attachUrl, a.attach_path attachPath, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
+        a.id id, a.owner_id ownerId, a.position_type positionType, a.attach_attr attachAttr, a.attach_md5 attachMd5, a.attach_sha1 attachSha1, a.attach_origin_title attachOriginTitle, a.attach_name attachName, a.attach_size attachSize, a.attach_suffix attachSuffix, a.attach_url attachUrl, a.attach_path attachPath, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
 
     <sql id="docAttachment_add_key">
         id, owner_id, position_type, attach_attr, attach_md5, attach_sha1, attach_origin_title, attach_name, attach_size, attach_suffix, attach_url, attach_path, remark, status, create_user_id, create_time, update_user_id, update_time    </sql>
