@@ -1,7 +1,9 @@
 package com.yk.web.controller.system;
 
+import com.yk.common.annotation.ActionLog;
 import com.yk.common.dto.Result;
 import com.yk.common.entity.Ztree;
+import com.yk.common.enums.LogTypeEnum;
 import com.yk.system.model.pojo.DictType;
 import com.yk.system.model.query.DictTypeQuery;
 import com.yk.system.service.DictTypeService;
@@ -49,6 +51,7 @@ public class DictTypeController {
      * @param dictType
      * @return
      */
+    @ActionLog(name = "字典类型", logType = LogTypeEnum.INSERT)
     @PostMapping("/addDictType")
     @RequiresPermissions("system:dict:add")
     public Result addDictType(@RequestBody DictType dictType) {
@@ -61,6 +64,7 @@ public class DictTypeController {
      * @param dictType
      * @return
      */
+    @ActionLog(name = "字典类型", logType = LogTypeEnum.UPDATE)
     @PutMapping("/editDictType")
     @RequiresPermissions("system:dict:edit")
     public Result editDictType(@RequestBody DictType dictType) {
@@ -73,6 +77,7 @@ public class DictTypeController {
      * @param id
      * @return
      */
+    @ActionLog(name = "字典类型", logType = LogTypeEnum.DELETE)
     @DeleteMapping("/deleteDictTypeById/{id}")
     @RequiresPermissions("system:dict:delete")
     public Result deleteDictTypeById(@PathVariable("id") String id) {
@@ -85,6 +90,7 @@ public class DictTypeController {
      * @param ids
      * @return
      */
+    @ActionLog(name = "字典类型", logType = LogTypeEnum.DELETE)
     @DeleteMapping("/deleteBatchDictTypeByIds/{ids}")
     @RequiresPermissions("system:dict:delete")
     public Result deleteBatchDictTypeByIds(@PathVariable("ids") List<String> ids) {

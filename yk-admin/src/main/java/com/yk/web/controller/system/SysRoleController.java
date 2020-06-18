@@ -1,6 +1,8 @@
 package com.yk.web.controller.system;
 
+import com.yk.common.annotation.ActionLog;
 import com.yk.common.dto.Result;
+import com.yk.common.enums.LogTypeEnum;
 import com.yk.system.model.pojo.SysRole;
 import com.yk.system.model.pojo.SysUser;
 import com.yk.system.model.pojo.UserRole;
@@ -54,6 +56,7 @@ public class SysRoleController {
      * @param sysRole
      * @return
      */
+    @ActionLog(name = "角色管理", logType = LogTypeEnum.INSERT)
     @PostMapping("/addSysRole")
     @RequiresPermissions("system:role:add")
     public Result addSysRole(@RequestBody SysRole sysRole) {
@@ -66,6 +69,7 @@ public class SysRoleController {
      * @param sysRole
      * @return
      */
+    @ActionLog(name = "角色管理", logType = LogTypeEnum.UPDATE)
     @PutMapping("/editSysRole")
     @RequiresPermissions("system:role:edit")
     public Result editSysRole(@RequestBody SysRole sysRole) {
@@ -78,6 +82,7 @@ public class SysRoleController {
      * @param id
      * @return
      */
+    @ActionLog(name = "角色管理", logType = LogTypeEnum.DELETE)
     @DeleteMapping("/deleteSysRoleById/{id}")
     @RequiresPermissions("system:role:delete")
     public Result deleteSysRoleById(@PathVariable("id") String id) {
@@ -90,6 +95,7 @@ public class SysRoleController {
      * @param ids
      * @return
      */
+    @ActionLog(name = "角色管理", logType = LogTypeEnum.DELETE)
     @DeleteMapping("/deleteBatchSysRoleByIds/{ids}")
     @RequiresPermissions("system:role:delete")
     public Result deleteBatchSysRoleByIds(@PathVariable("ids") List<String> ids) {
@@ -120,6 +126,7 @@ public class SysRoleController {
      * @param sysUserQuery
      * @return
      */
+    @ActionLog(name = "角色管理", logType = LogTypeEnum.UPDATE)
     @RequiresPermissions("system:role:list")
     @GetMapping("/authUser/listAllocatedUsers")
     public Result listAllocatedUsers(@RequestParam(value = "start", defaultValue = "0") int start,
@@ -154,6 +161,7 @@ public class SysRoleController {
      * @param userRole
      * @return
      */
+    @ActionLog(name = "角色管理", logType = LogTypeEnum.GRANT)
     @PostMapping("/authUser/selectUserAuthRole")
     public Result selectUserAuthRole(@RequestBody UserRole userRole) {
         return Result.response(sysRoleService.insertAuthUsers(userRole.getRoleId(), userRole.getUserId()));
@@ -166,6 +174,7 @@ public class SysRoleController {
      * @param userId
      * @return
      */
+    @ActionLog(name = "角色管理", logType = LogTypeEnum.GRANT)
     @DeleteMapping("/authUser/cancelAuthUsers/{roleId}/{userId}")
     public Result cancelAuthUsers(@PathVariable("roleId") String roleId, @PathVariable("userId") String userId) {
         return Result.response(sysRoleService.deleteAuthUsers(roleId, userId));

@@ -1,7 +1,9 @@
 package com.yk.generator.controller;
 
+import com.yk.common.annotation.ActionLog;
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
+import com.yk.common.enums.LogTypeEnum;
 import com.yk.common.text.Convert;
 import com.yk.generator.model.pojo.GenTable;
 import com.yk.generator.model.pojo.GenTableColumn;
@@ -86,6 +88,7 @@ public class GenController {
      * @author YuKai Fan
      * @date 2020/6/4 21:47
      */
+    @ActionLog(name = "代码生成", logType = LogTypeEnum.IMPORT)
     @RequiresPermissions("tool:gen:list")
     @PostMapping("/importTable/{tables}")
     public Result importTable(@PathVariable("tables") String tables) {
@@ -100,6 +103,7 @@ public class GenController {
      * @param genTable
      * @return
      */
+    @ActionLog(name = "代码生成", logType = LogTypeEnum.UPDATE)
     @PutMapping("/editGenTable")
     @RequiresPermissions("tool:gen:edit")
     public Result editGenTable(GenTable genTable) {
@@ -126,6 +130,7 @@ public class GenController {
      * @param tableName
      * @param response
      */
+    @ActionLog(name = "代码生成", logType = LogTypeEnum.GENCODE)
     @GetMapping("/genCode/{tableName}")
     @RequiresPermissions("tool:gen:code")
     public void genCode(@PathVariable("tableName") String tableName, HttpServletResponse response) throws IOException {
@@ -139,6 +144,7 @@ public class GenController {
      * @param tableNames
      * @param response
      */
+    @ActionLog(name = "代码生成", logType = LogTypeEnum.GENCODE)
     @GetMapping("/batchGenCode/{tableNames}")
     @RequiresPermissions("tool:gen:code")
     public void batchGenCode(@PathVariable("tableNames") String tableNames, HttpServletResponse response) throws IOException {

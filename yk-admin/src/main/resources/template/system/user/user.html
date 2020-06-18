@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('系统用户列表')" />
+    <th:block th:include="include :: header('系统用户列表')"/>
 </head>
 <body class="gray-bg">
 <div class="container-div">
     <div class="row">
         <div class="col-sm-12 search-collapse">
-            <form id="config-form">
+            <form id="formId">
                 <div class="select-list">
                     <ul>
                         <li>
-                            用户名称：<input type="text" name="userName"/>
+                            <label>用户名称：</label>
+                            <input type="text" name="userName"/>
                         </li>
                         <li>
-                            用户状态：<select class="form-control m-b" name="status" th:with="type=${@dict.getType('sys_common_status')}">
-                            <option value="">所有</option>
-                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-                        </select>
-                        </select>
+                            <label>状态：</label>
+                            <select name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                        th:value="${dict.dictValue}"></option>
+                            </select>
                         </li>
                         <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>
@@ -33,7 +37,8 @@
             <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:user:add">
                 <i class="fa fa-plus"></i> 新增
             </a>
-            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:user:delete">
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="system:user:delete">
                 <i class="fa fa-remove"></i> 删除
             </a>
         </div>
@@ -42,7 +47,7 @@
         </div>
     </div>
 </div>
-<th:block th:include="include :: footer" />
+<th:block th:include="include :: footer"/>
 <script th:inline="javascript">
     var prefix = ctx + "api/system/user";
     var pagePrefix = ctx + "system/user";
@@ -51,7 +56,7 @@
     var deleteFlag = [[${@permission.hasPermi('system:user:delete')}]];
     var dictData = [[${@dict.getType('sys_user_sex')}]];
 
-    $(function() {
+    $(function () {
         var options = {
             url: prefix + "/list",
             createUrl: pagePrefix + "/add",
@@ -87,7 +92,7 @@
                     field: 'sex',
                     title: '性别',
                     align: 'center',
-                    formatter: function(value, row, index) {
+                    formatter: function (value, row, index) {
                         return $.table.selectDictLabel(dictData, value);
                     }
                 },
@@ -106,7 +111,7 @@
                 {
                     title: '操作',
                     align: 'center',
-                    formatter: function(value, row, index) {
+                    formatter: function (value, row, index) {
                         var actions = [];
                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + deleteFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
@@ -128,15 +133,15 @@
 
     /* 用户管理-停用 */
     function disable(userId) {
-        $.modal.confirm("确认要停用用户吗？", function() {
-            $.operate.put(prefix + "/editSysUser", { "id": userId, "status": 2 });
+        $.modal.confirm("确认要停用用户吗？", function () {
+            $.operate.put(prefix + "/editSysUser", {"id": userId, "status": 2});
         })
     }
 
     /* 用户管理启用 */
     function enable(userId) {
-        $.modal.confirm("确认要启用用户吗？", function() {
-            $.operate.put(prefix + "/editSysUser", { "id": userId, "status": 1 });
+        $.modal.confirm("确认要启用用户吗？", function () {
+            $.operate.put(prefix + "/editSysUser", {"id": userId, "status": 1});
         })
     }
 </script>

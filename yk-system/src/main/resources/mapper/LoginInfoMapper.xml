@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.system.mapper.LoginInfoMapper">
+    <!-- 新增系统访问记录 -->
+    <insert id="insertLoginInfo" parameterType="LoginInfo">
+        insert into tb_login_info(
+        <include refid="loginInfo_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        ( #{id}, #{loginName}, #{ipAddr}, #{loginLocation}, #{browser}, #{os}, #{msg}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime} )
+    </insert>
+
+    <!-- 批量新增系统访问记录 -->
+    <insert id="insertLoginInfoBatch">
+        insert into tb_login_info(
+        <include refid="loginInfo_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.loginName}, #{item.ipAddr}, #{item.loginLocation}, #{item.browser}, #{item.os}, #{item.msg}, #{item.status}, #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!--  更新系统访问记录  -->
+    <update id="updateLoginInfo" parameterType="LoginInfo">
+        update tb_login_info
+        <set>
+            <if test="loginName != null  and loginName != '' and loginName != 'null' and loginName != 'undefined' ">
+                login_name = #{loginName},
+            </if>
+            <if test="ipAddr != null  and ipAddr != '' and ipAddr != 'null' and ipAddr != 'undefined' ">
+                ip_addr = #{ipAddr},
+            </if>
+            <if test="loginLocation != null  and loginLocation != '' and loginLocation != 'null' and loginLocation != 'undefined' ">
+                login_location = #{loginLocation},
+            </if>
+            <if test="browser != null  and browser != '' and browser != 'null' and browser != 'undefined' ">
+                browser = #{browser},
+            </if>
+            <if test="os != null  and os != '' and os != 'null' and os != 'undefined' ">
+                os = #{os},
+            </if>
+            <if test="msg != null  and msg != '' and msg != 'null' and msg != 'undefined' ">
+                msg = #{msg},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="createUserId != null  and createUserId != '' and createUserId != 'null' and createUserId != 'undefined' ">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createTime != null  and createTime != '' and createTime != 'null' and createTime != 'undefined' ">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUserId != null  and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined' ">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="updateTime != null  and updateTime != '' and updateTime != 'null' and updateTime != 'undefined' ">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除系统访问记录 -->
+    <update id="deleteLoginInfoById">
+        update tb_login_info set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除系统访问记录 -->
+    <update id="deleteBatchLoginInfoByIds" parameterType="List">
+        update tb_login_info set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除系统访问记录 -->
+    <delete id="deleteLoginInfoRealById">
+        delete from tb_login_info where id = #{id}
+    </delete>
+
+    <!-- 批量真删除系统访问记录 -->
+    <delete id="deleteBatchLoginInfoRealByIds">
+        delete from tb_login_info where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取系统访问记录 -->
+    <select id="getLoginInfoById" resultType="LoginInfo">
+        select
+        <include refid="loginInfo_select_cond"/>
+        from tb_login_info a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询系统访问记录集合 -->
+    <select id="listLoginInfos" parameterType="LoginInfoQuery" resultType="LoginInfo">
+        select
+        <include refid="loginInfo_select_cond"/>
+        from tb_login_info a
+        <where>
+            <if test="loginName != null  and loginName != '' and loginName != 'null' and loginName != 'undefined' ">
+                and a.login_name like concat('%', #{loginName}, '%')
+            </if>
+            <if test="browser != null  and browser != '' and browser != 'null' and browser != 'undefined' ">
+                and a.browser like concat('%', #{browser}, '%')
+            </if>
+            <if test="os != null  and os != '' and os != 'null' and os != 'undefined' ">
+                and a.os like concat('%', #{os}, '%')
+            </if>
+            <if test="status != null ">
+                and a.status = #{status}
+            </if>
+            AND a.status = 1
+        </where>
+    </select>
+
+    <sql id="loginInfo_select_cond">
+        a.id id, a.login_name loginName, a.ip_addr ipAddr, a.login_location loginLocation, a.browser browser, a.os os, a.msg msg, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
+
+    <sql id="loginInfo_add_key">
+        id, login_name, ip_addr, login_location, browser, os, msg, status, create_user_id, create_time, update_user_id, update_time    </sql>
+</mapper>

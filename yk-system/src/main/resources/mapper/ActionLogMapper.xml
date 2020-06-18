@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yk.system.mapper.ActionLogMapper">
+    <!-- 新增操作日志 -->
+    <insert id="insertActionLog" parameterType="ActionLog">
+        insert into tb_action_log(
+        <include refid="actionLog_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        ( #{id}, #{name}, #{type}, #{actionType}, #{ipAddr}, #{actionUrl}, #{actionLocation}, #{method},
+        #{requestMethod}, #{inputParam}, #{outputParam}, #{exceptionInfo}, #{remark}, #{status}, #{actionTime},
+        #{actionUserName} )
+    </insert>
+
+    <!-- 批量新增操作日志 -->
+    <insert id="insertActionLogBatch">
+        insert into tb_action_log(
+        <include refid="actionLog_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.name}, #{item.type}, #{item.actionType}, #{item.ipAddr}, #{item.actionUrl},
+            #{item.actionLocation}, #{item.method}, #{item.requestMethod}, #{item.inputParam}, #{item.outputParam},
+            #{item.exceptionInfo}, #{item.remark}, #{item.status}, #{item.actionTime}, #{item.actionUserName})
+        </foreach>
+    </insert>
+
+    <!--  更新操作日志  -->
+    <update id="updateActionLog" parameterType="ActionLog">
+        update tb_action_log
+        <set>
+            <if test="name != null  and name != '' and name != 'null' and name != 'undefined' ">
+                name = #{name},
+            </if>
+            <if test="type != null  and type != '' and type != 'null' and type != 'undefined' ">
+                type = #{type},
+            </if>
+            <if test="actionType != null ">
+                action_type = #{actionType},
+            </if>
+            <if test="ipAddr != null  and ipAddr != '' and ipAddr != 'null' and ipAddr != 'undefined' ">
+                ip_addr = #{ipAddr},
+            </if>
+            <if test="actionUrl != null  and actionUrl != '' and actionUrl != 'null' and actionUrl != 'undefined' ">
+                action_url = #{actionUrl},
+            </if>
+            <if test="actionLocation != null  and actionLocation != '' and actionLocation != 'null' and actionLocation != 'undefined' ">
+                action_location = #{actionLocation},
+            </if>
+            <if test="method != null  and method != '' and method != 'null' and method != 'undefined' ">
+                method = #{method},
+            </if>
+            <if test="requestMethod != null  and requestMethod != '' and requestMethod != 'null' and requestMethod != 'undefined' ">
+                request_method = #{requestMethod},
+            </if>
+            <if test="inputParam != null  and inputParam != '' and inputParam != 'null' and inputParam != 'undefined' ">
+                input_param = #{inputParam},
+            </if>
+            <if test="outputParam != null  and outputParam != '' and outputParam != 'null' and outputParam != 'undefined' ">
+                output_param = #{outputParam},
+            </if>
+            <if test="exceptionInfo != null  and exceptionInfo != '' and exceptionInfo != 'null' and exceptionInfo != 'undefined' ">
+                exception_info = #{exceptionInfo},
+            </if>
+            <if test="remark != null  and remark != '' and remark != 'null' and remark != 'undefined' ">
+                remark = #{remark},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="actionTime != null  and actionTime != '' and actionTime != 'null' and actionTime != 'undefined' ">
+                action_time = #{actionTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除操作日志 -->
+    <update id="deleteActionLogById">
+        update tb_action_log set status = 0 where id = #{id}
+    </update>
+
+    <!-- 批量删除操作日志 -->
+    <update id="deleteBatchActionLogByIds" parameterType="List">
+        update tb_action_log set status = 0 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 根据id真删除操作日志 -->
+    <delete id="deleteActionLogRealById">
+        delete from tb_action_log where id = #{id}
+    </delete>
+
+    <!-- 批量真删除操作日志 -->
+    <delete id="deleteBatchActionLogRealByIds">
+        delete from tb_action_log where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 根据id获取操作日志 -->
+    <select id="getActionLogById" resultType="ActionLog">
+        select
+        <include refid="actionLog_select_cond"/>
+        from tb_action_log a
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <!-- 查询操作日志集合 -->
+    <select id="listActionLogs" parameterType="ActionLogQuery" resultType="ActionLog">
+        select
+        <include refid="actionLog_select_cond"/>
+        from tb_action_log a
+        <where>
+            <if test="name != null  and name != '' and name != 'null' and name != 'undefined' ">
+                and a.name like concat('%', #{name}, '%')
+            </if>
+            <if test="types != null and types.length > 0">
+                AND a.type in
+                <foreach collection="types" item="type" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
+            <if test="type != null  and type != '' and type != 'null' and type != 'undefined' ">
+                and a.type = #{type}
+            </if>
+            <if test="actionType != null ">
+                and a.action_type = #{actionType}
+            </if>
+            AND a.status = 1
+        </where>
+        order by a.action_time desc
+    </select>
+
+    <sql id="actionLog_select_cond">
+        a.id id, a.name name, a.type type, a.action_type actionType, a.ip_addr ipAddr, a.action_url actionUrl, a.action_location actionLocation, a.method method, a.request_method requestMethod, a.input_param inputParam, a.output_param outputParam, a.exception_info exceptionInfo, a.remark remark, a.status status, a.action_time actionTime
+        , a.action_user_name actionUserName
+    </sql>
+
+    <sql id="actionLog_add_key">
+        id, name, type, action_type, ip_addr, action_url, action_location, method, request_method, input_param, output_param, exception_info, remark, status, action_time, action_user_name    </sql>
+</mapper>

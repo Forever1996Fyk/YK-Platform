@@ -1,7 +1,9 @@
 package com.yk.web.controller.system;
 
+import com.yk.common.annotation.ActionLog;
 import com.yk.common.dto.Result;
 import com.yk.common.enums.AttachmentAttrEnum;
+import com.yk.common.enums.LogTypeEnum;
 import com.yk.fileupload.attachment.service.ImageAttachmentService;
 import com.yk.fileupload.model.pojo.ImageAttachment;
 import com.yk.framework.util.ShiroUtils;
@@ -35,6 +37,7 @@ public class SysProfileController {
      * @return com.yk.common.dto.Result
      * @date 2020/6/13 15:19
      */
+    @ActionLog(name = "个人信息", logType = LogTypeEnum.UPDATE)
     @PutMapping("updateUserInfo")
     public Result updateUserInfo(@RequestBody SysUser sysUser) {
         SysUser user = ShiroUtils.getCurrentSysUser();
@@ -56,6 +59,7 @@ public class SysProfileController {
      * @return com.yk.common.dto.Result
      * @date 2020/6/13 15:22
      */
+    @ActionLog(name = "个人信息", logType = LogTypeEnum.UPDATE)
     @PostMapping("/updateAvatar")
     public Result updateAvatar(HttpServletRequest request) throws IOException {
         SysUser sysUser = ShiroUtils.getCurrentSysUser();

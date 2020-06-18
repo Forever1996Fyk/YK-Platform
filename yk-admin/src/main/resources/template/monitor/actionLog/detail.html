@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('操作日志详细')" />
+	<th:block th:include="include :: jsonview-css" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<form class="form-horizontal m-t" id="signupForm">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">操作模块：</label>
+			<div class="form-control-static" th:text="${actionLog.name} + ' / ' + ${@dict.getLabel('sys_log_type',actionLog.type)}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">登录信息：</label>
+			<div class="form-control-static" th:text="${actionLog.actionUserName} + ${actionLog.ipAddr}+ ' / ' + ${actionLog.actionLocation}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求地址：</label>
+			<div class="form-control-static" th:text="${actionLog.actionUrl}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求方式：</label>
+			<div class="form-control-static" th:text="${actionLog.requestMethod}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">操作方法：</label>
+			<div class="form-control-static" th:text="${actionLog.method}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">请求参数：</label>
+			<div class="form-control-static"><pre id="inputParam"></pre></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">返回参数：</label>
+			<div class="form-control-static"><pre id="outputParam"></pre></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">状态：</label>
+			<div class="form-control-static" th:class="${actionLog.status == 0 ? 'label label-danger' : 'label label-primary'}" th:text="${actionLog.status == 0 ? '异常': '正常'}">
+			</div>
+		</div>
+		<div class="form-group" th:style="'display:' + ${actionLog.status == 0 ?'block' : 'none' }">
+			<label class="col-sm-2 control-label">异常信息：</label>
+			<div class="form-control-static" th:text="${actionLog.exceptionInfo}">
+			</div>
+		</div>
+	</form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: jsonview-js" />
+    <script th:inline="javascript">
+	    $(function() {
+	    	var inputParam = [[${actionLog.inputParam}]];
+	    	if ($.common.isNotEmpty(inputParam) && inputParam.length < 2000) {
+	    		$("#inputParam").JSONView(inputParam);
+	    	} else {
+	    		$("#inputParam").text(inputParam);
+	    	}
+	    	var outputParam = [[${actionLog.outputParam}]];
+	    	if ($.common.isNotEmpty(outputParam) && outputParam.length < 2000) {
+	    		$("#outputParam").JSONView(outputParam);
+	    	} else {
+	    		$("#outputParam").text(outputParam);
+	    	}
+	    });
+    </script>
+</body>
+</html>

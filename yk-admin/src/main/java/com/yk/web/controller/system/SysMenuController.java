@@ -1,7 +1,9 @@
 package com.yk.web.controller.system;
 
+import com.yk.common.annotation.ActionLog;
 import com.yk.common.dto.Result;
 import com.yk.common.entity.Ztree;
+import com.yk.common.enums.LogTypeEnum;
 import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysMenu;
 import com.yk.system.model.pojo.SysRole;
@@ -64,6 +66,7 @@ public class SysMenuController {
      * @param sysMenu
      * @return
      */
+    @ActionLog(name = "菜单管理", logType = LogTypeEnum.INSERT)
     @PostMapping("/addSysMenu")
     @RequiresPermissions("system:menu:add")
     public Result addSysMenu(@RequestBody SysMenu sysMenu) {
@@ -76,6 +79,7 @@ public class SysMenuController {
      * @param sysMenu
      * @return
      */
+    @ActionLog(name = "菜单管理", logType = LogTypeEnum.UPDATE)
     @PutMapping("/editSysMenu")
     @RequiresPermissions("system:menu:edit")
     public Result editSysMenu(@RequestBody SysMenu sysMenu) {
@@ -89,6 +93,7 @@ public class SysMenuController {
      * @param id
      * @return
      */
+    @ActionLog(name = "菜单管理", logType = LogTypeEnum.DELETE)
     @DeleteMapping("/deleteSysMenuById/{id}")
     @RequiresPermissions("system:menu:delete")
     public Result deleteSysMenuById(@PathVariable("id") String id) {
@@ -101,6 +106,7 @@ public class SysMenuController {
      * @param ids
      * @return
      */
+    @ActionLog(name = "菜单管理", logType = LogTypeEnum.DELETE)
     @DeleteMapping("/deleteBatchSysMenuByIds/{ids}")
     @RequiresPermissions("system:menu:delete")
     public Result deleteBatchSysMenuByIds(@PathVariable("ids") List<String> ids) {

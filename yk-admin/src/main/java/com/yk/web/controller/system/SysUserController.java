@@ -1,8 +1,10 @@
 package com.yk.web.controller.system;
 
+import com.yk.common.annotation.ActionLog;
 import com.yk.common.constant.UserConstants;
 import com.yk.common.dto.DataTablesViewPage;
 import com.yk.common.dto.Result;
+import com.yk.common.enums.LogTypeEnum;
 import com.yk.common.exception.ParameterException;
 import com.yk.common.util.AssertUtils;
 import com.yk.framework.shiro.service.PasswordService;
@@ -51,6 +53,7 @@ public class SysUserController {
      * @param sysUser
      * @return
      */
+    @ActionLog(name = "用户管理", logType = LogTypeEnum.INSERT)
     @PostMapping("/addSysUser")
     @RequiresPermissions("system:user:add")
     public Result addSysUser(@RequestBody SysUser sysUser) {
@@ -66,6 +69,7 @@ public class SysUserController {
      * @param sysUser
      * @return
      */
+    @ActionLog(name = "用户管理", logType = LogTypeEnum.UPDATE)
     @PutMapping("/editSysUser")
     @RequiresPermissions("system:user:edit")
     public Result editSysUser(@RequestBody SysUser sysUser) {
@@ -80,6 +84,7 @@ public class SysUserController {
      * @param id
      * @return
      */
+    @ActionLog(name = "用户管理", logType = LogTypeEnum.DELETE)
     @DeleteMapping("/deleteSysUserById/{id}")
     @RequiresPermissions("system:user:delete")
     public Result deleteSysUserById(@PathVariable("id") String id) {
@@ -92,6 +97,7 @@ public class SysUserController {
      * @param ids
      * @return
      */
+    @ActionLog(name = "用户管理", logType = LogTypeEnum.DELETE)
     @RequiresPermissions("system:user:delete")
     @DeleteMapping("/deleteBatchSysUserByIds/{ids}")
     public Result deleteBatchSysUserByIds(@PathVariable("ids") List<String> ids) {

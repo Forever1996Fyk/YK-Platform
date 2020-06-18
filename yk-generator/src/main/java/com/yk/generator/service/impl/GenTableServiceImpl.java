@@ -56,7 +56,7 @@ public class GenTableServiceImpl implements GenTableService {
 
     @Override
     public List<GenTable> listGenTables(int start, int pageSize, GenTableQuery genTableQuery) {
-        PageHelper.offsetPage(start, pageSize);
+        PageHelper.startPage(start, pageSize);
         return this.listGenTables(genTableQuery);
     }
 
@@ -67,7 +67,7 @@ public class GenTableServiceImpl implements GenTableService {
 
     @Override
     public List<GenTable> listDbTables(int start, int pageSize, GenTableQuery genTableQuery) {
-        PageHelper.offsetPage(start, pageSize);
+        PageHelper.startPage(start, pageSize);
         return this.listDbTables(genTableQuery);
     }
 

@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ExecutorConfigurationSupport;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @program: YK-Platform
@@ -39,6 +38,27 @@ public class ThreadUtils {
                 pool.shutdown();
                 Thread.currentThread().interrupt();
             }
+        }
+    }
+
+    public static void printException(Runnable r, Throwable t) {
+        if (t == null && r instanceof Future<?>) {
+            try {
+                Future<?> future = (Future<?>) r;
+                if (future.isDone()) {
+                    future.get();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                t = e.getCause();
+            } catch (CancellationException e) {
+                t = e;
+            }
+        }
+
+        if (t != null) {
+            logger.error("线程异常: [{}], [{}]",t.getMessage(), t);
         }
     }
 }

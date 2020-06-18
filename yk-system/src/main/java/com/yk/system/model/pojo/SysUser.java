@@ -49,6 +49,16 @@ public class SysUser extends BaseEntity implements Serializable {
     private String avatarUrl;
 
     /**
+     * 最后登录时间
+     */
+    private String lastLoginTime;
+
+    /**
+     * 最后登录ip
+     */
+    private String lastLoginIp;
+
+    /**
      * 判断是否是超级管理员
      * @return
      */

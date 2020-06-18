@@ -20,7 +20,7 @@
                         </li>
                         <li>
                             <label>状态：</label>
-                            <select name="status" th:with="type=${@dict.getType('sys_common_status')}">
+                            <select name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
                                 <option value="">所有</option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
                                         th:value="${dict.dictValue}"></option>

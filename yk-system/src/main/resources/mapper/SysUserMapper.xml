@@ -11,7 +11,7 @@
         )
         values
         (#{id}, #{deptId}, #{account}, #{userName}, #{password}, #{phone}, #{email}, #{sex}, #{avatar}, #{userType},
-        #{salt}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime})
+        #{salt}, #{status}, #{createUserId}, #{createTime}, #{updateUserId}, #{updateTime}, #{lastLoginIp}, #{lastLoginTime})
 
     </insert>
 
@@ -26,7 +26,7 @@
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.id}, #{item.deptId}, #{item.account}, #{item.userName}, #{item.password}, #{item.phone},
             #{item.email}, #{item.sex}, #{item.avatar}, #{item.userType}, #{item.salt}, #{item.status},
-            #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime})
+            #{item.createUserId}, #{item.createTime}, #{item.updateUserId}, #{item.updateTime}, #{item.lastLoginIp}, #{item.lastLoginTime})
         </foreach>
 
     </insert>
@@ -67,6 +67,12 @@
             </if>
             <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
                 update_time = #{updateTime},
+            </if>
+            <if test="lastLoginTime != null and lastLoginTime != '' and lastLoginTime != 'null' and lastLoginTime != 'undefined'">
+                last_login_time = #{lastLoginTime},
+            </if>
+            <if test="lastLoginIp != null and lastLoginIp != '' and lastLoginIp != 'null' and lastLoginIp != 'undefined'">
+                last_login_ip = #{lastLoginIp},
             </if>
             <if test="status != null">
                 status=#{status},
@@ -250,6 +256,6 @@
     </sql>
 
     <sql id="sysUser_add_key">
-          id, dept_id, account, user_name, password, phone, email, sex, avatar, user_type, salt, status, create_user_id, create_time, update_user_id, update_time
+          id, dept_id, account, user_name, password, phone, email, sex, avatar, user_type, salt, status, create_user_id, create_time, update_user_id, update_time, last_login_ip, last_login_time
     </sql>
 </mapper>
