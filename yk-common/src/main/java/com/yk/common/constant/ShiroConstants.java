@@ -22,4 +22,9 @@ public class ShiroConstants {
      * 系统活跃用户缓存
      */
     public static final String SYS_USER_CACHE = "sys-user-cache";
+
+    /**
+     * 当前在线会话
+     */
+    public static final String ONLINE_SESSION = "online_session";
 }

@@ -57,4 +57,8 @@ public class OnlineSession extends SimpleSession {
     public void markAttributeChanged() {
         this.attributeChanged = true;
     }
+
+    public void resetAttributeChanged() {
+        this.attributeChanged = false;
+    }
 }

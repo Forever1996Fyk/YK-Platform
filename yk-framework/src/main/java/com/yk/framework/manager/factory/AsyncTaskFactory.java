@@ -2,12 +2,15 @@ package com.yk.framework.manager.factory;
 
 import com.yk.common.constant.ComConstants;
 import com.yk.common.util.*;
+import com.yk.framework.shiro.session.OnlineSession;
 import com.yk.framework.util.LogUtils;
 import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.ActionLog;
 import com.yk.system.model.pojo.LoginInfo;
+import com.yk.system.model.pojo.UserOnline;
 import com.yk.system.service.ActionLogService;
 import com.yk.system.service.LoginInfoService;
+import com.yk.system.service.UserOnlineService;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,31 @@ import java.util.TimerTask;
  **/
 public class AsyncTaskFactory {
     private static final Logger logger = LoggerFactory.getLogger("sys_user");
+
+    /**
+     * 同步session到数据库
+     * @param session
+     * @return
+     */
+    public static TimerTask syncSessionToDb(final OnlineSession session) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                UserOnline userOnline = new UserOnline();
+                userOnline.setSessionId(String.valueOf(session.getId()));
+                userOnline.setLoginName(session.getUserName());
+                userOnline.setStartTime(TimeUtils.parseTime(session.getStartTimestamp()));
+                userOnline.setLastAccessTime(TimeUtils.parseTime(session.getLastAccessTime()));
+                userOnline.setExpireTime(session.getTimeout());
+                userOnline.setIpAddr(session.getHost());
+                userOnline.setLoginLocation(AddressUtils.getRealAddressByIp(session.getHost()));
+                userOnline.setBrowser(session.getBrowser());
+                userOnline.setOs(session.getOs());
+                userOnline.setStatus(session.getStatus());
+                SpringUtils.getBean(UserOnlineService.class).insertUserOnline(userOnline);
+            }
+        };
+    }
 
     /**
      * 记录登录日志信息

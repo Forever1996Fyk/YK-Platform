@@ -2,11 +2,12 @@ package com.yk.framework.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.google.common.collect.Maps;
+import com.yk.common.util.SpringUtils;
 import com.yk.common.util.StringUtils;
 import com.yk.framework.shiro.realm.UserRealm;
+import com.yk.framework.shiro.session.OnlineSessionDAO;
 import com.yk.framework.shiro.session.OnlineSessionFactory;
-import com.yk.framework.shiro.web.filter.KickOutSessionFilter;
-import com.yk.framework.shiro.web.filter.LogoutFilter;
+import com.yk.framework.shiro.web.filter.*;
 import com.yk.framework.shiro.web.session.OnlineWebSessionManager;
 import net.sf.ehcache.CacheManager;
 import org.apache.commons.io.IOUtils;
@@ -160,6 +161,15 @@ public class ShiroConfig {
     }
 
     /**
+     * 自定义sessionDAO会话
+     * @return
+     */
+    @Bean
+    public OnlineSessionDAO sessionDAO() {
+        return new OnlineSessionDAO();
+    }
+
+    /**
      * 自定义session工厂会话
      * @return
      */
@@ -183,10 +193,12 @@ public class ShiroConfig {
         manager.setGlobalSessionTimeout(expireTime * 60 * 1000);
         // 去掉JSESSIONID
         manager.setSessionIdUrlRewritingEnabled(false);
-        // 定义要使用的无效的Session定时调度器 todo
+        // 定义要使用的无效的Session定时调度器
+        manager.setSessionValidationScheduler(SpringUtils.getBean(SpringSessionValidationScheduler.class));
         // 是否定时检查session
         manager.setSessionValidationSchedulerEnabled(true);
-        // 自定义SessionDAO todo
+        // 自定义SessionDAO
+        manager.setSessionDAO(sessionDAO());
         // 自定义SessionFactory
         manager.setSessionFactory(sessionFactory());
         return manager;
@@ -251,6 +263,26 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/**", "user, kickOut");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
+    }
+
+    /**
+     * 自定义在线用户处理过滤器
+     * @return
+     */
+    @Bean
+    public OnlineSessionFilter onlineSessionFilter() {
+        OnlineSessionFilter onlineSessionFilter = new OnlineSessionFilter();
+        onlineSessionFilter.setLoginUrl(loginUrl);
+        return onlineSessionFilter;
+    }
+
+    /**
+     * 自定义在线用户同步过滤器
+     * @return
+     */
+    @Bean
+    public SyncOnlineSessionFilter syncOnlineSessionFilter() {
+        return new SyncOnlineSessionFilter();
     }
 
     /**
