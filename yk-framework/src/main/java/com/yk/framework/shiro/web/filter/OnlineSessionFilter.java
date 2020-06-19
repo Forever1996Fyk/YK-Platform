@@ -59,7 +59,7 @@ public class OnlineSessionFilter extends AccessControlFilter {
                 SysUser user = ShiroUtils.getCurrentSysUser();
                 if (user != null) {
                     onlineSession.setUserId(user.getId());
-                    onlineSession.setUserId(user.getUserName());
+                    onlineSession.setUserName(user.getUserName());
                     onlineSession.setAvatar(user.getAvatarUrl());
                     onlineSession.markAttributeChanged();
                 }
@@ -69,7 +69,7 @@ public class OnlineSessionFilter extends AccessControlFilter {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override

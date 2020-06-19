@@ -73,4 +73,11 @@ public interface UserOnlineMapper {
      * @return
      */
     List<UserOnline> listUserOnlines(UserOnlineQuery userOnlineQuery);
+
+    /**
+     * 查询过期会话集合
+     * @param lastAccessTime
+     * @return
+     */
+    List<UserOnline> listUserOnlineByExpired(String lastAccessTime);
 }

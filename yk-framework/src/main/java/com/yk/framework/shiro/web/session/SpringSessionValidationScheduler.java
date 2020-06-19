@@ -1,4 +1,4 @@
-package com.yk.framework.shiro.web.filter;
+package com.yk.framework.shiro.web.session;
 
 import com.yk.common.util.ThreadUtils;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import sun.jvm.hotspot.runtime.Threads;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

@@ -49,12 +49,7 @@ public enum LogTypeEnum {
     GENCODE,
 
     /**
-     * 文件上传
+     * 强退
      */
-    UPLOAD,
-
-    /**
-     * 文件下载
-     */
-    DOWNLOAD,
+    FORCE,
 }

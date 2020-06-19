@@ -1,7 +1,10 @@
 package com.yk.framework.shiro.web.filter;
 
+import com.yk.common.constant.ComConstants;
 import com.yk.common.constant.ShiroConstants;
 import com.yk.common.util.StringUtils;
+import com.yk.framework.manager.AsyncTaskManager;
+import com.yk.framework.manager.factory.AsyncTaskFactory;
 import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.SysUser;
 import org.apache.shiro.cache.Cache;
@@ -47,7 +50,8 @@ public class LogoutFilter extends org.apache.shiro.web.filter.authc.LogoutFilter
             SysUser sysUser = ShiroUtils.getCurrentSysUser();
             if (StringUtils.isNotBlank(sysUser)) {
                 String userId = sysUser.getId();
-                //记录用户退出日志 todo
+                //记录用户退出日志
+                AsyncTaskManager.asyncManager().execute(AsyncTaskFactory.recordLoginInfo(sysUser.getUserName(), ComConstants.LOGOUT, "用户退出登录"));
                 //清理缓存
                 cache.remove(userId);
             }

@@ -1,5 +1,6 @@
 package com.yk.framework.shiro.session;
 
+import com.yk.common.enums.OnlineStatus;
 import com.yk.common.util.StringUtils;
 import com.yk.framework.manager.AsyncTaskManager;
 import com.yk.framework.manager.factory.AsyncTaskFactory;
@@ -92,5 +93,19 @@ public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
             onlineSession.resetAttributeChanged();
         }
         AsyncTaskManager.asyncManager().execute(AsyncTaskFactory.syncSessionToDb(onlineSession));
+    }
+
+    /**
+     * 当会话过期/停止(用户退出)
+     * @param session
+     */
+    @Override
+    protected void doDelete(Session session) {
+        OnlineSession onlineSession = (OnlineSession) session;
+        if (onlineSession == null) {
+            return;
+        }
+        onlineSession.setStatus(OnlineStatus.OFF_LINE);
+        sysShiroService.deleteSession(onlineSession);
     }
 }

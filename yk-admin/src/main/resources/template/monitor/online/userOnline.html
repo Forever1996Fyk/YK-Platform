@@ -25,7 +25,7 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-danger multiple disabled" onclick="javascript:batchForceLogout()" shiro:hasPermission="monitor:online:batchForceLogout">
+                <a class="btn btn-danger multiple disabled" onclick="javascript:batchForceLogout()" shiro:hasPermission="monitor:online:forceLogout">
                     <i class="fa fa-sign-out"></i> 强退
                 </a>
             </div>
@@ -85,9 +85,9 @@
                     title: '在线状态',
                     align: 'center',
                     formatter: function(value, row, index) {
-                        if (value == 'on_line') {
+                        if (value == 'ON_LINE') {
                             return '<span class="badge badge-primary">在线</span>';
-                        } else if (value == 'off_line') {
+                        } else if (value == 'OFF_LINE') {
                             return '<span class="badge badge-danger">离线</span>';
                         }
                     }
@@ -107,8 +107,7 @@
         // 单条强退
         function forceLogout(sessionId) {
             $.modal.confirm("确定要强制选中用户下线吗？", function() {
-                var data = { "sessionId": sessionId };
-                $.operate.post(prefix + "/forceLogout", data);
+                $.operate.postVariable(prefix + "/forceLogout/" + sessionId);
             })
         }
 
@@ -120,9 +119,7 @@
                 return;
             }
             $.modal.confirm("确认要强退选中的" + rows.length + "条数据吗?", function() {
-                var url = prefix + "/batchForceLogout";
-                var data = { "ids": rows };
-                $.operate.post(url, data);
+                $.operate.postVariable(prefix + "/batchForceLogout/" + rows);
             });
         }
     </script>

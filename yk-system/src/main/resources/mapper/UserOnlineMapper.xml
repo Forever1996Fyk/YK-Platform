@@ -126,6 +126,14 @@
         </where>
     </select>
 
+    <select id="listUserOnlineByExpired" resultType="UserOnline">
+        select
+        <include refid="userOnline_select_cond"/>
+        from tb_user_online a
+        WHERE a.last_access_time <![CDATA[ <= ]]> #{lastAccessTime}
+        ORDER BY a.last_access_time ASC
+    </select>
+
     <sql id="userOnline_select_cond">
         a.session_id sessionId, a.login_name loginName, a.ip_addr ipAddr, a.login_location loginLocation, a.browser browser, a.os os, a.status status, a.start_time startTime, a.last_access_time lastAccessTime, a.expire_time expireTime, a.remark remark, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime    </sql>
 

@@ -59,7 +59,6 @@ public class SysProfileController {
      * @return com.yk.common.dto.Result
      * @date 2020/6/13 15:22
      */
-    @ActionLog(name = "个人信息", logType = LogTypeEnum.UPDATE)
     @PostMapping("/updateAvatar")
     public Result updateAvatar(HttpServletRequest request) throws IOException {
         SysUser sysUser = ShiroUtils.getCurrentSysUser();

@@ -21,6 +21,7 @@ public class ShiroUtils {
 
     /**
      * 获取登录主体
+     *
      * @return
      */
     public static Subject getSubject() {
@@ -29,6 +30,7 @@ public class ShiroUtils {
 
     /**
      * 获取当前Session
+     *
      * @return
      */
     public static Session getSession() {
@@ -37,6 +39,7 @@ public class ShiroUtils {
 
     /**
      * 获取当前登录用户信息
+     *
      * @return
      */
     public static SysUser getCurrentSysUser() {
@@ -50,6 +53,7 @@ public class ShiroUtils {
 
     /**
      * 重新设置系统用户
+     *
      * @param sysUser
      */
     public static void setSysUser(SysUser sysUser) {
@@ -63,6 +67,7 @@ public class ShiroUtils {
 
     /**
      * 获取当前登录id
+     *
      * @return
      */
     public static String getCurrentUserId() {
@@ -71,6 +76,7 @@ public class ShiroUtils {
 
     /**
      * 获取当前登录ip
+     *
      * @return
      */
     public static String getCurrentIp() {
@@ -79,12 +85,21 @@ public class ShiroUtils {
 
     /**
      * 生成随机盐
+     *
      * @return
      */
     public static String randomSalt() {
         SecureRandomNumberGenerator generator = new SecureRandomNumberGenerator();
         String hex = generator.nextBytes(3).toHex();
         return hex;
+    }
+
+    /**
+     * 获取当前sessionId
+     * @return
+     */
+    public static String getSessionId() {
+        return String.valueOf(getSubject().getSession().getId());
     }
 
     public static void clearCachedAuthorizationInfo() {

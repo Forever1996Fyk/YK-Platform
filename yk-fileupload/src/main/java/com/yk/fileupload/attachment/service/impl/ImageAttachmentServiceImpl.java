@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.yk.common.constant.ComConstants;
 import com.yk.common.entity.Bucket;
 import com.yk.common.enums.PositionTypeEnum;
+import com.yk.common.exception.ParameterException;
 import com.yk.common.exception.file.FileReadErrorException;
 import com.yk.common.exception.file.RequestToFileException;
 import com.yk.common.util.FileUtils;
@@ -54,6 +55,9 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     @Override
     public ImageAttachment uploadFastDFSAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         MultipartFile file = FileUtils.getRequestFile(request);
+        if (file == null) {
+            throw new ParameterException("请选择图片!");
+        }
         ImageAttachment attachment = FastDfsAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
         attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
         imageAttachmentMapper.insertImageAttachment(attachment);

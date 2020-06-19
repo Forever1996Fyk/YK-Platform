@@ -79,5 +79,10 @@ public class UserOnlineServiceImpl implements UserOnlineService {
         PageHelper.startPage(start, pageSize);
         return this.listUserOnlines(userOnlineQuery);
     }
-    
+
+    @Override
+    public List<UserOnline> listUserOnlineByExpired(String lastAccessTime) {
+        return userOnlineMapper.listUserOnlineByExpired(lastAccessTime);
+    }
+
 }

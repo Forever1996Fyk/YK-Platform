@@ -9,6 +9,7 @@ import com.yk.framework.shiro.session.OnlineSessionDAO;
 import com.yk.framework.shiro.session.OnlineSessionFactory;
 import com.yk.framework.shiro.web.filter.*;
 import com.yk.framework.shiro.web.session.OnlineWebSessionManager;
+import com.yk.framework.shiro.web.session.SpringSessionValidationScheduler;
 import net.sf.ehcache.CacheManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -250,19 +251,35 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/request/**", "anon");
         //退出登录
         filterChainDefinitionMap.put("/logout", "logout");
+        // 不需要拦截的访问
+        filterChainDefinitionMap.put("/login", "anon");
         // 放行的接口
         filterChainDefinitionMap.put("/api/system/login", "anon");
 
-        //过滤器配置 todo
+        //过滤器配置
         Map<String, Filter> filters = Maps.newLinkedHashMap();
+        filters.put("onlineSession", onlineSessionFilter());
+        filters.put("syncOnlineSession", syncOnlineSessionFilter());
         filters.put("kickOut", kickOutSessionFilter());
+        // 注销成功，则跳转到指定页面
         filters.put("logout", logoutFilter());
-
         shiroFilterFactoryBean.setFilters(filters);
+
         //所有请求需要认证
-        filterChainDefinitionMap.put("/**", "user, kickOut");
+        filterChainDefinitionMap.put("/**", "user, kickOut, onlineSession, syncOnlineSession");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
+    }
+
+
+    /**
+     * 自定义在线用户同步过滤器
+     * @return
+     */
+    @Bean
+    public SyncOnlineSessionFilter syncOnlineSessionFilter() {
+        SyncOnlineSessionFilter syncOnlineSessionFilter = new SyncOnlineSessionFilter();
+        return syncOnlineSessionFilter;
     }
 
     /**
@@ -274,15 +291,6 @@ public class ShiroConfig {
         OnlineSessionFilter onlineSessionFilter = new OnlineSessionFilter();
         onlineSessionFilter.setLoginUrl(loginUrl);
         return onlineSessionFilter;
-    }
-
-    /**
-     * 自定义在线用户同步过滤器
-     * @return
-     */
-    @Bean
-    public SyncOnlineSessionFilter syncOnlineSessionFilter() {
-        return new SyncOnlineSessionFilter();
     }
 
     /**

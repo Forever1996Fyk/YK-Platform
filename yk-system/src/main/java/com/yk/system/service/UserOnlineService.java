@@ -81,4 +81,11 @@ public interface UserOnlineService {
      */
     List<UserOnline> listUserOnlines(int start, int pageSize, UserOnlineQuery userOnlineQuery);
 
+    /**
+     * 查询过期会话集合
+     * @param lastAccessTime
+     * @return
+     */
+    List<UserOnline> listUserOnlineByExpired(String lastAccessTime);
+
 }

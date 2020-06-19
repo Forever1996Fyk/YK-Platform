@@ -1,6 +1,12 @@
 package com.yk.web.controller.system;
 
+import com.yk.common.annotation.ActionLog;
 import com.yk.common.dto.Result;
+import com.yk.common.enums.LogTypeEnum;
+import com.yk.common.enums.OnlineStatus;
+import com.yk.framework.shiro.session.OnlineSession;
+import com.yk.framework.shiro.session.OnlineSessionDAO;
+import com.yk.framework.util.ShiroUtils;
 import com.yk.system.model.pojo.UserOnline;
 import com.yk.system.model.query.UserOnlineQuery;
 import com.yk.system.service.UserOnlineService;
@@ -22,6 +28,8 @@ import com.yk.common.dto.DataTablesViewPage;
 public class UserOnlineController {
     @Autowired
     private UserOnlineService userOnlineService;
+    @Autowired
+    private OnlineSessionDAO onlineSessionDAO;
 
     /**
      * 获取在线用户记录集合
@@ -37,6 +45,62 @@ public class UserOnlineController {
                                UserOnlineQuery userOnlineQuery) {
         List<UserOnline> list = userOnlineService.listUserOnlines(start, pageSize, userOnlineQuery);
         return Result.success("获取成功", new DataTablesViewPage<>(list));
+    }
+
+    /**
+     * 强退用户
+     * @param sessionId
+     * @return
+     */
+    @ActionLog(name = "在线用户", logType = LogTypeEnum.FORCE)
+    @RequiresPermissions("monitor:online:forceLogout")
+    @PostMapping("/forceLogout/{sessionId}")
+    public Result forceLogout(@PathVariable("sessionId") String sessionId) {
+        UserOnline userOnline = userOnlineService.getUserOnlineById(sessionId);
+        if (sessionId.equals(ShiroUtils.getSessionId())) {
+            return Result.error("当前登录用户无法强退");
+        }
+        if (userOnline == null) {
+            return Result.error("用户已下线");
+        }
+        OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(userOnline.getSessionId());
+        if (onlineSession == null) {
+            return Result.error("用户已下线");
+        }
+        onlineSession.setStatus(OnlineStatus.OFF_LINE);
+        onlineSessionDAO.update(onlineSession);
+        userOnline.setStatus(OnlineStatus.OFF_LINE);
+        userOnlineService.updateUserOnline(userOnline);
+        return Result.success();
+    }
+
+    /**
+     * 批量强退用户
+     * @param sessionIds
+     * @return
+     */
+    @ActionLog(name = "在线用户", logType = LogTypeEnum.FORCE)
+    @RequiresPermissions("monitor:online:forceLogout")
+    @PostMapping("/batchForceLogout/{sessionIds}")
+    public Result batchForceLogout(@PathVariable("sessionIds") String[] sessionIds) {
+        for (String sessionId : sessionIds) {
+            UserOnline userOnline = userOnlineService.getUserOnlineById(sessionId);
+            if (sessionId.equals(ShiroUtils.getSessionId())) {
+                return Result.error("当前登录用户无法强退");
+            }
+            if (userOnline == null) {
+                return Result.error("用户已下线");
+            }
+            OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(userOnline.getSessionId());
+            if (onlineSession == null) {
+                return Result.error("用户已下线");
+            }
+            onlineSession.setStatus(OnlineStatus.OFF_LINE);
+            onlineSessionDAO.update(onlineSession);
+            userOnline.setStatus(OnlineStatus.OFF_LINE);
+            userOnlineService.updateUserOnline(userOnline);
+        }
+        return Result.success();
     }
 
     /**
