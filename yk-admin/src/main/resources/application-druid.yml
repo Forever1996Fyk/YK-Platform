@@ -6,9 +6,9 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:mysql://rm-m5e91lmw2n84e7lp36o.mysql.rds.aliyuncs.com/yk-platform?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-        username: yukaifan
-        password: fyk961222!@#
+        url: jdbc:mysql://locahost/yk-platform?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: password
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭
