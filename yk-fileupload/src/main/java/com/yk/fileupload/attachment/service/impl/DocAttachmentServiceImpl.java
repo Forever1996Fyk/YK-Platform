@@ -102,7 +102,7 @@ public class DocAttachmentServiceImpl implements DocAttachmentService {
     }
 
     @Override
-    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -110,23 +110,18 @@ public class DocAttachmentServiceImpl implements DocAttachmentService {
         int result = 1;
         List<DocAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
-            try {
-                DocAttachment attachment = LocalAttachmentUtils.getDocAttachment(file, ownerId, attachAttr);
-                FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
+            DocAttachment attachment = LocalAttachmentUtils.getDocAttachment(file, ownerId, attachAttr);
+            FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
 
-                attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
-                list.add(attachment);
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = 0;
-            }
+            attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
+            list.add(attachment);
         }
         docAttachmentMapper.insertDocAttachmentBatch(list);
         return result;
     }
 
     @Override
-    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -134,21 +129,16 @@ public class DocAttachmentServiceImpl implements DocAttachmentService {
         int result = 1;
         List<DocAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
-            try {
-                DocAttachment attachment = FastDfsAttachmentUtils.getDocAttachment(file, ownerId, attachAttr);
-                attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
-                list.add(attachment);
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = 0;
-            }
+            DocAttachment attachment = FastDfsAttachmentUtils.getDocAttachment(file, ownerId, attachAttr);
+            attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
+            list.add(attachment);
         }
         docAttachmentMapper.insertDocAttachmentBatch(list);
         return result;
     }
 
     @Override
-    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) {
+    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) throws IOException {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -156,14 +146,9 @@ public class DocAttachmentServiceImpl implements DocAttachmentService {
         int result = 1;
         List<DocAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
-            try {
-                DocAttachment attachment = AliyunOssUtil.getDocAttachment(file, ownerId, attachAttr, bucket);
-                attachment.setPositionType(PositionTypeEnum.OSS.getContent());
-                list.add(attachment);
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = 0;
-            }
+            DocAttachment attachment = AliyunOssUtil.getDocAttachment(file, ownerId, attachAttr, bucket);
+            attachment.setPositionType(PositionTypeEnum.OSS.getContent());
+            list.add(attachment);
         }
         docAttachmentMapper.insertDocAttachmentBatch(list);
         return result;

@@ -47,7 +47,7 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @param ownerId
      * @return
      */
-    int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr);
+    int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException;
 
     /**
      * fastDFS服务 批量上传附件
@@ -55,7 +55,7 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @param ownerId
      * @return
      */
-    int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr);
+    int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException;
 
     /**
      * OSS服务 批量上传附件
@@ -63,7 +63,7 @@ public interface AttachmentService<T extends BaseAttachment> {
      * @param ownerId
      * @return
      */
-    int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket);
+    int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) throws IOException;
 
 
     /**

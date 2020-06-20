@@ -43,8 +43,7 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     @Override
     public ImageAttachment uploadLocalAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         MultipartFile file = FileUtils.getRequestFile(request);
-        ImageAttachment attachment = null;
-        attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
+        ImageAttachment attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
         FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
 
         attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
@@ -74,7 +73,7 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
     }
 
     @Override
-    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public int uploadLocalBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -82,23 +81,18 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
         int result = 1;
         List<ImageAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
-            try {
-                ImageAttachment attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
-                FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
+            ImageAttachment attachment = LocalAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
+            FileUtils.transferTo(file.getInputStream(), attachment.getAttachPath());
 
-                attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
-                list.add(attachment);
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = 0;
-            }
+            attachment.setPositionType(PositionTypeEnum.LOCAL.getContent());
+            list.add(attachment);
         }
         imageAttachmentMapper.insertImageAttachmentBatch(list);
         return result;
     }
 
     @Override
-    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) {
+    public int uploadFastDFSBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr) throws IOException {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -106,21 +100,16 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
         int result = 1;
         List<ImageAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
-            try {
-                ImageAttachment attachment = FastDfsAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
-                attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
-                list.add(attachment);
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = 0;
-            }
+            ImageAttachment attachment = FastDfsAttachmentUtils.getImageAttachment(file, ownerId, attachAttr);
+            attachment.setPositionType(PositionTypeEnum.FASTDFS.getContent());
+            list.add(attachment);
         }
         imageAttachmentMapper.insertImageAttachmentBatch(list);
         return result;
     }
 
     @Override
-    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) {
+    public int uploadOssBatchAttachment(HttpServletRequest request, String ownerId, String attachAttr, Bucket bucket) throws IOException {
         List<MultipartFile> requestListFile = FileUtils.getRequestListFile(request);
         if (CollectionUtils.isEmpty(requestListFile)) {
             throw new RequestToFileException();
@@ -128,14 +117,9 @@ public class ImageAttachmentServiceImpl implements ImageAttachmentService {
         int result = 1;
         List<ImageAttachment> list = Lists.newArrayList();
         for (MultipartFile file : requestListFile) {
-            try {
-                ImageAttachment attachment = AliyunOssUtil.getImageAttachment(file, ownerId, attachAttr, bucket);
-                attachment.setPositionType(PositionTypeEnum.OSS.getContent());
-                list.add(attachment);
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = 0;
-            }
+            ImageAttachment attachment = AliyunOssUtil.getImageAttachment(file, ownerId, attachAttr, bucket);
+            attachment.setPositionType(PositionTypeEnum.OSS.getContent());
+            list.add(attachment);
         }
         imageAttachmentMapper.insertImageAttachmentBatch(list);
         return result;

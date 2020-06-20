@@ -78,7 +78,7 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadLocalBatchAttachment")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadLocalBatchAttachment(HttpServletRequest request) {
+    public Result uploadLocalBatchAttachment(HttpServletRequest request) throws IOException {
         return Result.response(imageAttachmentService.uploadLocalBatchAttachment(request, null, null));
     }
 
@@ -90,7 +90,7 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadLocalBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadLocalBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+    public Result uploadLocalBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
         return Result.response(imageAttachmentService.uploadLocalBatchAttachment(request, ownerId, null));
     }
 
@@ -126,7 +126,7 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadFastDfsBatchAttachment")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadFastDFSBatchAttachment(HttpServletRequest request) {
+    public Result uploadFastDFSBatchAttachment(HttpServletRequest request) throws IOException {
         return Result.response(imageAttachmentService.uploadFastDFSBatchAttachment(request, null, null));
     }
 
@@ -138,7 +138,7 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadFastDfsBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadFastDFSBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+    public Result uploadFastDFSBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
         return Result.response(imageAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
     }
 
@@ -178,7 +178,7 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request) {
+    public Result uploadOssBatchAttachment(HttpServletRequest request) throws IOException {
         Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
         Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         return Result.response(imageAttachmentService.uploadOssBatchAttachment(request, null, null, bucket));
@@ -192,7 +192,7 @@ public class ImageAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:image:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
         Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
         Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         return Result.response(imageAttachmentService.uploadOssBatchAttachment(request, ownerId, null, bucket));

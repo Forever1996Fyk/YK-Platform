@@ -79,7 +79,7 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadLocalBatchAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadLocalBatchAttachment(HttpServletRequest request) {
+    public Result uploadLocalBatchAttachment(HttpServletRequest request) throws IOException {
         return Result.response(videoAttachmentService.uploadLocalBatchAttachment(request, null, null));
     }
 
@@ -91,7 +91,7 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadLocalBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadLocalBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+    public Result uploadLocalBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
         return Result.response(videoAttachmentService.uploadLocalBatchAttachment(request, ownerId, null));
     }
 
@@ -127,7 +127,7 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadFastDfsBatchAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadFastDfsBatchAttachment(HttpServletRequest request) {
+    public Result uploadFastDfsBatchAttachment(HttpServletRequest request) throws IOException {
         return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, null, null));
     }
 
@@ -139,7 +139,7 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadFastDfsBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadFastDfsBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+    public Result uploadFastDfsBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
         return Result.response(videoAttachmentService.uploadFastDFSBatchAttachment(request, ownerId, null));
     }
 
@@ -179,7 +179,7 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request) {
+    public Result uploadOssBatchAttachment(HttpServletRequest request) throws IOException {
         Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
         Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         return Result.response(videoAttachmentService.uploadOssBatchAttachment(request, null, null, bucket));
@@ -193,7 +193,7 @@ public class VideoAttachmentController {
      */
     @PostMapping("/uploadOssBatchAttachment/{ownerId}")
     @RequiresPermissions("attachment:video:upload")
-    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) {
+    public Result uploadOssBatchAttachment(HttpServletRequest request, @PathVariable("ownerId") String ownerId) throws IOException {
         Map<String, Object> parameterMap = ServletUtils.getParameterMapObject(request);
         Bucket bucket = MapUtils.mapToObject(Bucket.class, parameterMap, false);
         return Result.response(videoAttachmentService.uploadOssBatchAttachment(request, ownerId, null, bucket));
