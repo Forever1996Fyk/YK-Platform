@@ -96,7 +96,7 @@ file:
   # 本地文件上传位置(正式环境 /yk/upload/)
   localFilePath: E:/ykUpload/
   # fastDFS文件服务根地址
-  fastDFSAddr: http://www.yukaifan.top:8080/
+  fastDFSAddr: http://xxxxxxx
 
 # fastDFS配置
 fastdfs:
@@ -112,14 +112,14 @@ fastdfs:
   httpSecretKey: 13a1d2ead6a24a6747dbd0f7462adf86
   httpTrackerHttpPort: 80
   # tracker访问地址
-  trackerServers: www.yukaifan.top:22122
+  trackerServers: xxxxxx:22122
 
 # 阿里云配置
 aliyun:
   oss:
-    accessKeyId: LTAIoc5iy7rzY5oF
-    accessKeySecret: B7INLs3bwisLsUjcAcwNWx0RU4zCKI
-    endpoint: oss-cn-qingdao.aliyuncs.com
+    accessKeyId: xxxxxxxx
+    accessKeySecret: xxxxxxxxxx
+    endpoint: xxxxxxxxxxx
     bucketName: yk-platform
 
 # 防止XSS攻击
